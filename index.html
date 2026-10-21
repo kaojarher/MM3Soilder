@@ -1,5 +1,7 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0d1420">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 
 
 
@@ -83,6 +85,7 @@ button:active:not(:disabled){transform:translateY(1px);filter:brightness(1.12)}
 .move-actions button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;min-width:0;min-height:46px;padding:4px 1px;font-size:19px;line-height:1.05;background:linear-gradient(145deg,#263c55,#111c2b);border-color:#496987;box-shadow:0 3px 0 #060b12}
 .move-actions small{font-size:10px;font-weight:500;line-height:1.2;margin-top:3px;color:#c4d5e7}
 @media(max-width:380px){.move-actions{gap:3px}.move-actions button{font-size:17px;min-height:44px}.move-actions small{font-size:9px}}
+.flight-badge{display:inline-block;color:#9de7ff;border:1px solid #4b8eac;border-radius:5px;padding:2px 5px;font-size:10px;margin-left:4px}.flight-actions{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;width:100%}.flight-actions button{min-width:0;min-height:44px;padding:4px 1px;font-size:17px;background:linear-gradient(145deg,#24465c,#111c2b);border-color:#4a91b3}.flight-actions small{display:block;font-size:9px;color:#c4d5e7}.space-note{color:#b7e9ff;font-size:11px;margin-top:4px}
 /* Battle/movement presentation inspired by 凡人修仙傳_PWA_iPhone6版: viewport combat, compact HUD, large touch controls */
 .scene-wrap{position:relative}
 #battleLayer{position:absolute;z-index:4;inset:0;display:none;pointer-events:none;background:linear-gradient(180deg,rgba(4,8,16,.15),rgba(4,8,16,.08) 48%,rgba(4,8,16,.72))}
@@ -121,7 +124,7 @@ body.inbattle #l{min-height:2.5em;max-height:4.5em;overflow:hidden;padding:0 4px
 @media(prefers-reduced-motion:reduce){.battle-member.attacking .member-icon,.battle-foe.hit .foe-icon,.battle-foe.attacking .foe-icon{animation:none}}
 
 .sisbox{display:flex;align-items:center;gap:8px;padding:8px;margin-top:7px;border:1px solid #52728d;border-radius:9px;background:linear-gradient(120deg,#172a3d,#101a29);color:#e7f6ff;box-shadow:0 3px 12px #0004}.sisavatar{flex:0 0 38px;height:38px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 25%,#d7f6ff,#4d8eaf 55%,#17354b);border:1px solid #a4e8ff;color:#092033;font-weight:900;font-size:18px}.sisbody{flex:1;min-width:0}.sistitle{font-size:12px;font-weight:800;color:#9de7ff}.sistitle small{font-weight:500;color:#9baec1}.sistext{font-size:12px;line-height:1.35;margin-top:2px}.sisvoice{flex:0 0 auto;padding:5px;font-size:10px;min-height:34px;border-color:#4c7897}
-</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script></head><body><div id="a"><div id="h"></div><div id="v"></div><div id="p"></div><div id="l"></div><div id="c"></div></div><div id="m" hidden></div>
+</style><script src="jspdf.umd.min.js"></script></head><body><div id="a"><div id="h"></div><div id="v"></div><div id="p"></div><div id="l"></div><div id="c"></div></div><div id="m" hidden></div>
 <script>
 const $=i=>document.getElementById(i),R=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),pk=a=>a[R(0,a.length-1)];
 const CL=[["重甲兵","岩崢","💂",44,6,"壓制砲擊"],["護盾兵","安瀾","🛡️",40,5,"掩護"],["電磁術士","雷馳","⚡",26,7,"電磁風暴"],["光刃劍士","霜刃","⚔️",32,8,"光刃連斬"],["潛行特工","夜梭","🕵️",28,8,"背刺"],["格鬥兵","烈風","🥊",36,7,"連擊"],["軍醫","蘇茗","💊",28,4,"修復針劑"],["通訊官","陸弦","📡",26,4,"戰術增幅"]];
@@ -151,11 +154,39 @@ const f=[];g.forEach((r,y)=>r.forEach((v,x)=>{if(!v&&x+y>4&&!(x==9&&y==9))f.push
 const E=[{x:9,y:9,t:"b"}];for(let i=0;i<6;i++){const[p,q]=f.pop();E.push({x:p,y:q,t:"m"})}for(let i=0;i<3;i++){const[p,q]=f.pop();E.push({x:p,y:q,t:"c"})}
 return{g,E,seen:g.map(r=>r.map(()=>0))}}
 const gm=()=>S.maps[S.z+":"+S.f]||(S.maps[S.z+":"+S.f]=gen());
-function mapH(){const M=gm(),[px,py]=S.pos;let h='<div class=g>';for(let y=0;y<11;y++)for(let x=0;x<11;x++){const near=Math.abs(x-px)<3&&Math.abs(y-py)<3;if(near)M.seen[y][x]=1;let k="",c="";if(!M.seen[y][x])k="u";else if(M.g[y][x])k="w";else{const e=M.E.find(o=>o.x==x&&o.y==y);c=x==px&&y==py?"👨‍🚀":e?(e.t=="b"?bossFor(dep())[1]:e.t=="c"?"📦":near?"❗":""):""}h+=`<i class="${k}">${c}</i>`}return h+"</div>"}
+function fg(){const key="F:"+(S.flightZone||1);if(S.maps[key])return S.maps[key];const g=Array.from({length:11},()=>Array(11).fill(0)),seen=g.map(r=>r.map(()=>0)),spots=[];for(let y=2;y<10;y++)for(let x=2;x<10;x++)if(!(x===9&&y===9))spots.push([x,y]);spots.sort(()=>Math.random()-.5);const E=[{x:9,y:9,t:"b"}];for(let i=0;i<6;i++){const [x,y]=spots.pop();E.push({x,y,t:"m"})}for(let i=0;i<3;i++){const [x,y]=spots.pop();E.push({x,y,t:"c"})}return S.maps[key]={g,E,seen}}
+function mapH(){const M=S.flight?fg():gm(),[px,py]=S.pos;let h='<div class=g>';for(let y=0;y<11;y++)for(let x=0;x<11;x++){const near=Math.abs(x-px)<3&&Math.abs(y-py)<3;if(near)M.seen[y][x]=1;let k="",c="";if(!M.seen[y][x])k="u";else if(!S.flight&&M.g[y][x])k="w";else{const e=M.E.find(o=>o.x==x&&o.y==y);c=x==px&&y==py?(S.flight?"🚀":"👨‍🚀"):e?(e.t=="b"?(S.flight?"帝":"👹"):e.t=="c"?"📦":near?(S.flight?"⚔":"❗"):""):""}h+=`<i class="${k}">${c}</i>`}return h+"</div>"}
 const DIRS=[[0,-1],[1,0],[0,1],[-1,0]];
-function turn3d(n){S.dir=((S.dir??0)+n+4)%4;ui()}
+function turn3d(n){S.dir=((S.dir??0)+n+4)%4;if(S.flight)saySis(`航向已調整至${["北方","東方","南方","西方"][S.dir]}。注意帝國軍雷達訊號。`);ui()}
 function step3d(n){const d=DIRS[((S.dir??0)+4)%4];const dx=d[0]*n,dy=d[1]*n;mv(dx,dy)}
-function scene3d(){const M=gm(),[px,py]=S.pos,dir=((S.dir??0)+4)%4,ctx=$('scene3d').getContext('2d'),w=$('scene3d').width,h=$('scene3d').height;
+function toggleFlight(){if(C)return;if(!S.flight){S.groundReturn={z:S.z||0,f:S.f||1,pos:(S.pos||[1,1]).slice(),dir:S.dir||0};S.flight=true;S.flightZone=S.flightZone||1;S.z=S.z||1;S.f=1;S.pos=[1,1];S.dir=0;fg();saySis("飛艦已出港。姐姐已切換星系導航，雷達正在搜尋帝國軍。點擊前方航道前進，接近紅色目標即可交戰。",true);log("搭乘星隕級自走砲飛艦，進入星系探索。")}else{S.flight=false;const r=S.groundReturn||{z:0,f:1,pos:[1,1],dir:0};S.z=r.z;S.f=r.f;S.pos=r.pos;S.dir=r.dir;S.groundReturn=null;saySis("已完成返航，回到原本的探索區域。",true);log("飛艦返航，回到地面探索。")}$("m").hidden=1;ui()}
+function nextFlightZone(){if(!S.flight)return;S.flightZone=(S.flightZone||1)+1;S.pos=[1,1];S.dir=0;delete S.maps["F:"+S.flightZone];fg();saySis(`躍遷完成，抵達第 ${S.flightZone} 星系。帝國軍威脅等級提升。`,true);log(`進入第 ${S.flightZone} 星系。`);ui()}
+function scene3d(){const M=S.flight?fg():gm(),[px,py]=S.pos,dir=((S.dir??0)+4)%4,ctx=$('scene3d').getContext('2d'),w=$('scene3d').width,h=$('scene3d').height;
+if(S.flight){
+// 星系飛艦：沿用地面探索的方向、距離與投影概念，改成太空航道場景
+ctx.clearRect(0,0,w,h);
+const sky=ctx.createLinearGradient(0,0,0,h);sky.addColorStop(0,'#020611');sky.addColorStop(.48,'#101b39');sky.addColorStop(1,'#070b18');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
+const driftX=((px*19+py*7)%37),driftY=((py*13+px*5)%29);
+for(let i=0;i<150;i++){let sx=((i*83+driftX*7)%w),sy=((i*47+driftY*5)%h);ctx.globalAlpha=.35+(i%5)*.12;ctx.fillStyle=i%13===0?'#7deaff':'#dceaff';ctx.fillRect(sx,sy,i%13===0?2:1,i%13===0?2:1)}ctx.globalAlpha=1;
+// 透視星際航道網格，移動時產生空間深度感
+const horizon=h*.43;ctx.strokeStyle='rgba(64,150,214,.32)';ctx.lineWidth=1;
+for(let i=0;i<13;i++){const gx=i*w/12;ctx.beginPath();ctx.moveTo(w/2+(gx-w/2)*.06,horizon);ctx.lineTo(gx,h);ctx.stroke()}
+for(let j=1;j<9;j++){const t=j/8,y=horizon+(h-horizon)*t*t;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke()}
+ctx.fillStyle='rgba(7,18,40,.55)';ctx.fillRect(0,horizon-2,w,4);
+// 行星視差：星系位置改變時，行星視覺位置也會變化
+const planetX=w*(.72-((px*3+py*5)%9)*.035),planetY=h*(.24+((py+S.flightZone)%4)*.025),pr=18+((S.flightZone||1)%5)*5;
+const pg=ctx.createRadialGradient(planetX-pr*.38,planetY-pr*.45,1,planetX,planetY,pr);pg.addColorStop(0,'#d7efff');pg.addColorStop(.38,(S.flightZone||1)%2?'#5797ca':'#ba718b');pg.addColorStop(.78,'#243d68');pg.addColorStop(1,'#080e22');ctx.fillStyle=pg;ctx.beginPath();ctx.arc(planetX,planetY,pr,0,Math.PI*2);ctx.fill();ctx.strokeStyle='rgba(118,209,255,.6)';ctx.beginPath();ctx.ellipse(planetX,planetY,pr*1.55,pr*.34,-.18,0,Math.PI*2);ctx.stroke();
+// 飛艦火箭式艦首/砲管視角
+ctx.save();ctx.translate(w*.5,h*.78);ctx.fillStyle='#101f36';ctx.strokeStyle='#83eaff';ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(0,-36);ctx.lineTo(13,-12);ctx.lineTo(16,12);ctx.lineTo(27,25);ctx.lineTo(12,24);ctx.lineTo(7,31);ctx.lineTo(-7,31);ctx.lineTo(-12,24);ctx.lineTo(-27,25);ctx.lineTo(-16,12);ctx.lineTo(-13,-12);ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle='#d8f8ff';ctx.fillRect(-21,3,10,4);ctx.fillRect(11,3,10,4);ctx.fillStyle='#ffb95e';ctx.beginPath();ctx.moveTo(-5,28);ctx.lineTo(0,48);ctx.lineTo(5,28);ctx.fill();ctx.restore();
+// 依照目前航向，把星系地圖中的帝國軍投影到 3D 視野
+const fwd=DIRS[dir],right=DIRS[(dir+1)%4];
+for(const e of M.E){const dx=e.x-px,dy=e.y-py,forward=dx*fwd[0]+dy*fwd[1],side=dx*right[0]+dy*right[1];if(forward<=0||forward>9||Math.abs(side)>forward*.95+1)continue;const depth=forward+.7,scale=Math.min(1.8,2.7/depth),ex=w/2+(side/depth)*w*.62,ey=h*.44+(1/depth)*h*.22,size=Math.max(7,Math.min(29,35/depth));
+ctx.save();ctx.translate(ex,ey);ctx.scale(scale,scale);ctx.fillStyle=e.t==='b'?'#a8324b':e.t==='c'?'#c9a45a':'#a9bacd';ctx.strokeStyle=e.t==='b'?'#ff8795':e.t==='c'?'#ffe1a0':'#ff7d85';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(0,-size);ctx.lineTo(size*.42,-size*.12);ctx.lineTo(size*1.05,size*.25);ctx.lineTo(size*.32,size*.2);ctx.lineTo(0,size*.52);ctx.lineTo(-size*.32,size*.2);ctx.lineTo(-size*1.05,size*.25);ctx.lineTo(-size*.42,-size*.12);ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle='#ff6a73';ctx.fillRect(-size*.85,size*.32,size*.35,Math.max(2,size*.12));ctx.fillRect(size*.5,size*.32,size*.35,Math.max(2,size*.12));ctx.restore();
+ctx.textAlign='center';ctx.font=`bold ${Math.max(9,Math.min(13,14/depth+7))}px sans-serif`;ctx.fillStyle=e.t==='b'?'#ff8c9a':e.t==='c'?'#ffe0a0':'#ffb0b7';ctx.fillText(e.t==='b'?'帝國軍旗艦':e.t==='c'?'星際補給艙':'帝國軍戰機',Math.max(55,Math.min(w-55,ex)),Math.max(16,ey-size*.7-5));
+if(e.t!=='c'&&forward<=4){ctx.strokeStyle='rgba(255,100,120,.7)';ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(w/2,h*.67);ctx.lineTo(ex,ey);ctx.stroke();ctx.setLineDash([])}}ctx.textAlign='left';
+// 準星與導航資訊
+ctx.strokeStyle='#8feaff';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(w/2-8,h*.58);ctx.lineTo(w/2+8,h*.58);ctx.moveTo(w/2,h*.58-8);ctx.lineTo(w/2,h*.58+8);ctx.stroke();
+ctx.fillStyle='#b9ecff';ctx.font='12px sans-serif';ctx.fillText('星系 '+(S.flightZone||1)+'　航向 '+['北 ↑','東 →','南 ↓','西 ←'][dir],8,17);ctx.fillStyle='#ff9f9f';ctx.font='bold 11px sans-serif';ctx.fillText('帝國軍雷達活動區',8,h-10);return;}
 ctx.clearRect(0,0,w,h);const sky=ctx.createLinearGradient(0,0,0,h/2);sky.addColorStop(0,'#07101f');sky.addColorStop(1,'#23415c');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h/2);
 const floor=ctx.createLinearGradient(0,h/2,0,h);floor.addColorStop(0,'#26384a');floor.addColorStop(1,'#080d15');ctx.fillStyle=floor;ctx.fillRect(0,h/2,w,h/2);
 // horizon and glowing floor guides
@@ -182,15 +213,15 @@ function handleSceneClick(ev){
  step3d(1);
 }
 function refreshScene(){const canvas=$('scene3d');if(canvas){scene3d();canvas.onclick=handleSceneClick;canvas.style.cursor='pointer'}}
-const hubH=()=>`${sisBox()}<div class=hub><button onclick=shop()>🏪 補給站</button><button onclick=hire()>📋 招募艙</button><button onclick=inn()>🏥 醫療艙</button><button onclick=forge()>🔧 兵工廠</button><button onclick=gate()>🌀 躍遷門</button><button onclick=book()>📖 小說（${S.nov.length}集）</button></div><p style="color:var(--mut)">前線星港。整備好隊伍，從躍遷門出發。休眠艙裡的隊員會原地待命。</p>`;
+const hubH=()=>`${sisBox()}<div class=hub><button onclick=shop()>🏪 補給站</button><button onclick=hire()>📋 招募艙</button><button onclick=inn()>🏥 醫療艙</button><button onclick=forge()>🔧 兵工廠</button><button onclick=gate()>🌀 躍遷門</button><button onclick=toggleFlight()>🚀 自走砲飛艦</button><button onclick=book()>📖 小說（${S.nov.length}集）</button></div><p style="color:var(--mut)">前線星港。整備好隊伍，從躍遷門出發。休眠艙裡的隊員會原地待命。</p>`;
 function ui(){document.body.classList.toggle("inbattle",!!C);$("p").hidden=!!C;sv();$("h").textContent=`${zoneName(S.z)}${S.z?" 第"+S.f+"層":""}　💰${S.gold}　💉${S.pot}　武器+${S.w}${S.ng?"　周目"+(S.ng+1):""}`;
-$("v").innerHTML=S.z?`<div class="scenehead"><b>第一人稱 3D 探索</b><span>方向感測：${["北","東","南","西"][((S.dir??0)+4)%4]}</span></div><div class="scene-wrap"><canvas id="scene3d" width="480" height="300" aria-label="3D迷宮視角"></canvas><div id="battleLayer" aria-label="戰鬥畫面"></div><div id="minimap"><div class="maptop"><b>2D 戰術地圖</b><button type="button" onclick="toggleMap()" aria-label="收合或展開2D地圖">−</button></div>${mapH()}</div></div><div class="scenehud"><span>點擊前方路面前進；畫面左下左轉、右下右轉</span><span>${S.pos[0]+1},${S.pos[1]+1}</span></div>${sisBox()}`:hubH();
+$("v").innerHTML=S.z?`<div class="scenehead"><b>${S.flight?"星系 3D 飛艦探索":"第一人稱 3D 探索"}</b><span>${S.flight?`第 ${S.flightZone||1} 星系 <i class="flight-badge">帝國軍活動</i>`:`方向感測：${["北","東","南","西"][((S.dir??0)+4)%4]}`}</span></div><div class="scene-wrap"><canvas id="scene3d" width="480" height="300" aria-label="3D探索場景"></canvas><div id="battleLayer" aria-label="戰鬥畫面"></div><div id="minimap"><div class="maptop"><b>2D 戰術地圖</b><button type="button" onclick="toggleMap()" aria-label="收合或展開2D地圖">−</button></div>${mapH()}</div></div><div class="scenehud"><span>${S.flight?"點擊前方星際航道前進；左下左轉、右下右轉，接近帝國軍即可交戰":"點擊前方路面前進；畫面左下左轉、右下右轉"}</span><span>${S.pos[0]+1},${S.pos[1]+1}</span></div>${S.flight?`<div class="space-note">星隕級自走砲飛艦｜耐久 100%　護盾 100%　主砲就緒</div>`:""}${sisBox()}`:hubH();
 $("p").innerHTML=S.party.map(m=>`<div class="pc ${m.hp?"":"dn"}"><b>${nm(m)}</b> Lv${m.l}<i style="--w:${m.hp/m.mh*100}%"></i>${m.hp}/${m.mh} ⚡${m.mp}</div>`).join("");
 $("l").innerHTML=S.log.slice(-5).map(x=>`<div>${x}</div>`).join("");
-$("c").innerHTML=(S.z?`<div class="move-actions"><button onclick="turn3d(-1)" aria-label="左轉">↶<small>左轉</small></button><button onclick="step3d(1)" aria-label="向前">▲<small>前進</small></button><button onclick="turn3d(1)" aria-label="右轉">↷<small>右轉</small></button><button onclick="step3d(-1)" aria-label="後退">▼<small>後退</small></button><button onclick="base()" aria-label="返航">⌂<small>返航</small></button><button onclick="pot()" aria-label="使用修復針劑">💉<small>補給</small></button></div>`:"")+`<button onclick=book()>📖</button><button onclick=rst()>重新開始</button>`;
+$("c").innerHTML=(S.z?`<div class="${S.flight?"flight-actions":"move-actions"}"><button onclick="turn3d(-1)" aria-label="左轉">↶<small>左轉</small></button><button onclick="step3d(1)" aria-label="向前">▲<small>${S.flight?"推進":"前進"}</small></button><button onclick="turn3d(1)" aria-label="右轉">↷<small>右轉</small></button><button onclick="step3d(-1)" aria-label="後退">▼<small>${S.flight?"減速":"後退"}</small></button><button onclick="${S.flight?"toggleFlight()":"base()"}" aria-label="${S.flight?"返航下艦":"返航"}">${S.flight?"🛬":"⌂"}<small>${S.flight?"下艦":"返航"}</small></button><button onclick="${S.flight?"fireShipWeapon()":"pot()"}" aria-label="${S.flight?"主砲射擊":"使用修復針劑"}">${S.flight?"🎯":"💉"}<small>${S.flight?"主砲":"補給"}</small></button></div>${S.flight?"":`<button onclick="toggleFlight()">🚀 搭乘自走砲飛艦</button>`}`:"")+`<button onclick=book()>📖</button><button onclick=rst()>重新開始</button>`;
 refreshScene();
 }
-function mv(dx,dy){if(C||!$("m").hidden||!S.z)return;const M=gm(),x=S.pos[0]+dx,y=S.pos[1]+dy;if(x<0||y<0||x>=11||y>=11||M.g[y][x]){if(dx||dy){log("前方是牆壁，請轉向後再前進。");ui()}return}const e=M.E.find(o=>o.x==x&&o.y==y);
+function mv(dx,dy){if(C||!$("m").hidden||!S.z)return;const M=S.flight?fg():gm(),x=S.pos[0]+dx,y=S.pos[1]+dy;if(x<0||y<0||x>=11||y>=11||(!S.flight&&M.g[y][x])){if(dx||dy){log("前方是牆壁，請轉向後再前進。");ui()}return}const e=M.E.find(o=>o.x==x&&o.y==y);
 if(e){if(e.t==="b")saySis("注意！前方偵測到首領反應。先鎖定目標，善用技能與修復針劑。",true);else if(e.t==="m")saySis("敵人接近！先觀察敵方血量，姐姐建議集中火力逐一擊破。",true);if(e.t=="c"){M.E=M.E.filter(o=>o!==e);S.nev.c++;if(Math.random()<.2){e.t="x";log("擬態補給箱！");return fight(e)}const g=Math.round(R(30,80)*(1+.1*dep()));S.gold+=g;S.nev.g+=g;log(`打開補給箱，獲得 ${g} 星幣。`)}else return fight(e)}else {S.pos=[x,y];if(Math.random()<.22)saySis(pk(["路線暫時安全，繼續前進吧。","姐姐提醒：轉角可能有敵人，記得查看右上角戰術地圖。","小隊狀態正常。保持隊形，別離補給點太遠。"]),false)}ui()}
 addEventListener("keydown",e=>{const d={ArrowUp:[0,-1],w:[0,-1],ArrowDown:[0,1],s:[0,1],ArrowLeft:[-1,0],a:[-1,0],ArrowRight:[1,0],d:[1,0]}[e.key];if(d){e.preventDefault();if(S.z){if(e.key==="ArrowUp"||e.key==="w")step3d(1);else if(e.key==="ArrowDown"||e.key==="s")step3d(-1);else if(e.key==="ArrowLeft"||e.key==="a")turn3d(-1);else if(e.key==="ArrowRight"||e.key==="d")turn3d(1)}else mv(...d)}else if(S.z&&(e.key==="q"||e.key==="Q"||e.key==="e"||e.key==="E")){e.preventDefault();turn3d(e.key.toLowerCase()==="q"?-1:1)}});
 const dep=()=>(S.z-1)*2+S.f;
@@ -198,7 +229,8 @@ function pot(){if(C)return;const t=S.party.filter(m=>m.hp>0).sort((a,b)=>a.hp/a.
 /* 戰鬥 */
 const rf=d=>[pk(enemiesFor(S.z)),14+d*9+R(0,6),4+d*2];
 function fight(e){const d=dep(),sc=1+.35*S.ng,ac=1+.25*S.ng,F=(n,h,a)=>({n,hp:Math.round(h*sc),mh:Math.round(h*sc),a:Math.round(a*ac)});let f=[];
-if(e.t=="b"){const b=bossFor(d);f.push(F(b[1]+b[0],70+d*30,7+d*2.5));f.push(F(...rf(d)))}else if(e.t=="x")f.push(F("📦擬態補給箱",30+d*10,6+d*2));else for(let i=R(1,2);i--;)f.push(F(...rf(d)));
+if(S.flight){if(e.t==="b")f.push(F(`帝國軍星域旗艦・${S.flightZone||1}`,110+(S.flightZone||1)*32,10+(S.flightZone||1)*2),F("帝國軍護航巡洋艦",55+d*8,7+d));else if(e.t==="x")f.push(F("星際補給艙",30+d*10,0));else for(let i=R(1,2);i--;)f.push(F(pk(["帝國軍攔截戰機","帝國軍巡邏艇","帝國軍無人砲艇"]),35+(S.flightZone||1)*12,6+(S.flightZone||1)*2));}
+else if(e.t=="b"){const b=bossFor(d);f.push(F(b[1]+b[0],70+d*30,7+d*2.5));f.push(F(...rf(d)))}else if(e.t=="x")f.push(F("📦擬態補給箱",30+d*10,6+d*2));else for(let i=R(1,2);i--;)f.push(F(...rf(d)));
 C={foes:f,i:0,t:0,b:1,sh:0,e,rec:[`遭遇${f.map(x=>x.n).join("與")}。`]};saySis(`戰鬥開始！${f.map(x=>x.n).join("、")}已進入視野。`,true);cr()}
 function rcd(res){const ev=S.nev;ev.fs=ev.fs||[];const r=C.rec;ev.fs.push({z:zoneName(S.z),bs:C.e.t=="b",res,lines:r.length>16?[...r.slice(0,6),"……",...r.slice(-10)]:r.slice()});if(ev.fs.length>6)ev.fs.shift()}
 const cur=()=>S.party.find((m,i)=>i>=C.i&&m.hp>0),tg=()=>{if(!C.foes[C.t]||C.foes[C.t].hp<=0)C.t=C.foes.findIndex(f=>f.hp>0);return C.t};
@@ -212,6 +244,7 @@ function cr(){
  $("l").innerHTML=S.log.slice(-3).map(x=>`<div>${x}</div>`).join("");
  $("c").innerHTML=`<div class="battle-turn">⚔️ 輪到 <b>${nm(m)}</b>　${C.b>1?"✨ 戰術增幅中":"選擇敵方目標後出招"}</div><div class="battle-actions"><button class="primary" onclick="ac('a')">⚔️ 普通攻擊</button><button ${m.mp<4?"disabled":""} onclick="ac('s')">✨ ${CL[m.c][5]}<br>（消耗 4 能量）</button><button ${S.pot?"":"disabled"} onclick="ac('p')">💉 修復針劑 ×${S.pot}</button><button onclick="ac('r')">↩️ 撤退</button><button onclick="C.t=(C.t+1)%C.foes.length;tg();cr()">🎯 切換目標</button><button onclick="log('戰術：先集中攻擊已鎖定目標。');cr()">📋 戰術提示</button></div>`;
 }
+function fireShipWeapon(){if(!S.flight||C)return;const M=fg(),[x,y]=S.pos;let target=M.E.filter(e=>e.t!=="c").sort((a,b)=>Math.hypot(a.x-x,a.y-y)-Math.hypot(b.x-x,b.y-y))[0];if(!target||Math.hypot(target.x-x,target.y-y)>4){saySis("雷達四公里內沒有可鎖定的帝國軍目標。請沿航道接近紅色訊號。",true);log("主砲未能鎖定目標，請靠近帝國軍。");ui();return}saySis("目標鎖定！姐姐已同步火控系統，準備接戰。",true);fight(target)}
 function hurt(f,n){f.hp=Math.max(0,f.hp-n)}
 function ac(k){const m=cur(),f=C.foes[tg()],rn=(x=1)=>Math.round((at(m)+R(-1,3))*C.b*x);let s="";
 if(k=="a"){const n=rn();hurt(f,n);s=`${nm(m)}攻擊${f.n}，造成 ${n}。`}
@@ -234,9 +267,9 @@ C.sh=0;S.party.forEach(m=>{if(m.hp>0)m.mp=Math.min(12,m.mp+1)});if(S.party.every
 function win(){let nextFloor=false;const f=C.foes,g=f.reduce((s,x)=>s+R(10,25)+x.mh,0),xp=Math.round(f.reduce((s,x)=>s+x.mh,0)/2),e=C.e,ev=S.nev;S.gold+=g;ev.g+=g;ev.k+=f.length;f.forEach(x=>{const n=x.n.replace(/[^\u4e00-\u9fa5]/g,"");if(!ev.n.includes(n))ev.n.push(n)});
 if(Math.random()<.25){S.pot++;log("掉落一支修復針劑。")}
 S.party.forEach(m=>{if(m.hp<=0)return;m.xp+=xp;while(m.l<30&&m.xp>=m.l*30){m.xp-=m.l*30;m.l++;m.mh=mh(m);m.hp=Math.min(m.mh,m.hp+10);m.mp=12;ev.lv++;log(`${nm(m)}升到 Lv${m.l}！`)}});
-log(`勝利！獲得 ${g} 星幣、${xp} 戰功。`);saySis(`漂亮！本場獲得 ${g} 星幣與 ${xp} 戰功。姐姐會繼續監控前方威脅。`,true);rcd("勝");const M=gm();M.E=M.E.filter(o=>o!==e);C=null;$("m").hidden=1;
-if(e.t=="b"){const d=dep();ev.b++;ev.bo.push(bossFor(d)[0]);saySis(`首領已被擊敗！這只是第 ${d} 次首領戰。下一個戰區已在躍遷圖上標記。`,true);if(S.f==1){S.f=2;S.pos=[1,1];S.dir=0;nextFloor=true;log("擊敗首領，通往下一層的艙門開啟。")}else{const clearedZone=S.z;S.unl=Math.max(S.unl,clearedZone+1);log(`${zoneName(clearedZone)}肅清完畢，新的躍遷座標解鎖。`);base();const nextZone=clearedZone+1;if(true){mo(`<h3>🚀 戰區攻略完成！</h3><p>你已完成 <b>${zoneName(clearedZone)}</b> 的兩層戰鬥。</p><p>新戰區 <b>${zoneName(nextZone)}</b> 已解鎖，點擊下方按鈕直接前往新戰區第一層。</p><div class=row><button onclick="go(${nextZone})">前往 ${zoneName(nextZone)}</button><button onclick="cl()">稍後返回星港</button></div>`,1)}return}}ui();if(nextFloor)mo(`<h3>🎉 第一層攻略完成！</h3><p>首領已擊敗，已自動進入 <b>${zoneName(S.z)}・第 2 層</b>。</p><p>新的迷宮已生成，請從起點繼續探索，尋找下一層首領。</p><div class=row><button onclick="cl()">前往第 2 層</button></div>`,1)}
-function lose(){const ev=S.nev;rcd("敗");ev.d++;S.gold=Math.floor(S.gold*.7);S.party.forEach(m=>{m.hp=Math.ceil(m.mh*.3);m.mp=6});C=null;log("全隊倒下，被緊急撈回星港，損失 30% 星幣。");$("m").hidden=1;base()}
+log(`勝利！獲得 ${g} 星幣、${xp} 戰功。`);saySis(`漂亮！本場獲得 ${g} 星幣與 ${xp} 戰功。姐姐會繼續監控前方威脅。`,true);rcd("勝");const M=S.flight?fg():gm();M.E=M.E.filter(o=>o!==e);C=null;$("m").hidden=1;
+if(e.t=="b"){const d=dep();ev.b++;ev.bo.push(S.flight?`帝國軍星域旗艦・${S.flightZone||1}`:bossFor(d)[0]);saySis(S.flight?"帝國軍旗艦已失去戰力！星系航道暫時安全。姐姐已標記下一個星系。":"首領已被擊敗！這只是第 "+d+" 次首領戰。下一個戰區已在躍遷圖上標記。",true);if(S.flight){const fz=S.flightZone||1;S.gold+=100+fz*25;log(`擊退帝國軍旗艦，獲得 ${100+fz*25} 星幣。`);M.E=M.E.filter(o=>o!==e);C=null;S.pos=[1,1];ui();mo(`<h3>🚀 帝國軍星域突破！</h3><p>第 ${fz} 星系的帝國軍旗艦已被擊退。</p><p>獲得星幣獎勵，下一個星系已可躍遷。</p><div class=row><button onclick="cl();nextFlightZone()">前往第 ${fz+1} 星系</button><button onclick="cl()">繼續探索本星系</button><button onclick="cl();toggleFlight()">返航下艦</button></div>`,1);return}else if(S.f==1){S.f=2;S.pos=[1,1];S.dir=0;nextFloor=true;log("擊敗首領，通往下一層的艙門開啟。")}else{const clearedZone=S.z;S.unl=Math.max(S.unl,clearedZone+1);log(`${zoneName(clearedZone)}肅清完畢，新的躍遷座標解鎖。`);base();const nextZone=clearedZone+1;if(true){mo(`<h3>🚀 戰區攻略完成！</h3><p>你已完成 <b>${zoneName(clearedZone)}</b> 的兩層戰鬥。</p><p>新戰區 <b>${zoneName(nextZone)}</b> 已解鎖，點擊下方按鈕直接前往新戰區第一層。</p><div class=row><button onclick="go(${nextZone})">前往 ${zoneName(nextZone)}</button><button onclick="cl()">稍後返回星港</button></div>`,1)}return}}ui();if(nextFloor)mo(`<h3>🎉 第一層攻略完成！</h3><p>首領已擊敗，已自動進入 <b>${zoneName(S.z)}・第 2 層</b>。</p><p>新的迷宮已生成，請從起點繼續探索，尋找下一層首領。</p><div class=row><button onclick="cl()">前往第 2 層</button></div>`,1)}
+function lose(){const ev=S.nev;rcd("敗");ev.d++;S.gold=Math.floor(S.gold*.7);S.party.forEach(m=>{m.hp=Math.ceil(m.mh*.3);m.mp=6});C=null;log("全隊倒下，被緊急撈回星港，損失 30% 星幣。");$("m").hidden=1;if(S.flight){S.flight=false;S.z=0;S.f=1;S.pos=[1,1];S.dir=0;S.groundReturn=null;saySis("飛艦緊急撤離成功，已返回哨站七號。先整備隊伍再出發。",true);ui()}else base()}
 function base(){if(C)return;S.z=0;S.f=1;S.pos=[1,1];S.dir=0;const n=chap();$("m").hidden=1;ui();if(n)book()}
 /* 據點 */
 function shop(){mo(`<h3>🏪 補給站</h3><p>💰${S.gold}　修復針劑 x${S.pot}</p><div class=row><button onclick=buy()>買修復針劑 20 星幣</button></div>`)}
@@ -299,5 +332,5 @@ const IP=flow(),V=Math.max(1,Math.ceil(IP.length/6)),doc=new window.jspdf.jsPDF(
 add(guide(V),1);for(let v=0;v<V;v++){const P=[cov(v,V)];for(let k=0;k<6;k++){const g=IP[v*6+k]||notes();pnum(g,k+2);P.push(g)}P.push(bck());add(sheet(P))}
 await sav("星途小兵錄_摺頁小冊.pdf",doc.output("blob"))}
 try{S=JSON.parse(localStorage.getItem("xb_save"))}catch(e){}
-if(!S||!S.party)S=ns();if(S.dir==null)S.dir=0;if(S.unl==null)S.unl=1;if(S.sisText==null)S.sisText=sisDefault;if(S.sisVoice==null)S.sisVoice=false;ui();
-</script></body></html>
+if(!S||!S.party)S=ns();if(S.dir==null)S.dir=0;if(S.unl==null)S.unl=1;if(S.sisText==null)S.sisText=sisDefault;if(S.sisVoice==null)S.sisVoice=false;if(S.flight==null)S.flight=false;if(S.flightZone==null)S.flightZone=1;if(S.maps==null)S.maps={};ui();
+</script><script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}</script></body></html>
