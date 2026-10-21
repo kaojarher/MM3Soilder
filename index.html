@@ -126,6 +126,21 @@ body.inbattle #l{min-height:2.5em;max-height:4.5em;overflow:hidden;padding:0 4px
 @media(prefers-reduced-motion:reduce){.battle-member.attacking .member-icon,.battle-foe.hit .foe-icon,.battle-foe.attacking .foe-icon{animation:none}}
 
 .sisbox{display:flex;align-items:center;gap:8px;padding:8px;margin-top:7px;border:1px solid #52728d;border-radius:9px;background:linear-gradient(120deg,#172a3d,#101a29);color:#e7f6ff;box-shadow:0 3px 12px #0004}.sisavatar{flex:0 0 38px;height:38px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 25%,#d7f6ff,#4d8eaf 55%,#17354b);border:1px solid #a4e8ff;color:#092033;font-weight:900;font-size:18px}.sisbody{flex:1;min-width:0}.sistitle{font-size:12px;font-weight:800;color:#9de7ff}.sistitle small{font-weight:500;color:#9baec1}.sistext{font-size:12px;line-height:1.35;margin-top:2px}.sisvoice{flex:0 0 auto;padding:5px;font-size:10px;min-height:34px;border-color:#4c7897}
+
+/* v10 iPhone 6 (iOS 12) 戰鬥畫面修正：iOS 12 不支援 inset / clamp() / flex gap / aspect-ratio，改用明確寫法與回退值 */
+#battleLayer{top:0;right:0;bottom:0;left:0;width:100%;height:100%}
+body.inbattle .scene-wrap{height:calc((100vw - 18px)*1.05);min-height:300px;max-height:540px;background:#080e18}
+body.inbattle #scene3d{position:absolute;top:0;left:0;width:100%;height:100%}
+.battle-foes{top:8px;left:4px;right:4px;width:auto}
+.battle-foe{width:44%;max-width:150px;margin:0 3px}
+.battle-foe .foe-icon{font-size:38px;font-size:clamp(30px,9vw,54px)}
+.battle-foe.boss .foe-icon{font-size:50px;font-size:clamp(42px,12vw,68px)}
+.battle-member .member-icon{font-size:28px;font-size:clamp(22px,6vw,36px)}
+@media(max-width:380px){.battle-member .member-icon{font-size:24px}}
+#minimap .g i{font-size:6px;font-size:clamp(5px,1.6vw,8px)}
+.row{gap:0;margin:4px -2px}.row>*{margin:2px}
+#c{gap:0}#c>*{margin:2px}
+body.inbattle #c>*{margin:0}
 </style><script src="jspdf.umd.min.js"></script></head><body><div id="a"><div id="h"></div><div id="v"></div><div id="p"></div><div id="l"></div><div id="c"></div></div><div id="m" hidden></div>
 <script>
 const $=i=>document.getElementById(i),R=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),pk=a=>a[R(0,a.length-1)];
