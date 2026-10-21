@@ -1,0 +1,31 @@
+{
+  "id": "./",
+  "name": "小兵傳奇：Emoji 星途",
+  "short_name": "Emoji星途",
+  "description": "手機優先的星際小隊探索與回合制 RPG。核心遊戲支援離線遊玩。",
+  "lang": "zh-Hant",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0d1420",
+  "theme_color": "#0d1420",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -1,0 +1,303 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d1420">
+
+
+
+
+
+<title>小兵傳奇：Emoji 星途</title>
+<style>
+:root{--bg:#0d1420;--p:#16202f;--ink:#e6edf5;--mut:#8a9bb0;--ln:#2a3a50;--ac:#ffb020;--hp:#e5484d;--u:#070b12;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#eef2f7;--p:#fff;--ink:#17202c;--mut:#5d6b7e;--ln:#cdd6e2;--ac:#a85f00;--u:#cfd8e4}}
+:root[data-theme="dark"]{--bg:#0d1420}
+*{box-sizing:border-box}html,body{margin:0}body{background:var(--bg);color:var(--ink);font:15px/1.5 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
+#a{max-width:560px;margin:0 auto;padding:10px;display:grid;gap:8px}
+#h{background:var(--p);border:1px solid var(--ln);border-radius:8px;padding:6px 10px;font-weight:700;color:var(--ac)}
+#v{background:var(--p);border:1px solid var(--ln);border-radius:8px;padding:8px}
+.g{display:grid;grid-template-columns:repeat(11,1fr);gap:2px}.g i{height:calc((min(100vw,560px) - 58px)/11);display:flex;align-items:center;justify-content:center;font-style:normal;font-size:calc((min(100vw,560px) - 58px)/11*.62);background:var(--bg);border-radius:3px}.g .w{background:var(--ln)}.g .u{background:var(--u)}
+.hub{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+button{font:inherit;color:var(--ink);background:var(--p);border:1px solid var(--ln);border-radius:6px;padding:8px 10px;cursor:pointer}button:hover:not(:disabled){border-color:var(--ac)}button:focus-visible{outline:2px solid var(--ac)}button:disabled{opacity:.4}
+#p{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.pc{background:var(--p);border:1px solid var(--ln);border-radius:6px;padding:4px 6px;font-size:12px}.pc.dn{opacity:.4}.pc i{display:block;height:5px;background:linear-gradient(90deg,var(--hp) var(--w),var(--ln) var(--w));border-radius:3px;margin:2px 0}
+#l{font-size:13px;color:var(--mut);min-height:5.5em}#c{display:flex;flex-wrap:wrap;justify-content:center}#c>*{margin:3px}.pad{display:grid;grid-template-columns:repeat(3,48px);gap:4px}
+#m{position:fixed;top:0;left:0;right:0;bottom:0;background:#000a;display:grid;place-items:center;padding:12px;z-index:9}#m[hidden]{display:none}
+.bx{background:var(--p);border:1px solid var(--ac);border-radius:10px;padding:14px;max-width:520px;width:100%;max-height:86vh;overflow:auto}.bx h3{margin:0 0 8px}.row{display:flex;flex-wrap:wrap;margin:6px -3px}.row>*{margin:3px}.on{border-color:var(--ac)!important;background:var(--bg)}
+.ch p{text-indent:2em;margin:.4em 0}
+
+/* iPhone 6 / legacy iOS Safari compatibility layer */
+html{min-height:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{min-height:100%;min-height:100vh;min-height:100dvh;overscroll-behavior:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button{min-height:40px;touch-action:manipulation;-webkit-appearance:none;appearance:none;line-height:1.35}
+button:active:not(:disabled){transform:translateY(1px);filter:brightness(1.12)}
+#a{width:100%;max-width:560px;min-height:100vh;min-height:100dvh;padding:calc(8px + env(safe-area-inset-top,0px)) 9px calc(10px + env(safe-area-inset-bottom,0px));gap:7px}
+#h{font-size:clamp(13px,3.7vw,16px);line-height:1.4;overflow-wrap:anywhere}
+#v{min-width:0;overflow:hidden}
+.g{gap:2px;grid-template-columns:repeat(11,minmax(0,1fr))}
+.g i{height:calc((min(100vw,560px) - 48px)/11);min-height:18px;font-size:clamp(11px,calc((min(100vw,560px) - 48px)/11*.62),27px);overflow:hidden}
+#p{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+.pc{min-width:0;overflow-wrap:anywhere;font-size:12px;line-height:1.45;padding:5px 7px}
+#l{min-height:3.2em;max-height:7.5em;overflow:auto;overflow-wrap:anywhere;padding:2px 1px}
+#c{gap:4px;align-items:center;padding-bottom:2px}
+#c>*{margin:0}
+.pad{grid-template-columns:repeat(3, minmax(44px,52px));gap:5px}
+.pad button{min-height:44px;font-size:20px}
+#m{padding:calc(8px + env(safe-area-inset-top,0px)) 9px calc(8px + env(safe-area-inset-bottom,0px));overflow-y:auto;-webkit-overflow-scrolling:touch}
+.bx{max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);padding:12px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.bx button{min-height:42px;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.row{gap:4px;margin:6px 0}
+.row>*{margin:0}
+@media(max-width:360px){#a{padding-left:6px;padding-right:6px}.g{gap:1px}.g i{height:calc((100vw - 28px)/11);font-size:calc((100vw - 28px)/11*.58)}.pc{font-size:11px}.bx{padding:10px}}
+@media(min-width:561px){#a{margin:0 auto}.g i{height:calc((560px - 48px)/11)}}
+@media(orientation:landscape) and (max-height:430px){#a{min-height:100vh;padding-top:4px;padding-bottom:4px;gap:4px}#l{min-height:2em;max-height:3.5em}.bx{max-height:calc(100vh - 16px);padding:9px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+
+/* First-person pseudo-3D exploration view: lightweight for iPhone 6 */
+#scene3d{display:block;width:100%;height:auto;aspect-ratio:16/10;border:1px solid #38516d;border-radius:8px;background:#080e18;box-shadow:inset 0 0 22px #000;touch-action:manipulation}
+.scenehead{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:12px;color:var(--mut);margin:0 2px 5px}
+.scenehud{display:flex;justify-content:space-between;gap:6px;font-size:11px;color:#b9d7ef;margin-top:4px}
+#minimap{margin-top:8px;opacity:.85}
+#minimap .g i{height:calc((min(100vw,560px) - 48px)/22);font-size:clamp(7px,calc((min(100vw,560px) - 48px)/22*.62),13px)}
+.pad3d{display:grid;grid-template-columns:repeat(3,minmax(44px,1fr));gap:5px;width:min(100%,250px)}
+.pad3d button{min-height:44px;font-size:18px;background:linear-gradient(145deg,#263c55,#111c2b);border-color:#496987;box-shadow:0 3px 0 #060b12}
+
+
+/* Compact tactical minimap overlay above the 3D viewport */
+.scene-wrap{position:relative;isolation:isolate;overflow:hidden;border-radius:8px}
+#scene3d{position:relative;z-index:1}
+#minimap{position:absolute;z-index:3;top:8px;right:8px;width:min(31%,132px);min-width:96px;margin:0;padding:5px;background:rgba(5,12,22,.78);border:1px solid rgba(143,234,255,.65);border-radius:7px;box-shadow:0 3px 14px #0008;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:1}
+#minimap .maptop{display:flex;align-items:center;justify-content:space-between;gap:3px;margin-bottom:4px;color:#dff7ff;font-size:10px;line-height:1.2}
+#minimap .maptop button{min-height:22px;padding:1px 5px;font-size:10px;line-height:1;background:#162b3d;border-color:#527a96;border-radius:4px}
+#minimap .g{grid-template-columns:repeat(11,minmax(0,1fr));gap:1px}
+#minimap .g i{width:100%;height:auto;aspect-ratio:1;min-height:0;padding:0;border-radius:1px;font-size:clamp(5px,1.6vw,8px);line-height:1;background:#263b4c}
+#minimap .g .w{background:#71869a}
+#minimap .g .u{background:#070b12}
+#minimap .g i:not(.w):not(.u){background:#244c61}
+#minimap .g i:empty{color:transparent}
+#minimap.map-hidden .g{display:none}
+#minimap.map-hidden{width:auto;min-width:0;padding:4px 5px}
+#minimap.map-hidden .maptop{margin:0}
+@media(max-width:360px){#minimap{top:6px;right:6px;width:31%;min-width:90px;padding:4px}#minimap .maptop{font-size:9px}}
+
+
+.move-actions{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;width:100%}
+.move-actions button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;min-width:0;min-height:46px;padding:4px 1px;font-size:19px;line-height:1.05;background:linear-gradient(145deg,#263c55,#111c2b);border-color:#496987;box-shadow:0 3px 0 #060b12}
+.move-actions small{font-size:10px;font-weight:500;line-height:1.2;margin-top:3px;color:#c4d5e7}
+@media(max-width:380px){.move-actions{gap:3px}.move-actions button{font-size:17px;min-height:44px}.move-actions small{font-size:9px}}
+/* Battle/movement presentation inspired by 凡人修仙傳_PWA_iPhone6版: viewport combat, compact HUD, large touch controls */
+.scene-wrap{position:relative}
+#battleLayer{position:absolute;z-index:4;inset:0;display:none;pointer-events:none;background:linear-gradient(180deg,rgba(4,8,16,.15),rgba(4,8,16,.08) 48%,rgba(4,8,16,.72))}
+body.inbattle #battleLayer{display:block}
+body.inbattle #minimap{display:none}
+body.inbattle #p{display:none}
+.battle-foes{position:absolute;top:8px;left:4px;right:4px;display:flex;align-items:flex-start;justify-content:center;gap:5px;pointer-events:auto}
+.battle-foe{width:min(44%,150px);min-width:0;padding:4px;background:rgba(9,16,27,.86);border:1px solid #526a83;border-radius:8px;color:#f0f6ff;text-align:center;box-shadow:0 3px 8px #0008;cursor:pointer;touch-action:manipulation}
+.battle-foe.selected{border:2px solid #ffd24a;box-shadow:0 0 12px #ffcf45aa}
+.battle-foe .foe-icon{font-size:clamp(30px,9vw,54px);line-height:1.05;filter:drop-shadow(0 3px 3px #000a)}
+.battle-foe.boss .foe-icon{font-size:clamp(42px,12vw,68px)}
+.battle-foe .foe-name{font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.battle-foe .hp-track,.battle-member .hp-track,.battle-member .mp-track{height:5px;background:#263449;border-radius:4px;overflow:hidden;margin-top:3px}
+.battle-foe .hp-fill,.battle-member .hp-fill,.battle-member .mp-fill{height:100%;display:block;background:#e5484d}
+.battle-member .mp-fill{background:#43b8ee}
+.battle-party{position:absolute;left:4px;right:4px;bottom:6px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px;align-items:end;pointer-events:auto}
+.battle-member{min-width:0;padding:3px 3px 4px;border:1px solid #526a83;border-radius:6px;background:rgba(8,15,26,.9);color:#eef5ff;text-align:center}
+.battle-member.active{border-color:#ffbf36;box-shadow:0 0 8px #ffbf3670;transform:translateY(-3px)}
+.battle-member.dead{opacity:.42;filter:grayscale(1)}
+.battle-member .member-icon{font-size:clamp(22px,6vw,36px);line-height:1.05;filter:drop-shadow(0 2px 2px #000)}
+.battle-member .member-name{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.battle-member .member-stats{font-size:9px;color:#c4d5e7;line-height:1.25}
+.battle-member.attacking .member-icon{animation:xbLunge .48s ease-in-out}
+.battle-foe.hit .foe-icon{animation:xbHit .32s linear}
+.battle-foe.attacking .foe-icon{animation:xbEnemyLunge .48s ease-in-out}
+@keyframes xbLunge{0%,100%{transform:translate(0,0) scale(1)}35%,65%{transform:translateY(-8px) scale(1.22)}}
+@keyframes xbEnemyLunge{0%,100%{transform:translate(0,0) scale(1)}40%,65%{transform:translateY(20px) scale(1.15)}}
+@keyframes xbHit{0%,100%{transform:translateX(0);filter:drop-shadow(0 0 0 #f33)}25%,75%{transform:translateX(-4px);filter:drop-shadow(0 0 8px #f33)}50%{transform:translateX(4px);filter:drop-shadow(0 0 8px #f33)}}
+.battle-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;width:100%}
+.battle-actions button{min-height:42px;padding:6px 4px;font-size:13px;border-radius:8px;background:linear-gradient(145deg,#263c55,#111c2b);border-color:#496987;box-shadow:0 2px 0 #060b12}
+.battle-actions button.primary{border-color:#ffbf36;color:#ffe3a0}
+.battle-turn{width:100%;text-align:left;font-size:12px;color:var(--mut);padding:2px 4px}
+body.inbattle #c{display:grid;grid-template-columns:1fr;gap:4px}
+body.inbattle #l{min-height:2.5em;max-height:4.5em;overflow:hidden;padding:0 4px;font-size:11px}
+@media(max-width:380px){.battle-member .member-stats{font-size:8px}.battle-member .member-icon{font-size:24px}.battle-foe .foe-name{font-size:10px}.battle-actions button{font-size:12px;min-height:40px}}
+@media(prefers-reduced-motion:reduce){.battle-member.attacking .member-icon,.battle-foe.hit .foe-icon,.battle-foe.attacking .foe-icon{animation:none}}
+
+.sisbox{display:flex;align-items:center;gap:8px;padding:8px;margin-top:7px;border:1px solid #52728d;border-radius:9px;background:linear-gradient(120deg,#172a3d,#101a29);color:#e7f6ff;box-shadow:0 3px 12px #0004}.sisavatar{flex:0 0 38px;height:38px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 25%,#d7f6ff,#4d8eaf 55%,#17354b);border:1px solid #a4e8ff;color:#092033;font-weight:900;font-size:18px}.sisbody{flex:1;min-width:0}.sistitle{font-size:12px;font-weight:800;color:#9de7ff}.sistitle small{font-weight:500;color:#9baec1}.sistext{font-size:12px;line-height:1.35;margin-top:2px}.sisvoice{flex:0 0 auto;padding:5px;font-size:10px;min-height:34px;border-color:#4c7897}
+</style><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script></head><body><div id="a"><div id="h"></div><div id="v"></div><div id="p"></div><div id="l"></div><div id="c"></div></div><div id="m" hidden></div>
+<script>
+const $=i=>document.getElementById(i),R=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),pk=a=>a[R(0,a.length-1)];
+const CL=[["重甲兵","岩崢","💂",44,6,"壓制砲擊"],["護盾兵","安瀾","🛡️",40,5,"掩護"],["電磁術士","雷馳","⚡",26,7,"電磁風暴"],["光刃劍士","霜刃","⚔️",32,8,"光刃連斬"],["潛行特工","夜梭","🕵️",28,8,"背刺"],["格鬥兵","烈風","🥊",36,7,"連擊"],["軍醫","蘇茗","💊",28,4,"修復針劑"],["通訊官","陸弦","📡",26,4,"戰術增幅"]];
+const ZN=["哨站七號","灰塵礦星","赤焰戰區","星核要塞"];
+const zoneName=z=>z===0?ZN[0]:(ZN[z]||`${["霜環","雷暴","幽影","晶海","熔爐","天穹","深淵","蒼穹","星塵","量子"][((z-4)%10+10)%10]}遠征戰區 ${z-3}`);
+const bossFor=d=>{const b=BO[(d-1)%BO.length];return d<=BO.length?b:[`${b[0]}・第${Math.floor((d-1)/BO.length)+1}型`,b[1]]};
+const enemiesFor=z=>EN[z]||["量子獵犬🐺","裂隙機兵🤖","星塵掠奪者🛸","深空寄生體👾","電弧獸⚡","虛空蜂群🪲"];
+const sisDefault="新兵，這裡是電腦姐姐。記得留意小隊生命值；發現首領標記就先整備再接戰。";
+function saySis(t,voice=false){if(!S)return;S.sisText=t;const el=$("sisText");if(el)el.textContent=t;if(voice&&S.sisVoice&&window.speechSynthesis){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="zh-TW";u.rate=1.02;u.pitch=1.12;speechSynthesis.speak(u)}catch(e){}}}
+function toggleSisVoice(){S.sisVoice=!S.sisVoice;sv();ui();if(C)cr();saySis(S.sisVoice?"語音回報已開啟。接下來我會在重要戰況時提醒你。":"語音回報已關閉，文字提示仍會顯示。",S.sisVoice)}
+function sisBox(){return `<div class="sisbox"><div class="sisavatar">姊</div><div class="sisbody"><div class="sistitle">電腦姐姐 <small>・戰術支援中</small></div><div id="sisText" class="sistext">${String(S.sisText||sisDefault).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}</div></div><button class="sisvoice" onclick="toggleSisVoice()">${S.sisVoice?"🔊 語音開啟":"🔈 語音關閉"}</button></div>`;}
+const EN=[[],["腐蝕蟲🐌","裂顎獸🦎","毒囊飛蟲🦟","礦洞蛛🕷️"],["失控礦機🤖","掠奪無人機🛸","荒原狼蜥🐺","棘刺巨蠍🦂"],["暗影潛行者👤","赤焰機甲兵🔥","電弧炮塔🗼","虛空幼體👾"]];
+const BO=[["蟲巢母皇","🐛"],["鋼骸巨像","🗿"],["赤焰統領","🌋"],["叛軍教官","🎖️"],["虛空領主","🌀"],["核心意識","🧠"]];
+let S,C=null;
+const nm=m=>CL[m.c][2]+CL[m.c][1],pn=m=>CL[m.c][1],mh=m=>CL[m.c][3]+(m.l-1)*6,at=m=>CL[m.c][4]+Math.floor((m.l-1)*1.5)+S.w*2;
+const mk=(c,l=1)=>{const m={c,l,xp:0,mp:12};m.mh=mh(m);m.hp=m.mh;return m};
+const ne=()=>({k:0,b:0,c:0,d:0,lv:0,g:0,n:[],bo:[],zs:{},fs:[]});
+function ns(keep){const o={gold:60,w:0,pot:3,ng:0,party:[mk(0),mk(1)],pool:[2,3,4,5,6,7],z:0,f:1,maps:{},unl:1,nev:ne(),nov:[],pos:[1,1],dir:0,log:["歡迎來到哨站七號，新兵。"]};if(keep){o.ng=keep.ng+1;o.party=keep.party;o.gold=keep.gold;o.w=keep.w;o.nov=keep.nov;o.pool=keep.pool;o.log=["重啟戰線：敵人變得更強了。"]}return o}
+const log=x=>{S.log.push(x);if(S.log.length>30)S.log.shift();if(C&&C.rec)C.rec.push(x)};
+function sv(){try{localStorage.setItem("xb_save",JSON.stringify(S))}catch(e){}}
+function mo(h,nc){$("m").innerHTML=`<div class=bx>${h}${nc?"":"<div class=row><button onclick=cl()>關閉</button></div>"}</div>`;$("m").hidden=0}
+const cl=()=>{if(C)return;$("m").hidden=1;ui()};
+function gen(){const W=11,g=[...Array(W)].map(()=>Array(W).fill(1)),st=[[1,1]];g[1][1]=0;
+while(st.length){const[x,y]=st[st.length-1],d=[[2,0],[-2,0],[0,2],[0,-2]].sort(()=>Math.random()-.5).filter(([a,b])=>x+a>0&&x+a<W-1&&y+b>0&&y+b<W-1&&g[y+b][x+a]);if(!d.length){st.pop();continue}const[a,b]=d[0];g[y+b/2][x+a/2]=0;g[y+b][x+a]=0;st.push([x+a,y+b])}
+for(let i=0;i<12;i++)g[R(1,9)][R(1,9)]=0;
+const f=[];g.forEach((r,y)=>r.forEach((v,x)=>{if(!v&&x+y>4&&!(x==9&&y==9))f.push([x,y])}));f.sort(()=>Math.random()-.5);
+const E=[{x:9,y:9,t:"b"}];for(let i=0;i<6;i++){const[p,q]=f.pop();E.push({x:p,y:q,t:"m"})}for(let i=0;i<3;i++){const[p,q]=f.pop();E.push({x:p,y:q,t:"c"})}
+return{g,E,seen:g.map(r=>r.map(()=>0))}}
+const gm=()=>S.maps[S.z+":"+S.f]||(S.maps[S.z+":"+S.f]=gen());
+function mapH(){const M=gm(),[px,py]=S.pos;let h='<div class=g>';for(let y=0;y<11;y++)for(let x=0;x<11;x++){const near=Math.abs(x-px)<3&&Math.abs(y-py)<3;if(near)M.seen[y][x]=1;let k="",c="";if(!M.seen[y][x])k="u";else if(M.g[y][x])k="w";else{const e=M.E.find(o=>o.x==x&&o.y==y);c=x==px&&y==py?"👨‍🚀":e?(e.t=="b"?bossFor(dep())[1]:e.t=="c"?"📦":near?"❗":""):""}h+=`<i class="${k}">${c}</i>`}return h+"</div>"}
+const DIRS=[[0,-1],[1,0],[0,1],[-1,0]];
+function turn3d(n){S.dir=((S.dir??0)+n+4)%4;ui()}
+function step3d(n){const d=DIRS[((S.dir??0)+4)%4];const dx=d[0]*n,dy=d[1]*n;mv(dx,dy)}
+function scene3d(){const M=gm(),[px,py]=S.pos,dir=((S.dir??0)+4)%4,ctx=$('scene3d').getContext('2d'),w=$('scene3d').width,h=$('scene3d').height;
+ctx.clearRect(0,0,w,h);const sky=ctx.createLinearGradient(0,0,0,h/2);sky.addColorStop(0,'#07101f');sky.addColorStop(1,'#23415c');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h/2);
+const floor=ctx.createLinearGradient(0,h/2,0,h);floor.addColorStop(0,'#26384a');floor.addColorStop(1,'#080d15');ctx.fillStyle=floor;ctx.fillRect(0,h/2,w,h/2);
+// horizon and glowing floor guides
+ctx.strokeStyle='#41647c';ctx.lineWidth=1;for(let i=1;i<7;i++){let y=h/2+(h/2)*i/7;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke()}for(let i=0;i<9;i++){ctx.beginPath();ctx.moveTo(w/2,h/2);ctx.lineTo(i*w/8,h);ctx.stroke()}
+const rayCount= Math.min(120,w),fov=Math.PI/2.8;
+for(let i=0;i<rayCount;i++){const ang=(dir*Math.PI/2)+((i/(rayCount-1))-.5)*fov;let dist=.03,hit=false,tx=px+.5,ty=py+.5,wall=0;
+while(dist<8&&!hit){dist+=.035;tx=px+.5+Math.sin(ang)*dist;ty=py+.5-Math.cos(ang)*dist;const cx=Math.floor(tx),cy=Math.floor(ty);if(cx<0||cy<0||cx>=11||cy>=11||M.g[cy][cx]){hit=true;wall=1}}
+const corrected=dist*Math.cos(((i/(rayCount-1))-.5)*fov),hh=Math.min(h*.94,h/(corrected+.12)*.62),x=i*w/rayCount,y=(h-hh)/2;
+let shade=Math.max(22,115-corrected*13);ctx.fillStyle=`rgb(${Math.floor(shade*.58)},${Math.floor(shade*.76)},${Math.floor(shade)})`;ctx.fillRect(x,y,w/rayCount+1,hh);ctx.fillStyle='rgba(120,190,230,.18)';ctx.fillRect(x,y,w/rayCount+1,2);}
+// nearest visible point-of-interest indicator
+let best=null,bd=99;for(const e of M.E){const dx=e.x-px,dy=e.y-py,d=Math.hypot(dx,dy);if(d<bd){bd=d;best=e}}
+if(best&&bd<5){const dx=best.x-px,dy=best.y-py,ang=Math.atan2(dx,-dy)-dir*Math.PI/2;let rel=((ang+Math.PI*3)%(Math.PI*2))-Math.PI;if(Math.abs(rel)<fov*.62){const ex=w/2+Math.tan(rel)*w*.55,ey=h*.55,sz=Math.max(12,Math.min(38,52/(bd+.25)));ctx.font=`${sz}px sans-serif`;ctx.textAlign='center';ctx.fillText(best.t==='b'?'👹':best.t==='c'?'📦':'❗',ex,ey);ctx.textAlign='left'}}
+// reticle and direction compass
+ctx.strokeStyle='#8feaff';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(w/2-7,h/2);ctx.lineTo(w/2+7,h/2);ctx.moveTo(w/2,h/2-7);ctx.lineTo(w/2,h/2+7);ctx.stroke();ctx.fillStyle='#e3f5ff';ctx.font='12px sans-serif';ctx.fillText(['北 ↑','東 →','南 ↓','西 ←'][dir],8,17);
+}
+function toggleMap(){const m=$('minimap');if(!m)return;m.classList.toggle('map-hidden');const b=m.querySelector('button');if(b)b.textContent=m.classList.contains('map-hidden')?'+':'−'}
+function handleSceneClick(ev){
+ if(C)return;
+ const canvas=$('scene3d');if(!canvas)return;
+ const r=canvas.getBoundingClientRect(),x=(ev.clientX-r.left)/r.width,y=(ev.clientY-r.top)/r.height;
+ // Bottom-left/right corners act as on-screen turning zones; the road/center advances.
+ if(y>=.68&&x<=.34){turn3d(-1);return}
+ if(y>=.68&&x>=.66){turn3d(1);return}
+ step3d(1);
+}
+function refreshScene(){const canvas=$('scene3d');if(canvas){scene3d();canvas.onclick=handleSceneClick;canvas.style.cursor='pointer'}}
+const hubH=()=>`${sisBox()}<div class=hub><button onclick=shop()>🏪 補給站</button><button onclick=hire()>📋 招募艙</button><button onclick=inn()>🏥 醫療艙</button><button onclick=forge()>🔧 兵工廠</button><button onclick=gate()>🌀 躍遷門</button><button onclick=book()>📖 小說（${S.nov.length}集）</button></div><p style="color:var(--mut)">前線星港。整備好隊伍，從躍遷門出發。休眠艙裡的隊員會原地待命。</p>`;
+function ui(){document.body.classList.toggle("inbattle",!!C);$("p").hidden=!!C;sv();$("h").textContent=`${zoneName(S.z)}${S.z?" 第"+S.f+"層":""}　💰${S.gold}　💉${S.pot}　武器+${S.w}${S.ng?"　周目"+(S.ng+1):""}`;
+$("v").innerHTML=S.z?`<div class="scenehead"><b>第一人稱 3D 探索</b><span>方向感測：${["北","東","南","西"][((S.dir??0)+4)%4]}</span></div><div class="scene-wrap"><canvas id="scene3d" width="480" height="300" aria-label="3D迷宮視角"></canvas><div id="battleLayer" aria-label="戰鬥畫面"></div><div id="minimap"><div class="maptop"><b>2D 戰術地圖</b><button type="button" onclick="toggleMap()" aria-label="收合或展開2D地圖">−</button></div>${mapH()}</div></div><div class="scenehud"><span>點擊前方路面前進；畫面左下左轉、右下右轉</span><span>${S.pos[0]+1},${S.pos[1]+1}</span></div>${sisBox()}`:hubH();
+$("p").innerHTML=S.party.map(m=>`<div class="pc ${m.hp?"":"dn"}"><b>${nm(m)}</b> Lv${m.l}<i style="--w:${m.hp/m.mh*100}%"></i>${m.hp}/${m.mh} ⚡${m.mp}</div>`).join("");
+$("l").innerHTML=S.log.slice(-5).map(x=>`<div>${x}</div>`).join("");
+$("c").innerHTML=(S.z?`<div class="move-actions"><button onclick="turn3d(-1)" aria-label="左轉">↶<small>左轉</small></button><button onclick="step3d(1)" aria-label="向前">▲<small>前進</small></button><button onclick="turn3d(1)" aria-label="右轉">↷<small>右轉</small></button><button onclick="step3d(-1)" aria-label="後退">▼<small>後退</small></button><button onclick="base()" aria-label="返航">⌂<small>返航</small></button><button onclick="pot()" aria-label="使用修復針劑">💉<small>補給</small></button></div>`:"")+`<button onclick=book()>📖</button><button onclick=rst()>重新開始</button>`;
+refreshScene();
+}
+function mv(dx,dy){if(C||!$("m").hidden||!S.z)return;const M=gm(),x=S.pos[0]+dx,y=S.pos[1]+dy;if(x<0||y<0||x>=11||y>=11||M.g[y][x]){if(dx||dy){log("前方是牆壁，請轉向後再前進。");ui()}return}const e=M.E.find(o=>o.x==x&&o.y==y);
+if(e){if(e.t==="b")saySis("注意！前方偵測到首領反應。先鎖定目標，善用技能與修復針劑。",true);else if(e.t==="m")saySis("敵人接近！先觀察敵方血量，姐姐建議集中火力逐一擊破。",true);if(e.t=="c"){M.E=M.E.filter(o=>o!==e);S.nev.c++;if(Math.random()<.2){e.t="x";log("擬態補給箱！");return fight(e)}const g=Math.round(R(30,80)*(1+.1*dep()));S.gold+=g;S.nev.g+=g;log(`打開補給箱，獲得 ${g} 星幣。`)}else return fight(e)}else {S.pos=[x,y];if(Math.random()<.22)saySis(pk(["路線暫時安全，繼續前進吧。","姐姐提醒：轉角可能有敵人，記得查看右上角戰術地圖。","小隊狀態正常。保持隊形，別離補給點太遠。"]),false)}ui()}
+addEventListener("keydown",e=>{const d={ArrowUp:[0,-1],w:[0,-1],ArrowDown:[0,1],s:[0,1],ArrowLeft:[-1,0],a:[-1,0],ArrowRight:[1,0],d:[1,0]}[e.key];if(d){e.preventDefault();if(S.z){if(e.key==="ArrowUp"||e.key==="w")step3d(1);else if(e.key==="ArrowDown"||e.key==="s")step3d(-1);else if(e.key==="ArrowLeft"||e.key==="a")turn3d(-1);else if(e.key==="ArrowRight"||e.key==="d")turn3d(1)}else mv(...d)}else if(S.z&&(e.key==="q"||e.key==="Q"||e.key==="e"||e.key==="E")){e.preventDefault();turn3d(e.key.toLowerCase()==="q"?-1:1)}});
+const dep=()=>(S.z-1)*2+S.f;
+function pot(){if(C)return;const t=S.party.filter(m=>m.hp>0).sort((a,b)=>a.hp/a.mh-b.hp/b.mh)[0];if(!S.pot||!t||t.hp==t.mh)return log("現在不需要使用針劑。"),ui();S.pot--;t.hp=Math.min(t.mh,t.hp+25);log(`${nm(t)}注射修復針劑。`);ui()}
+/* 戰鬥 */
+const rf=d=>[pk(enemiesFor(S.z)),14+d*9+R(0,6),4+d*2];
+function fight(e){const d=dep(),sc=1+.35*S.ng,ac=1+.25*S.ng,F=(n,h,a)=>({n,hp:Math.round(h*sc),mh:Math.round(h*sc),a:Math.round(a*ac)});let f=[];
+if(e.t=="b"){const b=bossFor(d);f.push(F(b[1]+b[0],70+d*30,7+d*2.5));f.push(F(...rf(d)))}else if(e.t=="x")f.push(F("📦擬態補給箱",30+d*10,6+d*2));else for(let i=R(1,2);i--;)f.push(F(...rf(d)));
+C={foes:f,i:0,t:0,b:1,sh:0,e,rec:[`遭遇${f.map(x=>x.n).join("與")}。`]};saySis(`戰鬥開始！${f.map(x=>x.n).join("、")}已進入視野。`,true);cr()}
+function rcd(res){const ev=S.nev;ev.fs=ev.fs||[];const r=C.rec;ev.fs.push({z:zoneName(S.z),bs:C.e.t=="b",res,lines:r.length>16?[...r.slice(0,6),"……",...r.slice(-10)]:r.slice()});if(ev.fs.length>6)ev.fs.shift()}
+const cur=()=>S.party.find((m,i)=>i>=C.i&&m.hp>0),tg=()=>{if(!C.foes[C.t]||C.foes[C.t].hp<=0)C.t=C.foes.findIndex(f=>f.hp>0);return C.t};
+function cr(){
+ if(!C)return;const m=cur(),t=tg();
+ document.body.classList.add("inbattle");$("m").hidden=1;
+ const layer=$("battleLayer");if(!layer)return;
+ layer.innerHTML=`<div class="battle-foes">${C.foes.map((f,i)=>`<button class="battle-foe ${i===t?"selected":""} ${f.boss?"boss":""} ${C.anim&&C.anim.kind==="hit"&&C.anim.fi===i?"hit":""} ${C.anim&&C.anim.kind==="enemy"&&C.anim.fi===i?"attacking":""}" ${f.hp<=0?"disabled":""} onclick="C.t=${i};cr()" aria-label="鎖定目標 ${f.n}"><div class="foe-icon">${f.n.match(/[^\u4e00-\u9fffA-Za-z0-9]/u)?.[0]||"👾"}</div><div class="foe-name">${f.n}</div><div class="hp-track"><i class="hp-fill" style="width:${Math.max(0,f.hp)/f.mh*100}%"></i></div><div class="member-stats">${Math.max(0,f.hp)} / ${f.mh}</div></button>`).join("")}</div>
+ <div class="battle-party">${S.party.map((p,i)=>`<div class="battle-member ${i===C.i?"active":""} ${p.hp<=0?"dead":""} ${C.anim&&C.anim.kind==="attack"&&C.anim.pi===i?"attacking":""}"><div class="member-icon">${p.hp?CL[p.c][2]:"💀"}</div><div class="member-name">${pn(p)} Lv${p.l}</div><div class="hp-track"><i class="hp-fill" style="width:${Math.max(0,p.hp)/p.mh*100}%"></i></div><div class="member-stats">HP ${Math.max(0,p.hp)}/${p.mh}</div><div class="mp-track"><i class="mp-fill" style="width:${p.mp/12*100}%"></i></div><div class="member-stats">⚡ ${p.mp}/12</div></div>`).join("")}</div>`;
+ const animNow=C.anim;if(animNow)setTimeout(()=>{if(C&&C.anim===animNow)C.anim=null},550);
+ $("l").innerHTML=S.log.slice(-3).map(x=>`<div>${x}</div>`).join("");
+ $("c").innerHTML=`<div class="battle-turn">⚔️ 輪到 <b>${nm(m)}</b>　${C.b>1?"✨ 戰術增幅中":"選擇敵方目標後出招"}</div><div class="battle-actions"><button class="primary" onclick="ac('a')">⚔️ 普通攻擊</button><button ${m.mp<4?"disabled":""} onclick="ac('s')">✨ ${CL[m.c][5]}<br>（消耗 4 能量）</button><button ${S.pot?"":"disabled"} onclick="ac('p')">💉 修復針劑 ×${S.pot}</button><button onclick="ac('r')">↩️ 撤退</button><button onclick="C.t=(C.t+1)%C.foes.length;tg();cr()">🎯 切換目標</button><button onclick="log('戰術：先集中攻擊已鎖定目標。');cr()">📋 戰術提示</button></div>`;
+}
+function hurt(f,n){f.hp=Math.max(0,f.hp-n)}
+function ac(k){const m=cur(),f=C.foes[tg()],rn=(x=1)=>Math.round((at(m)+R(-1,3))*C.b*x);let s="";
+if(k=="a"){const n=rn();hurt(f,n);s=`${nm(m)}攻擊${f.n}，造成 ${n}。`}
+else if(k=="s"){m.mp-=4;const c=m.c;
+if(c==6){const t=S.party.filter(x=>x.hp>0).sort((a,b)=>a.hp/a.mh-b.hp/b.mh)[0],h=18+m.l*2;t.hp=Math.min(t.mh,t.hp+h);s=`${nm(m)}替${pn(t)}回復 ${h} 生命。`}
+else if(c==7){C.b=1.3;s=`${nm(m)}調整頻道，全隊戰力提升。`}
+else if(c==1){C.sh=1;s=`${nm(m)}舉盾掩護，本回合受傷減半。`}
+else if(c==2){C.foes.forEach(x=>x.hp&&hurt(x,rn(.9)));s=`${nm(m)}釋放電磁風暴，全體受創。`}
+else if(c==5){const a=rn(),b=rn();hurt(f,a+b);s=`${nm(m)}連擊${f.n}，共 ${a+b}。`}
+else{const n=rn([1.8,0,0,2,2.2][c]);hurt(f,n);s=`${nm(m)}施展${CL[c][5]}，造成 ${n}。`}}
+else if(k=="p"){S.pot--;const t=S.party.filter(x=>x.hp>0).sort((a,b)=>a.hp/a.mh-b.hp/b.mh)[0];t.hp=Math.min(t.mh,t.hp+25);s=`${nm(m)}替${pn(t)}注射針劑。`}
+else if(k=="r"){if(C.e.t=="b"||Math.random()>.5){s="撤退失敗！"}else{log("全隊成功撤退。");rcd("退");C=null;$("m").hidden=1;S.nev.n.push("撤退");return ui()}}
+
+if(k==="a"||k==="s"){C.anim={kind:"attack",pi:S.party.indexOf(m),fi:C.foes.indexOf(f)};if(f.hp<=0)C.anim={kind:"hit",fi:C.foes.indexOf(f)}}
+else if(k==="p")C.anim=null;
+log(s);C.i++;step()}
+function step(){if(C.foes.every(f=>f.hp<=0))return win();if(S.party.some((m,i)=>i>=C.i&&m.hp>0))return cr();
+C.foes.filter(f=>f.hp>0).forEach((f,fi)=>{const al=S.party.filter(m=>m.hp>0);if(!al.length)return;const t=pk(al);let n=Math.max(1,f.a+R(-2,2));if(C.sh)n=Math.ceil(n/2);t.hp=Math.max(0,t.hp-n);C.anim={kind:"enemy",fi,pi:S.party.indexOf(t)};log(`${f.n}攻擊${nm(t)}，${n} 傷害。`);saySis(`${nm(t)}受到 ${n} 點傷害。請留意隊員生命值。`,false)});
+C.sh=0;S.party.forEach(m=>{if(m.hp>0)m.mp=Math.min(12,m.mp+1)});if(S.party.every(m=>m.hp<=0))return lose();C.i=0;cr()}
+function win(){let nextFloor=false;const f=C.foes,g=f.reduce((s,x)=>s+R(10,25)+x.mh,0),xp=Math.round(f.reduce((s,x)=>s+x.mh,0)/2),e=C.e,ev=S.nev;S.gold+=g;ev.g+=g;ev.k+=f.length;f.forEach(x=>{const n=x.n.replace(/[^\u4e00-\u9fa5]/g,"");if(!ev.n.includes(n))ev.n.push(n)});
+if(Math.random()<.25){S.pot++;log("掉落一支修復針劑。")}
+S.party.forEach(m=>{if(m.hp<=0)return;m.xp+=xp;while(m.l<30&&m.xp>=m.l*30){m.xp-=m.l*30;m.l++;m.mh=mh(m);m.hp=Math.min(m.mh,m.hp+10);m.mp=12;ev.lv++;log(`${nm(m)}升到 Lv${m.l}！`)}});
+log(`勝利！獲得 ${g} 星幣、${xp} 戰功。`);saySis(`漂亮！本場獲得 ${g} 星幣與 ${xp} 戰功。姐姐會繼續監控前方威脅。`,true);rcd("勝");const M=gm();M.E=M.E.filter(o=>o!==e);C=null;$("m").hidden=1;
+if(e.t=="b"){const d=dep();ev.b++;ev.bo.push(bossFor(d)[0]);saySis(`首領已被擊敗！這只是第 ${d} 次首領戰。下一個戰區已在躍遷圖上標記。`,true);if(S.f==1){S.f=2;S.pos=[1,1];S.dir=0;nextFloor=true;log("擊敗首領，通往下一層的艙門開啟。")}else{const clearedZone=S.z;S.unl=Math.max(S.unl,clearedZone+1);log(`${zoneName(clearedZone)}肅清完畢，新的躍遷座標解鎖。`);base();const nextZone=clearedZone+1;if(true){mo(`<h3>🚀 戰區攻略完成！</h3><p>你已完成 <b>${zoneName(clearedZone)}</b> 的兩層戰鬥。</p><p>新戰區 <b>${zoneName(nextZone)}</b> 已解鎖，點擊下方按鈕直接前往新戰區第一層。</p><div class=row><button onclick="go(${nextZone})">前往 ${zoneName(nextZone)}</button><button onclick="cl()">稍後返回星港</button></div>`,1)}return}}ui();if(nextFloor)mo(`<h3>🎉 第一層攻略完成！</h3><p>首領已擊敗，已自動進入 <b>${zoneName(S.z)}・第 2 層</b>。</p><p>新的迷宮已生成，請從起點繼續探索，尋找下一層首領。</p><div class=row><button onclick="cl()">前往第 2 層</button></div>`,1)}
+function lose(){const ev=S.nev;rcd("敗");ev.d++;S.gold=Math.floor(S.gold*.7);S.party.forEach(m=>{m.hp=Math.ceil(m.mh*.3);m.mp=6});C=null;log("全隊倒下，被緊急撈回星港，損失 30% 星幣。");$("m").hidden=1;base()}
+function base(){if(C)return;S.z=0;S.f=1;S.pos=[1,1];S.dir=0;const n=chap();$("m").hidden=1;ui();if(n)book()}
+/* 據點 */
+function shop(){mo(`<h3>🏪 補給站</h3><p>💰${S.gold}　修復針劑 x${S.pot}</p><div class=row><button onclick=buy()>買修復針劑 20 星幣</button></div>`)}
+function buy(){if(S.gold<20)return;S.gold-=20;S.pot++;ui();shop()}
+function inn(){mo(`<h3>🏥 醫療艙</h3><p>全隊完全恢復並復活，費用 10 星幣。</p><div class=row><button ${S.gold<10?"disabled":""} onclick=heal()>治療</button></div>`)}
+function heal(){S.gold-=10;S.party.forEach(m=>{m.hp=m.mh;m.mp=12});log("全隊恢復。");ui();inn()}
+function hire(){mo(`<h3>📋 招募艙</h3><p>每位 50 星幣（隊伍 ${S.party.length}/8）</p><div class=row>${S.pool.map(c=>`<button ${S.gold<50||S.party.length>=8?"disabled":""} onclick="hr(${c})">${CL[c][2]}${CL[c][1]}（${CL[c][0]}）</button>`).join("")||"沒有可招募的隊員。"}</div>`)}
+function hr(c){S.gold-=50;S.pool=S.pool.filter(x=>x!=c);const l=Math.max(1,Math.round(S.party.reduce((s,m)=>s+m.l,0)/S.party.length)-1);S.party.push(mk(c,l));log(`${CL[c][1]}加入小隊。`);ui();hire()}
+function forge(){const p=40*(S.w+1);mo(`<h3>🔧 兵工廠</h3><p>全隊武器 +${S.w}，每級攻擊 +2（上限 +10）。</p><div class=row><button ${S.gold<p||S.w>=10?"disabled":""} onclick=up()>強化 ${p} 星幣</button></div>`)}
+function up(){S.gold-=40*(S.w+1);S.w++;ui();forge()}
+function gate(){const end=Math.max(3,S.unl+2);mo(`<h3>🌀 躍遷門・無限遠征</h3><p>目前已解鎖至第 ${S.unl} 戰區。每個戰區有 2 層，完成第 2 層首領戰即可解鎖下一區。</p><div class=row>${Array.from({length:end},(_,i)=>i+1).map(z=>`<button ${z>S.unl?"disabled":""} onclick="go(${z})">${zoneName(z)}${z>S.unl?"（未解鎖）":""}</button>`).join("")}</div>`)}
+function go(z){if(!Number.isInteger(z)||z<1||z>S.unl){log("該戰區尚未解鎖。");$("m").hidden=1;ui();return}S.z=z;S.f=1;S.pos=[1,1];S.dir=0;S.nev.zs[z]=1;log(`躍遷至${zoneName(z)}。`);saySis(`躍遷完成，已抵達${zoneName(z)}。姐姐已標記補給箱與首領可能出現的區域，請小心探索。`,true);$("m").hidden=1;ui()}
+function ending(){mo(`<h3>✅ 星海可期</h3><p>核心意識沉默了。深空傳來一段無人能解的信號，像是在回應你們。小兵們望向舷窗，元帥之路才剛開始。</p><div class=row><button onclick=ng()>重啟戰線（第二周目）</button><button onclick=cl2()>繼續</button></div>`,1)}
+const cl2=()=>{$("m").hidden=1;base()};
+function ng(){S=ns(S);$("m").hidden=1;ui()}
+function rst(){if(confirm("確定要清除存檔並重新開始？")){S=ns();$("m").hidden=1;ui()}}
+/* 小說（離線範本） */
+function chap(force){const e=S.nev,sc=e.k+3*e.b+3*e.d+e.c;if(!force&&sc<3)return 0;
+const z=zoneName(Math.max(1,...Object.keys(e.zs).map(Number))),P=S.party.map(pn),a=P[0],b=P[1]||P[0],n=S.nov.length+1,T=[];
+T.push(pk([`哨站七號的警報在拂曉響起。${a}與${b}領著 ${P.length} 人小隊登上躍遷艙，目的地是${z}。`,`躍遷艙裡只有低沉的嗡鳴。${a}檢查完能量電池，抬頭望向${z}的荒涼地表。`]));
+if(e.k)T.push(`接下來的幾個小時，他們與${e.n.slice(0,3).join("、")}交火，一共擊倒 ${e.k} 隻。${pk([`${b}的槍管燙得發紅，卻沒有人喊停。`,`每倒下一隻敵人，隊伍的默契便多一分。`])}`);
+T.push(e.bo.length?`通道盡頭，${e.bo.join("與")}擋住了去路。${pk([`${a}壓低身子，低聲說：「按訓練來。」`,`機械教官的嚴訓在這一刻派上了用場。`])}戰鬥結束時，沒有人再說笑。`:`他們沒遇上統領級的敵人，但通訊頻道裡一直有種不安的雜音。`);
+if(e.fs&&e.fs.length){const f=e.fs[e.fs.length-1];T.push(`一場惡戰令人難忘：${f.lines.slice(1,4).join("")}最終${f.res=="勝"?"他們慘勝":f.res=="敗"?"他們不敵":"他們及時撤走"}。`)}const x=[];if(e.c)x.push(`拆開 ${e.c} 個補給箱`);if(e.lv)x.push(`隊伍升階 ${e.lv} 次`);if(e.d)x.push(`一度全隊倒下，是${a}拖著傷員撤回星港`);if(x.length)T.push(`這一趟，他們${x.join("，")}。`);
+T.push(`回到哨站七號時，補給站的燈還亮著。這趟共帶回 ${e.g} 星幣。距離元帥之夢仍遠，但新兵們明白，每一步都算數。`);
+S.nov.push({n,title:`第${n}集：${z}${e.bo.length?"・"+e.bo[0]:"巡弋"}`,text:T.join("\n"),ev:e,z});S.nev=ne();if(S.ai)aiw(S.nov.length-1);return 1}
+function book(){const h=S.nov.slice().reverse().map(c=>`<div class=ch><h3>${c.title}${c.ai?" ✨":""}${c.busy?" ⏳":""}</h3><button onclick="aiw(${S.nov.indexOf(c)},1)">✨ AI 重寫此集</button>${c.text.split("\n").map(p=>`<p>${p.replace(/</g,"&lt;")}</p>`).join("")}</div>`).join("");mo(`<h3>📖 《星途小兵錄》</h3>${h||"<p>還沒有章節。完成幾場戰鬥並返航，就會自動成章。</p>"}<div class=row><button onclick="chap(1)&&book()">立即成章</button><button onclick=dl()>下載 TXT</button><button onclick=pdf()>摺頁小冊 PDF</button><button onclick=tai()>自動 AI 成章：${S.ai?"開":"關"}</button></div>`)}
+function dl(){const t="《星途小兵錄》\n\n"+S.nov.map(c=>c.title+"\n"+c.text).join("\n\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([t],{type:"text/plain"}));a.download="星途小兵錄.txt";a.click()}
+/* AI 寫作與 PDF */
+const STY="文風參考網路修仙小說《凡人修仙傳》（忘語）的整體氣質，只學行文節奏，不得抄襲原作文字、人物與情節：第三人稱，視角偏冷靜謹慎；敘事沉穩克制，少用誇張形容與熱血口號；戰鬥寫得具體，依回合交代誰先出手、動用什麼裝備與戰術、對手如何應對、局勢如何轉折，並穿插短促的心理判斷與環境細節；對話少而精。把修仙詞彙換成星際軍旅詞彙（能量、護盾、電磁、艙體）。";
+const rb=()=>{if(!$("m").hidden&&!C&&$("m").textContent.includes("星途小兵錄"))book()};
+const tai=()=>{S.ai=!S.ai;book()};
+const tmo=ms=>new Promise((_,j)=>setTimeout(()=>j({code:"逾時"}),ms));
+async function llm(p,man){if(await loadPuter()){try{if(!(await puter.auth.isSignedIn())){if(!man)return null;if(!S.pc){if(!confirm("小說提示詞（含遊戲事件）會送到 Puter 的 AI 服務。要繼續嗎？"))return null;S.pc=1}await puter.auth.signIn()}
+const r=await Promise.race([puter.ai.chat(p,{model:"claude-sonnet-4-5"}),tmo(120000)]),t=typeof r=="string"?r:r&&((r.message&&r.message.content&&r.message.content[0]&&r.message.content[0].text)||r.text||(r.message&&typeof r.message.content=="string"?r.message.content:""));if(t)return t}catch(e){log("Puter："+(e.code||e.message||"失敗"))}}
+const sm=window.claude&&await claude.use("sample");if(sm){try{return(await sm(p,{cache:false})).text}catch(e){}}return null}
+async function aiw(i,man){const c=S.nov[i];if(!c||c.busy)return;
+const e=c.ev||{},P=S.party.map(m=>CL[m.c][1]+"（"+CL[m.c][0]+"）").join("、"),pv=S.nov[i-1]?S.nov[i-1].text.slice(0,200):"（無）",F=(e.fs||[]).map((f,k)=>`戰鬥${k+1}（${f.z}${f.bs?"，首領戰":""}，結果：${f.res}）：${f.lines.join("／")}`).join("\n");
+const p=`你是連載網路小說編輯，請寫《星途小兵錄》第${c.n}集。\n【世界觀】星際戰爭延燒數百年，資質平庸的新兵靠智慧與同袍扶持，立志成為統一星海的元帥；據點是前線星港「哨站七號」。\n【文風】${STY}\n【人物】${P}（原創，沿用這些名字）。\n【內容要求】繁體中文；900–1300 字；6–10 段；必須把下列戰鬥紀錄擴寫成連貫的打鬥過程，不可略過，數字可轉為感受；第一行為 10 字內標題，空一行後接純文字段落。\n【前情】${pv}\n【本集紀錄】地點：${c.z||""}；擊倒 ${e.k||0} 隻（${(e.n||[]).join("、")}）；首領：${(e.bo||[]).join("、")||"無"}；補給箱 ${e.c||0}；全滅 ${e.d||0} 次；星幣 ${e.g||0}。\n${F}`;
+c.busy=1;rb();try{const tx=await llm(p,man);if(!tx)throw{code:"沒有可用的 AI，已保留範本"};const t=tx.trim().split("\n"),ti=t.shift().replace(/[#*《》「」\s]/g,"").slice(0,24),b=t.filter(x=>x.trim()).join("\n");if(b.length>150){c.title=`第${c.n}集：${ti}`;c.text=b;c.ai=1}}catch(x){log("AI 寫作未完成："+(x.code||"錯誤"))}c.busy=0;sv();rb()}
+async function sav(n,d){const dn=window.claude&&await claude.use("downloads");if(dn){try{await dn.save({filename:n,data:d})}catch(e){}return}const u=URL.createObjectURL(d instanceof Blob?d:new Blob([d],{type:"text/plain;charset=utf-8"}));if(!window.open(u))location.href=u}
+async function dl(){await sav("星途小兵錄.txt","《星途小兵錄》\n\n"+S.nov.map(c=>c.title+"\n"+c.text).join("\n\n"))}
+const FN='"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif',PW=594,PH=840,LAY=[[5,4,3,2],[6,7,8,1]];
+const cvs=()=>{const c=document.createElement("canvas");c.width=PW;c.height=PH;const x=c.getContext("2d");x.fillStyle="#fbf6ea";x.fillRect(0,0,PW,PH);x.fillStyle="#222";x.textBaseline="top";return[c,x]};
+function flow(){const pg=[];let c,x,y;const nw=()=>{[c,x]=cvs();pg.push(c);y=60};nw();
+const put=(t,f,lh,ind)=>{let l="",fs=1;const out=()=>{if(y>PH-80)nw();x.font=f;x.fillText(l,50+(fs?ind:0),y);y+=lh;l="";fs=0};x.font=f;for(const ch of t){if(x.measureText(l+ch).width>PW-100-(fs?ind:0)){out();x.font=f}l+=ch}if(l)out();y+=8};
+S.nov.forEach(n=>{put(n.title,"bold 30px "+FN,46,0);n.text.split("\n").forEach(q=>put(q,"23px "+FN,36,46));y+=14});return pg}
+const ctr=(x,t,y,f)=>{x.font=f;x.textAlign="center";x.fillText(t,PW/2,y);x.textAlign="left"};
+function pnum(c,n){const x=c.getContext("2d");x.fillStyle="#777";x.textBaseline="top";ctr(x,String(n),PH-40,"16px "+FN)}
+function notes(){const[c,x]=cvs();x.strokeStyle="#bbb";for(let y=110;y<PH-70;y+=40){x.beginPath();x.moveTo(50,y);x.lineTo(PW-50,y);x.stroke()}ctr(x,"— 筆記 —",50,"22px "+FN);return c}
+function cov(v,V){const[c,x]=cvs();ctr(x,"🚀",130,"90px "+FN);ctr(x,"星途小兵錄",300,"bold 44px "+FN);ctr(x,"小兵傳奇：Emoji 星途",370,"24px "+FN);ctr(x,`第 ${v+1}／${V} 本・全書 ${S.nov.length} 集`,430,"22px "+FN);return c}
+function bck(){const[c,x]=cvs();ctr(x,"小隊",120,"bold 32px "+FN);S.party.slice(0,8).forEach((m,i)=>ctr(x,`${nm(m)}　Lv${m.l}`,190+i*44,"24px "+FN));return c}
+function sheet(P){const c=document.createElement("canvas");c.width=PW*4;c.height=PH*2;const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);
+LAY.forEach((row,r)=>row.forEach((n,k)=>{x.save();x.translate(k*PW,r*PH);if(r==0){x.translate(PW,PH);x.rotate(Math.PI)}x.drawImage(P[n-1],0,0);x.restore()}));
+x.strokeStyle="#ccc";x.lineWidth=2;for(let i=1;i<4;i++){x.beginPath();x.moveTo(i*PW,0);x.lineTo(i*PW,c.height);x.stroke()}x.beginPath();x.moveTo(0,PH);x.lineTo(c.width,PH);x.stroke();
+x.strokeStyle="#e00";x.lineWidth=4;x.setLineDash([16,12]);x.beginPath();x.moveTo(PW,PH);x.lineTo(PW*3,PH);x.stroke();return c}
+function guide(V){const c=document.createElement("canvas");c.width=PW*4;c.height=PH*2;const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.fillStyle="#222";x.textBaseline="top";x.font="bold 64px "+FN;x.fillText("摺頁小冊 摺法說明",120,120);x.font="44px "+FN;
+[`共 ${V} 本，每本一張紙；從 PDF 第 2 頁開始印。`,"列印設定：A4 橫向、實際大小、單面。","1. 紙橫放，文字面朝上，水平對折後展開。","2. 再沿垂直方向對折兩次後展開，紙面成 4×2 格。","3. 沿紅色虛線只剪中間兩格（水平中線的中間段）。","4. 沿水平中線對折，剪口朝上，兩端向中心推成十字。","5. 收攏成小冊，封面朝上，依頁碼閱讀。"].forEach((t,i)=>x.fillText(t,120,300+i*110));return c}
+async function pdf(){if(!window.jspdf)return alert("PDF 函式庫未載入，請重新整理");if(!S.nov.length)return alert("還沒有章節");
+const IP=flow(),V=Math.max(1,Math.ceil(IP.length/6)),doc=new window.jspdf.jsPDF({unit:"mm",format:"a4",orientation:"landscape",compress:true}),add=(c,f)=>{if(!f)doc.addPage("a4","landscape");doc.addImage(c.toDataURL("image/jpeg",.85),"JPEG",0,0,297,210)};
+add(guide(V),1);for(let v=0;v<V;v++){const P=[cov(v,V)];for(let k=0;k<6;k++){const g=IP[v*6+k]||notes();pnum(g,k+2);P.push(g)}P.push(bck());add(sheet(P))}
+await sav("星途小兵錄_摺頁小冊.pdf",doc.output("blob"))}
+try{S=JSON.parse(localStorage.getItem("xb_save"))}catch(e){}
+if(!S||!S.party)S=ns();if(S.dir==null)S.dir=0;if(S.unl==null)S.unl=1;if(S.sisText==null)S.sisText=sisDefault;if(S.sisVoice==null)S.sisVoice=false;ui();
+</script></body></html>
