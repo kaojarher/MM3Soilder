@@ -169,11 +169,19 @@ body.exp #p{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
 body.exp .pc{font-size:10px;line-height:1.25;padding:3px 4px}
 body.exp #l{min-height:0;max-height:none;font-size:12px;line-height:1.4;overflow:hidden;padding:0 2px}
 body.inbattle .scene-wrap{min-height:0;max-height:none;height:calc((100vw - 36px)*.9);height:max(250px,min(calc((100vw - 36px)*.9),calc(var(--vh1)*100 - 255px)))}
+
+/* v13 戰艦NPC與新選單 */
+.mrow{display:block;width:100%;margin:4px 0;text-align:left}
+.msub{font-size:12px;color:#9db8cc;margin-bottom:4px}
+.bx small{color:#9db8cc;font-weight:400}
+.toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top,0px) + 46px);-webkit-transform:translateX(-50%);transform:translateX(-50%);max-width:92%;background:rgba(0,0,0,.85);border:1px solid var(--ac);border-radius:8px;padding:6px 10px;font-size:12px;z-index:20;text-align:center;pointer-events:none}
+#c:empty{display:none}
 </style><script src="jspdf.umd.min.js"></script></head><body><div id="a"><div id="h"></div><div id="v"></div><div id="p"></div><div id="l"></div><div id="c"></div></div><div id="m" hidden></div>
+<input type=file id=imp accept=".json,application/json" hidden>
 <script>
 const $=i=>document.getElementById(i),R=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),pk=a=>a[R(0,a.length-1)];
 const CL=[["重甲兵","岩崢","💂\u200d\u2640\ufe0f",44,6,"壓制砲擊"],["護盾兵","安瀾","🦸\u200d\u2640\ufe0f",40,5,"掩護"],["電磁術士","雷馳","🧙\u200d\u2640\ufe0f",26,7,"電磁風暴"],["光刃劍士","霜刃","🧝\u200d\u2640\ufe0f",32,8,"光刃連斬"],["潛行特工","夜梭","🕵\ufe0f\u200d\u2640\ufe0f",28,8,"背刺"],["格鬥兵","烈風","👮\u200d\u2640\ufe0f",36,7,"連擊"],["軍醫","蘇茗","👩\u200d\u2695\ufe0f",28,4,"修復針劑"],["通訊官","陸弦","👩\u200d💻",26,4,"戰術增幅"]];
-const ZN=["哨站七號","灰塵礦星","赤焰戰區","星核要塞"];
+const ZN=["哨站七號戰艦","灰塵礦星","赤焰戰區","星核要塞"];
 const zoneName=z=>z===0?ZN[0]:(ZN[z]||`${["霜環","雷暴","幽影","晶海","熔爐","天穹","深淵","蒼穹","星塵","量子"][((z-4)%10+10)%10]}遠征戰區 ${z-3}`);
 const bossFor=d=>{const b=BO[(d-1)%BO.length];return d<=BO.length?b:[`${b[0]}・第${Math.floor((d-1)/BO.length)+1}型`,b[1]]};
 const enemiesFor=z=>EN[z]||["量子獵犬🐺","裂隙機兵🤖","星塵掠奪者🛸","深空寄生體👾","電弧獸⚡","虛空蜂群🪲"];
@@ -184,10 +192,10 @@ function sisBox(){return `<div class="sisbox"><div class="sisavatar">姊</div><d
 const EN=[[],["腐蝕蟲🐌","裂顎獸🦎","毒囊飛蟲🦟","礦洞蛛🕷️"],["失控礦機🤖","掠奪無人機🛸","荒原狼蜥🐺","棘刺巨蠍🦂"],["暗影潛行者👤","赤焰機甲兵🔥","電弧炮塔🗼","虛空幼體👾"]];
 const BO=[["蟲巢母皇","🐛"],["鋼骸巨像","🗿"],["赤焰統領","🌋"],["叛軍教官","🎖️"],["虛空領主","🌀"],["核心意識","🧠"]];
 let S,C=null;
-const nm=m=>CL[m.c][2]+CL[m.c][1],pn=m=>CL[m.c][1],mh=m=>CL[m.c][3]+(m.l-1)*6,at=m=>CL[m.c][4]+Math.floor((m.l-1)*1.5)+S.w*2;
-const mk=(c,l=1)=>{const m={c,l,xp:0,mp:12};m.mh=mh(m);m.hp=m.mh;return m};
+const nm=m=>CL[m.c][2]+CL[m.c][1],pn=m=>CL[m.c][1],mh=m=>CL[m.c][3]+(m.l-1)*6+E(m).hp,at=m=>CL[m.c][4]+Math.floor((m.l-1)*1.5)+S.w*2+E(m).atk;
+const mk=(c,l=1)=>{const m={c,l,xp:0,mp:12,eq:{},st:{},g:0};m.mh=mh(m);m.hp=m.mh;m.mp=mm(m);return m};
 const ne=()=>({k:0,b:0,c:0,d:0,lv:0,g:0,n:[],bo:[],zs:{},fs:[]});
-function ns(keep){const o={gold:60,w:0,pot:3,ng:0,party:[mk(0),mk(1)],pool:[2,3,4,5,6,7],z:0,f:1,maps:{},unl:1,nev:ne(),nov:[],pos:[1,1],dir:0,log:["歡迎來到哨站七號，新兵。"]};if(keep){o.ng=keep.ng+1;o.party=keep.party;o.gold=keep.gold;o.w=keep.w;o.nov=keep.nov;o.pool=keep.pool;o.log=["重啟戰線：敵人變得更強了。"]}return o}
+function ns(keep){const o={gold:60,w:0,pot:3,ng:0,party:[mk(0),mk(1)],pool:[2,3,4,5,6,7],camp:[],inv:[],cn:{eth:1,herb:1,scr:0},camps:2,quest:null,offers:null,dex:{},ach:{},kills:0,bk:0,qdone:0,keys:0,bless:0,set:{sfx:1,mus:1,diff:"normal"},z:0,f:1,maps:{},unl:1,nev:ne(),nov:[],pos:[5,6],dir:0,log:["歡迎登艦，新兵。這裡是哨站七號戰艦。"]};if(keep){o.ng=keep.ng+1;["party","gold","w","nov","pool","camp","inv","cn","camps","dex","ach","kills","bk","qdone","set"].forEach(k=>{if(keep[k]!=null)o[k]=keep[k]});o.log=["重啟戰線：敵人變得更強了。"]}return o}
 const log=x=>{S.log.push(x);if(S.log.length>30)S.log.shift();if(C&&C.rec)C.rec.push(x)};
 function sv(){try{localStorage.setItem("xb_save",JSON.stringify(S))}catch(e){}}
 function mo(h,nc){$("m").innerHTML=`<div class=bx>${h}${nc?"":"<div class=row><button onclick=cl()>關閉</button></div>"}</div>`;$("m").hidden=0}
@@ -196,11 +204,12 @@ function gen(){const W=11,g=[...Array(W)].map(()=>Array(W).fill(1)),st=[[1,1]];g
 while(st.length){const[x,y]=st[st.length-1],d=[[2,0],[-2,0],[0,2],[0,-2]].sort(()=>Math.random()-.5).filter(([a,b])=>x+a>0&&x+a<W-1&&y+b>0&&y+b<W-1&&g[y+b][x+a]);if(!d.length){st.pop();continue}const[a,b]=d[0];g[y+b/2][x+a/2]=0;g[y+b][x+a]=0;st.push([x+a,y+b])}
 for(let i=0;i<12;i++)g[R(1,9)][R(1,9)]=0;
 const f=[];g.forEach((r,y)=>r.forEach((v,x)=>{if(!v&&x+y>4&&!(x==9&&y==9))f.push([x,y])}));f.sort(()=>Math.random()-.5);
-const E=[{x:9,y:9,t:"b"}];for(let i=0;i<6;i++){const[p,q]=f.pop();E.push({x:p,y:q,t:"m"})}for(let i=0;i<3;i++){const[p,q]=f.pop();E.push({x:p,y:q,t:"c"})}
-return{g,E,seen:g.map(r=>r.map(()=>0))}}
-const gm=()=>S.maps[S.z+":"+S.f]||(S.maps[S.z+":"+S.f]=gen());
+const mod=S.z>0&&Math.random()<.5?pk(Object.keys(MODS)):null,nM=mod=="calm"?4:mod=="swarm"?9:6,E=[{x:9,y:9,t:"b"}],ev_=(t,n)=>{for(let i=0;i<n&&f.length;i++){const[p,q]=f.pop();E.push({x:p,y:q,t})}};
+ev_("m",nM);ev_("c",3);ev_("f",1);if(Math.random()<.55){ev_("k",1);ev_("l",1)}if(Math.random()<.35)ev_("s",1);if(S.z>=2&&Math.random()<.3)ev_("v",1);ev_("t",2);
+return{g,E,mod,seen:g.map(r=>r.map(()=>0))}}
+const gm=()=>S.z===0?shipMap():S.maps[S.z+":"+S.f]||(S.maps[S.z+":"+S.f]=gen());
 function fg(){const key="F:"+(S.flightZone||1);if(S.maps[key])return S.maps[key];const g=Array.from({length:11},()=>Array(11).fill(0)),seen=g.map(r=>r.map(()=>0)),spots=[];for(let y=2;y<10;y++)for(let x=2;x<10;x++)if(!(x===9&&y===9))spots.push([x,y]);spots.sort(()=>Math.random()-.5);const E=[{x:9,y:9,t:"b"}];for(let i=0;i<6;i++){const [x,y]=spots.pop();E.push({x,y,t:"m"})}for(let i=0;i<3;i++){const [x,y]=spots.pop();E.push({x,y,t:"c"})}return S.maps[key]={g,E,seen}}
-function mapH(){const M=S.flight?fg():gm(),[px,py]=S.pos;let h='<div class=g>';for(let y=0;y<11;y++)for(let x=0;x<11;x++){const near=Math.abs(x-px)<3&&Math.abs(y-py)<3;if(near)M.seen[y][x]=1;let k="",c="";if(!M.seen[y][x])k="u";else if(!S.flight&&M.g[y][x])k="w";else{const e=M.E.find(o=>o.x==x&&o.y==y);c=x==px&&y==py?(S.flight?"🚀":"👩‍🚀"):e?(e.t=="b"?(S.flight?"帝":"👹"):e.t=="c"?"📦":near?(S.flight?"⚔":"❗"):""):""}h+=`<i class="${k}${x==px&&y==py?" me":""}">${c}</i>`}return h+"</div>"}
+function mapH(){const M=S.flight?fg():gm(),[px,py]=S.pos;let h='<div class=g>';for(let y=0;y<11;y++)for(let x=0;x<11;x++){const near=Math.abs(x-px)<3&&Math.abs(y-py)<3;if(near)M.seen[y][x]=1;let k="",c="";if(!M.seen[y][x])k="u";else if(!S.flight&&M.g[y][x])k="w";else{const e=M.E.find(o=>o.x==x&&o.y==y);c=x==px&&y==py?(S.flight?"🚀":"👩‍🚀"):e?(e.t=="b"?(S.flight?"帝":"👹"):e.t=="c"?"📦":e.t=="n"?NPC[e.id].e:POI[e.t]?POI[e.t]:e.t=="t"?"":near?(S.flight?"⚔":"❗"):""):""}h+=`<i class="${k}${x==px&&y==py?" me":""}">${c}</i>`}return h+"</div>"}
 const DIRS=[[0,-1],[1,0],[0,1],[-1,0]];
 function turn3d(n){S.dir=(((S.dir==null?0:S.dir))+n+4)%4;if(S.flight)saySis(`航向已調整至${["北方","東方","南方","西方"][S.dir]}。注意帝國軍雷達訊號。`);ui()}
 function step3d(n){const d=DIRS[(((S.dir==null?0:S.dir))+4)%4];const dx=d[0]*n,dy=d[1]*n;mv(dx,dy)}
@@ -232,7 +241,7 @@ if(e.t!=='c'&&forward<=4){ctx.strokeStyle='rgba(255,100,120,.7)';ctx.setLineDash
 // 準星與導航資訊
 ctx.strokeStyle='#8feaff';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(w/2-8,h*.58);ctx.lineTo(w/2+8,h*.58);ctx.moveTo(w/2,h*.58-8);ctx.lineTo(w/2,h*.58+8);ctx.stroke();
 ctx.fillStyle='#b9ecff';ctx.font='12px sans-serif';ctx.fillText('星系 '+(S.flightZone||1)+'　航向 '+['北 ↑','東 →','南 ↓','西 ←'][dir],8,17);ctx.fillStyle='#ff9f9f';ctx.font='bold 11px sans-serif';ctx.fillText('帝國軍雷達活動區',8,h-10);return;}
-ctx.clearRect(0,0,w,h);const sky=ctx.createLinearGradient(0,0,0,h/2);sky.addColorStop(0,'#07101f');sky.addColorStop(1,'#23415c');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h/2);
+ctx.clearRect(0,0,w,h);const sky=ctx.createLinearGradient(0,0,0,h/2);sky.addColorStop(0,S.z?'#07101f':'#0c1624');sky.addColorStop(1,S.z?'#23415c':'#3a5670');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h/2);
 const floor=ctx.createLinearGradient(0,h/2,0,h);floor.addColorStop(0,'#26384a');floor.addColorStop(1,'#080d15');ctx.fillStyle=floor;ctx.fillRect(0,h/2,w,h/2);
 // horizon and glowing floor guides
 ctx.strokeStyle='#41647c';ctx.lineWidth=1;for(let i=1;i<7;i++){let y=h/2+(h/2)*i/7;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke()}for(let i=0;i<9;i++){ctx.beginPath();ctx.moveTo(w/2,h/2);ctx.lineTo(i*w/8,h);ctx.stroke()}
@@ -240,10 +249,10 @@ const rayCount= Math.min(120,w),fov=Math.PI/2.8;
 for(let i=0;i<rayCount;i++){const ang=(dir*Math.PI/2)+((i/(rayCount-1))-.5)*fov;let dist=.03,hit=false,tx=px+.5,ty=py+.5,wall=0;
 while(dist<8&&!hit){dist+=.035;tx=px+.5+Math.sin(ang)*dist;ty=py+.5-Math.cos(ang)*dist;const cx=Math.floor(tx),cy=Math.floor(ty);if(cx<0||cy<0||cx>=11||cy>=11||M.g[cy][cx]){hit=true;wall=1}}
 const corrected=dist*Math.cos(((i/(rayCount-1))-.5)*fov),hh=Math.min(h*.94,h/(corrected+.12)*.62),x=i*w/rayCount,y=(h-hh)/2;
-let shade=Math.max(22,115-corrected*13);ctx.fillStyle=`rgb(${Math.floor(shade*.58)},${Math.floor(shade*.76)},${Math.floor(shade)})`;ctx.fillRect(x,y,w/rayCount+1,hh);ctx.fillStyle='rgba(120,190,230,.18)';ctx.fillRect(x,y,w/rayCount+1,2);}
+let shade=Math.max(22,115-corrected*13);ctx.fillStyle=`rgb(${Math.floor(shade*(S.z?.58:.74))},${Math.floor(shade*(S.z?.76:.84))},${Math.floor(shade*(S.z?1:.96))})`;ctx.fillRect(x,y,w/rayCount+1,hh);ctx.fillStyle='rgba(120,190,230,.18)';ctx.fillRect(x,y,w/rayCount+1,2);}
 // nearest visible point-of-interest indicator
-let best=null,bd=99;for(const e of M.E){const dx=e.x-px,dy=e.y-py,d=Math.hypot(dx,dy);if(d<bd){bd=d;best=e}}
-if(best&&bd<5){const dx=best.x-px,dy=best.y-py,ang=Math.atan2(dx,-dy)-dir*Math.PI/2;let rel=((ang+Math.PI*3)%(Math.PI*2))-Math.PI;if(Math.abs(rel)<fov*.62){const ex=w/2+Math.tan(rel)*w*.55,ey=h*.55,sz=Math.max(12,Math.min(38,52/(bd+.25)));ctx.font=`${sz}px sans-serif`;ctx.textAlign='center';ctx.fillText(best.t==='b'?'👹':best.t==='c'?'📦':'❗',ex,ey);ctx.textAlign='left'}}
+if(!S.z)drawShip(ctx,M,px,py,dir,fov,w,h);let best=null,bd=99;for(const e of M.E){if(e.t==='t'||!S.z)continue;const dx=e.x-px,dy=e.y-py,d=Math.hypot(dx,dy);if(d<bd){bd=d;best=e}}
+if(best&&bd<5){const dx=best.x-px,dy=best.y-py,ang=Math.atan2(dx,-dy)-dir*Math.PI/2;let rel=((ang+Math.PI*3)%(Math.PI*2))-Math.PI;if(Math.abs(rel)<fov*.62){const ex=w/2+Math.tan(rel)*w*.55,ey=h*.55,sz=Math.max(12,Math.min(38,52/(bd+.25)));ctx.font=`${sz}px sans-serif`;ctx.textAlign='center';ctx.fillText(best.t==='b'?'👹':best.t==='c'?'📦':(POI[best.t]||'❗'),ex,ey);ctx.textAlign='left'}}
 // reticle and direction compass
 ctx.strokeStyle='#8feaff';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(w/2-7,h/2);ctx.lineTo(w/2+7,h/2);ctx.moveTo(w/2,h/2-7);ctx.lineTo(w/2,h/2+7);ctx.stroke();ctx.fillStyle='#e3f5ff';ctx.font='12px sans-serif';ctx.fillText(['北 ↑','東 →','南 ↓','西 ←'][dir],8,17);
 }
@@ -258,23 +267,7 @@ function handleSceneClick(ev){
  step3d(1);
 }
 function refreshScene(){const canvas=$('scene3d');if(canvas){scene3d();canvas.onclick=handleSceneClick;canvas.style.cursor='pointer'}}
-const hubH=()=>`${sisBox()}<div class=hub><button onclick=shop()>🏪 補給站</button><button onclick=hire()>📋 招募艙</button><button onclick=inn()>🏥 醫療艙</button><button onclick=forge()>🔧 兵工廠</button><button onclick=gate()>🌀 躍遷門</button><button onclick=toggleFlight()>🚀 自走砲飛艦</button><button onclick=book()>📖 小說（${S.nov.length}集）</button></div><p style="color:var(--mut)">前線星港。整備好隊伍，從躍遷門出發。休眠艙裡的隊員會原地待命。</p>`;
-function fitVh(){try{document.documentElement.style.setProperty("--vh1",(window.innerHeight/100)+"px")}catch(e){}}
-addEventListener("resize",fitVh);addEventListener("orientationchange",function(){setTimeout(fitVh,250)});fitVh();
-function ui(){document.body.classList.toggle("inbattle",!!C);document.body.classList.toggle("exp",!!S.z&&!C);$("p").hidden=!!C;sv();
-const esc=t=>String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"),f=!!S.flight;
-const ht=`${zoneName(S.z)}${S.z?" 第"+S.f+"層":""}　💰${S.gold}　💉${S.pot}　武器+${S.w}${S.ng?"　周目"+(S.ng+1):""}${S.z?"　"+(S.pos[0]+1)+","+(S.pos[1]+1):""}`;
-$("h").innerHTML=`<span class="ht">${esc(ht)}</span>`+(S.z?`<span class="hb"><button type="button" onclick="toggleSisVoice()" aria-label="語音開關">${S.sisVoice?"🔊":"🔈"}</button>${f?"":`<button type="button" onclick="toggleFlight()" aria-label="搭乘飛艦">🚀</button>`}<button type="button" onclick="book()" aria-label="小說">📖</button><button type="button" onclick="rst()" aria-label="重新開始">↺</button></span>`:"");
-const ctl=`<div class="${f?"flight-actions":"move-actions"}"><button onclick="turn3d(-1)" aria-label="左轉">↶<small>左轉</small></button><button onclick="step3d(1)" aria-label="向前">▲<small>${f?"推進":"前進"}</small></button><button onclick="turn3d(1)" aria-label="右轉">↷<small>右轉</small></button><button onclick="step3d(-1)" aria-label="後退">▼<small>${f?"減速":"後退"}</small></button><button onclick="${f?"toggleFlight()":"base()"}" aria-label="${f?"返航下艦":"返航"}">${f?"🛬":"⌂"}<small>${f?"下艦":"返航"}</small></button><button onclick="${f?"fireShipWeapon()":"pot()"}" aria-label="${f?"主砲射擊":"使用修復針劑"}">${f?"🎯":"💉"}<small>${f?"主砲":"補給"}</small></button></div>`;
-$("v").innerHTML=S.z?`<div class="scene-wrap"><canvas id="scene3d" width="480" height="300" aria-label="3D探索場景"></canvas><div id="battleLayer" aria-label="戰鬥畫面"></div></div><div class="xrow"><div id="minimap">${mapH()}</div><div class="xright">${ctl}<div class="xsis"><b>姊</b><span id="sisText">${esc(S.sisText||sisDefault)}</span></div></div></div>`:hubH();
-$("p").innerHTML=S.party.map(m=>`<div class="pc ${m.hp?"":"dn"}"><b>${nm(m)}</b> Lv${m.l}<i style="--w:${m.hp/m.mh*100}%"></i>${m.hp}/${m.mh} ⚡${m.mp}</div>`).join("");
-$("l").innerHTML=S.log.slice(S.z?-2:-5).map(x=>`<div>${x}</div>`).join("");
-$("c").innerHTML=S.z?"":`<button onclick=book()>📖</button><button onclick=rst()>重新開始</button>`;
-refreshScene();
-}
-function mv(dx,dy){if(C||!$("m").hidden||!S.z)return;const M=S.flight?fg():gm(),x=S.pos[0]+dx,y=S.pos[1]+dy;if(x<0||y<0||x>=11||y>=11||(!S.flight&&M.g[y][x])){if(dx||dy){log("前方是牆壁，請轉向後再前進。");ui()}return}const e=M.E.find(o=>o.x==x&&o.y==y);
-if(e){if(e.t==="b")saySis("注意！前方偵測到首領反應。先鎖定目標，善用技能與修復針劑。",true);else if(e.t==="m")saySis("敵人接近！先觀察敵方血量，姐姐建議集中火力逐一擊破。",true);if(e.t=="c"){M.E=M.E.filter(o=>o!==e);S.nev.c++;if(Math.random()<.2){e.t="x";log("擬態補給箱！");return fight(e)}const g=Math.round(R(30,80)*(1+.1*dep()));S.gold+=g;S.nev.g+=g;log(`打開補給箱，獲得 ${g} 星幣。`)}else return fight(e)}else {S.pos=[x,y];if(Math.random()<.22)saySis(pk(["路線暫時安全，繼續前進吧。","姐姐提醒：轉角可能有敵人，記得查看右上角戰術地圖。","小隊狀態正常。保持隊形，別離補給點太遠。"]),false)}ui()}
-addEventListener("keydown",e=>{const d={ArrowUp:[0,-1],w:[0,-1],ArrowDown:[0,1],s:[0,1],ArrowLeft:[-1,0],a:[-1,0],ArrowRight:[1,0],d:[1,0]}[e.key];if(d){e.preventDefault();if(S.z){if(e.key==="ArrowUp"||e.key==="w")step3d(1);else if(e.key==="ArrowDown"||e.key==="s")step3d(-1);else if(e.key==="ArrowLeft"||e.key==="a")turn3d(-1);else if(e.key==="ArrowRight"||e.key==="d")turn3d(1)}else mv(...d)}else if(S.z&&(e.key==="q"||e.key==="Q"||e.key==="e"||e.key==="E")){e.preventDefault();turn3d(e.key.toLowerCase()==="q"?-1:1)}});
+addEventListener("keydown",e=>{const d={ArrowUp:[0,-1],w:[0,-1],ArrowDown:[0,1],s:[0,1],ArrowLeft:[-1,0],a:[-1,0],ArrowRight:[1,0],d:[1,0]}[e.key];if(d){e.preventDefault();if(true){if(e.key==="ArrowUp"||e.key==="w")step3d(1);else if(e.key==="ArrowDown"||e.key==="s")step3d(-1);else if(e.key==="ArrowLeft"||e.key==="a")turn3d(-1);else if(e.key==="ArrowRight"||e.key==="d")turn3d(1)}else mv(...d)}else if(e.key==="q"||e.key==="Q"||e.key==="e"||e.key==="E"){e.preventDefault();turn3d(e.key.toLowerCase()==="q"?-1:1)}});
 const dep=()=>(S.z-1)*2+S.f;
 function pot(){if(C)return;const t=S.party.filter(m=>m.hp>0).sort((a,b)=>a.hp/a.mh-b.hp/b.mh)[0];if(!S.pot||!t||t.hp==t.mh)return log("現在不需要使用針劑。"),ui();S.pot--;t.hp=Math.min(t.mh,t.hp+25);log(`${nm(t)}注射修復針劑。`);ui()}
 /* 戰鬥 */
@@ -282,61 +275,23 @@ const rf=d=>[pk(enemiesFor(S.z)),14+d*9+R(0,6),4+d*2];
 function fight(e){const d=dep(),sc=1+.35*S.ng,ac=1+.25*S.ng,F=(n,h,a)=>({n,hp:Math.round(h*sc),mh:Math.round(h*sc),a:Math.round(a*ac)});let f=[];
 if(S.flight){if(e.t==="b")f.push(F(`帝國軍星域旗艦・${S.flightZone||1}`,110+(S.flightZone||1)*32,10+(S.flightZone||1)*2),F("帝國軍護航巡洋艦",55+d*8,7+d));else if(e.t==="x")f.push(F("星際補給艙",30+d*10,0));else for(let i=R(1,2);i--;)f.push(F(pk(["帝國軍攔截戰機","帝國軍巡邏艇","帝國軍無人砲艇"]),35+(S.flightZone||1)*12,6+(S.flightZone||1)*2));}
 else if(e.t=="b"){const b=bossFor(d);f.push(F(b[1]+b[0],70+d*30,7+d*2.5));f.push(F(...rf(d)))}else if(e.t=="x")f.push(F("📦擬態補給箱",30+d*10,6+d*2));else for(let i=R(1,2);i--;)f.push(F(...rf(d)));
-C={foes:f,i:0,t:0,b:1,sh:0,e,rec:[`遭遇${f.map(x=>x.n).join("與")}。`]};saySis(`戰鬥開始！${f.map(x=>x.n).join("、")}已進入視野。`,true);cr()}
+fx(f,e);C={foes:f,i:0,t:0,b:1,sh:0,e,rec:[`遭遇${f.map(x=>x.n).join("與")}。`]};saySis(`戰鬥開始！${f.map(x=>x.n).join("、")}已進入視野。`,true);cr()}
 function rcd(res){const ev=S.nev;ev.fs=ev.fs||[];const r=C.rec;ev.fs.push({z:zoneName(S.z),bs:C.e.t=="b",res,lines:r.length>16?[...r.slice(0,6),"……",...r.slice(-10)]:r.slice()});if(ev.fs.length>6)ev.fs.shift()}
-const cur=()=>S.party.find((m,i)=>i>=C.i&&m.hp>0),tg=()=>{if(!C.foes[C.t]||C.foes[C.t].hp<=0)C.t=C.foes.findIndex(f=>f.hp>0);return C.t};
-function cr(){
- if(!C)return;const m=cur(),t=tg();
- document.body.classList.add("inbattle");document.body.classList.remove("exp");$("m").hidden=1;
- const layer=$("battleLayer");if(!layer)return;
- layer.innerHTML=`<div class="battle-foes">${C.foes.map((f,i)=>`<button class="battle-foe ${i===t?"selected":""} ${f.boss?"boss":""} ${C.anim&&C.anim.kind==="hit"&&C.anim.fi===i?"hit":""} ${C.anim&&C.anim.kind==="enemy"&&C.anim.fi===i?"attacking":""}" ${f.hp<=0?"disabled":""} onclick="C.t=${i};cr()" aria-label="鎖定目標 ${f.n}"><div class="foe-icon">${((f.n.match(/[^\u4e00-\u9fffA-Za-z0-9]/u)||[])[0])||"👾"}</div><div class="foe-name">${f.n}</div><div class="hp-track"><i class="hp-fill" style="width:${Math.max(0,f.hp)/f.mh*100}%"></i></div><div class="member-stats">${Math.max(0,f.hp)} / ${f.mh}</div></button>`).join("")}</div>
- <div class="battle-party">${S.party.map((p,i)=>`<div class="battle-member ${i===C.i?"active":""} ${p.hp<=0?"dead":""} ${C.anim&&C.anim.kind==="attack"&&C.anim.pi===i?"attacking":""}"><div class="member-icon">${p.hp?CL[p.c][2]:"💀"}</div><div class="member-name">${pn(p)} Lv${p.l}</div><div class="hp-track"><i class="hp-fill" style="width:${Math.max(0,p.hp)/p.mh*100}%"></i></div><div class="member-stats">HP ${Math.max(0,p.hp)}/${p.mh}</div><div class="mp-track"><i class="mp-fill" style="width:${p.mp/12*100}%"></i></div><div class="member-stats">⚡ ${p.mp}/12</div></div>`).join("")}</div>`;
- const animNow=C.anim;if(animNow)setTimeout(()=>{if(C&&C.anim===animNow)C.anim=null},550);
- $("l").innerHTML=S.log.slice(-3).map(x=>`<div>${x}</div>`).join("");
- $("c").innerHTML=`<div class="battle-turn">⚔️ 輪到 <b>${nm(m)}</b>　${C.b>1?"✨ 戰術增幅中":"選擇敵方目標後出招"}</div><div class="battle-actions"><button class="primary" onclick="ac('a')">⚔️ 普通攻擊</button><button ${m.mp<4?"disabled":""} onclick="ac('s')">✨ ${CL[m.c][5]}<br>（消耗 4 能量）</button><button ${S.pot?"":"disabled"} onclick="ac('p')">💉 修復針劑 ×${S.pot}</button><button onclick="ac('r')">↩️ 撤退</button><button onclick="C.t=(C.t+1)%C.foes.length;tg();cr()">🎯 切換目標</button><button onclick="log('戰術：先集中攻擊已鎖定目標。');cr()">📋 戰術提示</button></div>`;
-}
 function fireShipWeapon(){if(!S.flight||C)return;const M=fg(),[x,y]=S.pos;let target=M.E.filter(e=>e.t!=="c").sort((a,b)=>Math.hypot(a.x-x,a.y-y)-Math.hypot(b.x-x,b.y-y))[0];if(!target||Math.hypot(target.x-x,target.y-y)>4){saySis("雷達四公里內沒有可鎖定的帝國軍目標。請沿航道接近紅色訊號。",true);log("主砲未能鎖定目標，請靠近帝國軍。");ui();return}saySis("目標鎖定！姐姐已同步火控系統，準備接戰。",true);fight(target)}
 function hurt(f,n){f.hp=Math.max(0,f.hp-n)}
-function ac(k){const m=cur(),f=C.foes[tg()],rn=(x=1)=>Math.round((at(m)+R(-1,3))*C.b*x);let s="";
-if(k=="a"){const n=rn();hurt(f,n);s=`${nm(m)}攻擊${f.n}，造成 ${n}。`}
-else if(k=="s"){m.mp-=4;const c=m.c;
-if(c==6){const t=S.party.filter(x=>x.hp>0).sort((a,b)=>a.hp/a.mh-b.hp/b.mh)[0],h=18+m.l*2;t.hp=Math.min(t.mh,t.hp+h);s=`${nm(m)}替${pn(t)}回復 ${h} 生命。`}
-else if(c==7){C.b=1.3;s=`${nm(m)}調整頻道，全隊戰力提升。`}
-else if(c==1){C.sh=1;s=`${nm(m)}舉盾掩護，本回合受傷減半。`}
-else if(c==2){C.foes.forEach(x=>x.hp&&hurt(x,rn(.9)));s=`${nm(m)}釋放電磁風暴，全體受創。`}
-else if(c==5){const a=rn(),b=rn();hurt(f,a+b);s=`${nm(m)}連擊${f.n}，共 ${a+b}。`}
-else{const n=rn([1.8,0,0,2,2.2][c]);hurt(f,n);s=`${nm(m)}施展${CL[c][5]}，造成 ${n}。`}}
-else if(k=="p"){S.pot--;const t=S.party.filter(x=>x.hp>0).sort((a,b)=>a.hp/a.mh-b.hp/b.mh)[0];t.hp=Math.min(t.mh,t.hp+25);s=`${nm(m)}替${pn(t)}注射針劑。`}
-else if(k=="r"){if(C.e.t=="b"||Math.random()>.5){s="撤退失敗！"}else{log("全隊成功撤退。");rcd("退");C=null;$("m").hidden=1;S.nev.n.push("撤退");return ui()}}
-
-if(k==="a"||k==="s"){C.anim={kind:"attack",pi:S.party.indexOf(m),fi:C.foes.indexOf(f)};if(f.hp<=0)C.anim={kind:"hit",fi:C.foes.indexOf(f)}}
-else if(k==="p")C.anim=null;
-log(s);C.i++;step()}
-function step(){if(C.foes.every(f=>f.hp<=0))return win();if(S.party.some((m,i)=>i>=C.i&&m.hp>0))return cr();
-C.foes.filter(f=>f.hp>0).forEach((f,fi)=>{const al=S.party.filter(m=>m.hp>0);if(!al.length)return;const t=pk(al);let n=Math.max(1,f.a+R(-2,2));if(C.sh)n=Math.ceil(n/2);t.hp=Math.max(0,t.hp-n);C.anim={kind:"enemy",fi,pi:S.party.indexOf(t)};log(`${f.n}攻擊${nm(t)}，${n} 傷害。`);saySis(`${nm(t)}受到 ${n} 點傷害。請留意隊員生命值。`,false)});
-C.sh=0;S.party.forEach(m=>{if(m.hp>0)m.mp=Math.min(12,m.mp+1)});if(S.party.every(m=>m.hp<=0))return lose();C.i=0;cr()}
-function win(){let nextFloor=false;const f=C.foes,g=f.reduce((s,x)=>s+R(10,25)+x.mh,0),xp=Math.round(f.reduce((s,x)=>s+x.mh,0)/2),e=C.e,ev=S.nev;S.gold+=g;ev.g+=g;ev.k+=f.length;f.forEach(x=>{const n=x.n.replace(/[^\u4e00-\u9fa5]/g,"");if(!ev.n.includes(n))ev.n.push(n)});
-if(Math.random()<.25){S.pot++;log("掉落一支修復針劑。")}
-S.party.forEach(m=>{if(m.hp<=0)return;m.xp+=xp;while(m.l<30&&m.xp>=m.l*30){m.xp-=m.l*30;m.l++;m.mh=mh(m);m.hp=Math.min(m.mh,m.hp+10);m.mp=12;ev.lv++;log(`${nm(m)}升到 Lv${m.l}！`)}});
+function win(){let nextFloor=false;const f=C.foes,g=Math.round(f.reduce((s,x)=>s+R(10,25)+x.mh,0)*gmul()),xp=Math.round(f.reduce((s,x)=>s+x.mh,0)/2),e=C.e,ev=S.nev;S.gold+=g;ev.g+=g;ev.k+=f.length;f.forEach(x=>{const n=x.n.replace(/[^\u4e00-\u9fa5]/g,"");if(!ev.n.includes(n))ev.n.push(n)});
+winX(f);
+S.party.forEach(m=>{if(m.hp<=0)return;m.xp+=xp;while(m.l<30&&m.xp>=m.l*30){m.xp-=m.l*30;m.l++;m.mh=mh(m);m.hp=Math.min(m.mh,m.hp+10);m.mp=mm(m);ev.lv++;log(`${nm(m)}升到 Lv${m.l}！`);lvX(m)}});
 log(`勝利！獲得 ${g} 星幣、${xp} 戰功。`);saySis(`漂亮！本場獲得 ${g} 星幣與 ${xp} 戰功。姐姐會繼續監控前方威脅。`,true);rcd("勝");const M=S.flight?fg():gm();M.E=M.E.filter(o=>o!==e);C=null;$("m").hidden=1;
 if(e.t=="b"){const d=dep();ev.b++;ev.bo.push(S.flight?`帝國軍星域旗艦・${S.flightZone||1}`:bossFor(d)[0]);saySis(S.flight?"帝國軍旗艦已失去戰力！星系航道暫時安全。姐姐已標記下一個星系。":"首領已被擊敗！這只是第 "+d+" 次首領戰。下一個戰區已在躍遷圖上標記。",true);if(S.flight){const fz=S.flightZone||1;S.gold+=100+fz*25;log(`擊退帝國軍旗艦，獲得 ${100+fz*25} 星幣。`);M.E=M.E.filter(o=>o!==e);C=null;S.pos=[1,1];ui();mo(`<h3>🚀 帝國軍星域突破！</h3><p>第 ${fz} 星系的帝國軍旗艦已被擊退。</p><p>獲得星幣獎勵，下一個星系已可躍遷。</p><div class=row><button onclick="cl();nextFlightZone()">前往第 ${fz+1} 星系</button><button onclick="cl()">繼續探索本星系</button><button onclick="cl();toggleFlight()">返航下艦</button></div>`,1);return}else if(S.f==1){S.f=2;S.pos=[1,1];S.dir=0;nextFloor=true;log("擊敗首領，通往下一層的艙門開啟。")}else{const clearedZone=S.z;S.unl=Math.max(S.unl,clearedZone+1);log(`${zoneName(clearedZone)}肅清完畢，新的躍遷座標解鎖。`);base();const nextZone=clearedZone+1;if(true){mo(`<h3>🚀 戰區攻略完成！</h3><p>你已完成 <b>${zoneName(clearedZone)}</b> 的兩層戰鬥。</p><p>新戰區 <b>${zoneName(nextZone)}</b> 已解鎖，點擊下方按鈕直接前往新戰區第一層。</p><div class=row><button onclick="go(${nextZone})">前往 ${zoneName(nextZone)}</button><button onclick="cl()">稍後返回星港</button></div>`,1)}return}}ui();if(nextFloor)mo(`<h3>🎉 第一層攻略完成！</h3><p>首領已擊敗，已自動進入 <b>${zoneName(S.z)}・第 2 層</b>。</p><p>新的迷宮已生成，請從起點繼續探索，尋找下一層首領。</p><div class=row><button onclick="cl()">前往第 2 層</button></div>`,1)}
-function lose(){const ev=S.nev;rcd("敗");ev.d++;S.gold=Math.floor(S.gold*.7);S.party.forEach(m=>{m.hp=Math.ceil(m.mh*.3);m.mp=6});C=null;log("全隊倒下，被緊急撈回星港，損失 30% 星幣。");$("m").hidden=1;if(S.flight){S.flight=false;S.z=0;S.f=1;S.pos=[1,1];S.dir=0;S.groundReturn=null;saySis("飛艦緊急撤離成功，已返回哨站七號。先整備隊伍再出發。",true);ui()}else base()}
-function base(){if(C)return;S.z=0;S.f=1;S.pos=[1,1];S.dir=0;const n=chap();$("m").hidden=1;ui();if(n)book()}
+function lose(){const ev=S.nev;rcd("敗");ev.d++;if(S.set.diff=="nm"){C=null;$("m").hidden=1;return permaDeath()}const lp=S.set.diff=="easy"?.15:.3;S.gold=Math.floor(S.gold*(1-lp));S.party.forEach(m=>{m.hp=Math.ceil(m.mh*.3);m.mp=6;m.st={};m.g=0;m.dn=0});C=null;log(`全隊倒下，被緊急撈回戰艦，損失 ${Math.round(lp*100)}% 星幣。`);$("m").hidden=1;if(S.flight){S.flight=false;S.z=0;S.f=1;S.pos=[5,6];S.dir=0;S.groundReturn=null;saySis("飛艦緊急撤離成功，已返回哨站七號。先整備隊伍再出發。",true);ui()}else base()}
+function base(){if(C)return;genStock();S.z=0;S.f=1;S.pos=[5,6];S.dir=0;const n=chap();$("m").hidden=1;ui();if(n)book()}
 /* 據點 */
-function shop(){mo(`<h3>🏪 補給站</h3><p>💰${S.gold}　修復針劑 x${S.pot}</p><div class=row><button onclick=buy()>買修復針劑 20 星幣</button></div>`)}
-function buy(){if(S.gold<20)return;S.gold-=20;S.pot++;ui();shop()}
-function inn(){mo(`<h3>🏥 醫療艙</h3><p>全隊完全恢復並復活，費用 10 星幣。</p><div class=row><button ${S.gold<10?"disabled":""} onclick=heal()>治療</button></div>`)}
-function heal(){S.gold-=10;S.party.forEach(m=>{m.hp=m.mh;m.mp=12});log("全隊恢復。");ui();inn()}
-function hire(){mo(`<h3>📋 招募艙</h3><p>每位 50 星幣（隊伍 ${S.party.length}/8）</p><div class=row>${S.pool.map(c=>`<button ${S.gold<50||S.party.length>=8?"disabled":""} onclick="hr(${c})">${CL[c][2]}${CL[c][1]}（${CL[c][0]}）</button>`).join("")||"沒有可招募的隊員。"}</div>`)}
-function hr(c){S.gold-=50;S.pool=S.pool.filter(x=>x!=c);const l=Math.max(1,Math.round(S.party.reduce((s,m)=>s+m.l,0)/S.party.length)-1);S.party.push(mk(c,l));log(`${CL[c][1]}加入小隊。`);ui();hire()}
-function forge(){const p=40*(S.w+1);mo(`<h3>🔧 兵工廠</h3><p>全隊武器 +${S.w}，每級攻擊 +2（上限 +10）。</p><div class=row><button ${S.gold<p||S.w>=10?"disabled":""} onclick=up()>強化 ${p} 星幣</button></div>`)}
-function up(){S.gold-=40*(S.w+1);S.w++;ui();forge()}
 function gate(){const end=Math.max(3,S.unl+2);mo(`<h3>🌀 躍遷門・無限遠征</h3><p>目前已解鎖至第 ${S.unl} 戰區。每個戰區有 2 層，完成第 2 層首領戰即可解鎖下一區。</p><div class=row>${Array.from({length:end},(_,i)=>i+1).map(z=>`<button ${z>S.unl?"disabled":""} onclick="go(${z})">${zoneName(z)}${z>S.unl?"（未解鎖）":""}</button>`).join("")}</div>`)}
-function go(z){if(!Number.isInteger(z)||z<1||z>S.unl){log("該戰區尚未解鎖。");$("m").hidden=1;ui();return}S.z=z;S.f=1;S.pos=[1,1];S.dir=0;S.nev.zs[z]=1;log(`躍遷至${zoneName(z)}。`);saySis(`躍遷完成，已抵達${zoneName(z)}。姐姐已標記補給箱與首領可能出現的區域，請小心探索。`,true);$("m").hidden=1;ui()}
+function go(z){if(!Number.isInteger(z)||z<1||z>S.unl){log("該戰區尚未解鎖。");$("m").hidden=1;ui();return}S.z=z;S.f=1;S.pos=[1,1];S.dir=0;S.ret=null;S.nev.zs[z]=1;log(`躍遷至${zoneName(z)}。`);saySis(`躍遷完成，已抵達${zoneName(z)}。姐姐已標記補給箱與首領可能出現的區域，請小心探索。`,true);$("m").hidden=1;ui()}
 function ending(){mo(`<h3>✅ 星海可期</h3><p>核心意識沉默了。深空傳來一段無人能解的信號，像是在回應你們。小兵們望向舷窗，元帥之路才剛開始。</p><div class=row><button onclick=ng()>重啟戰線（第二周目）</button><button onclick=cl2()>繼續</button></div>`,1)}
 const cl2=()=>{$("m").hidden=1;base()};
 function ng(){S=ns(S);$("m").hidden=1;ui()}
-function rst(){if(confirm("確定要清除存檔並重新開始？")){S=ns();$("m").hidden=1;ui()}}
 /* 小說（離線範本） */
 function chap(force){const e=S.nev,sc=e.k+3*e.b+3*e.d+e.c;if(!force&&sc<3)return 0;
 const z=zoneName(Math.max(1,...Object.keys(e.zs).map(Number))),P=S.party.map(pn),a=P[0],b=P[1]||P[0],n=S.nov.length+1,T=[];
@@ -358,7 +313,7 @@ const r=await Promise.race([puter.ai.chat(p,{model:"claude-sonnet-4-5"}),tmo(120
 const sm=window.claude&&await claude.use("sample");if(sm){try{return(await sm(p,{cache:false})).text}catch(e){}}return null}
 async function aiw(i,man){const c=S.nov[i];if(!c||c.busy)return;
 const e=c.ev||{},P=S.party.map(m=>CL[m.c][1]+"（"+CL[m.c][0]+"）").join("、"),pv=S.nov[i-1]?S.nov[i-1].text.slice(0,200):"（無）",F=(e.fs||[]).map((f,k)=>`戰鬥${k+1}（${f.z}${f.bs?"，首領戰":""}，結果：${f.res}）：${f.lines.join("／")}`).join("\n");
-const p=`你是連載網路小說編輯，請寫《星途小兵錄》第${c.n}集。\n【世界觀】星際戰爭延燒數百年，資質平庸的新兵靠智慧與同袍扶持，立志成為統一星海的元帥；據點是前線星港「哨站七號」。\n【文風】${STY}\n【人物】${P}（原創，沿用這些名字；全員皆為女性，代名詞一律用「她」「她們」）。\n【內容要求】繁體中文；900–1300 字；6–10 段；必須把下列戰鬥紀錄擴寫成連貫的打鬥過程，不可略過，數字可轉為感受；第一行為 10 字內標題，空一行後接純文字段落。\n【前情】${pv}\n【本集紀錄】地點：${c.z||""}；擊倒 ${e.k||0} 隻（${(e.n||[]).join("、")}）；首領：${(e.bo||[]).join("、")||"無"}；補給箱 ${e.c||0}；全滅 ${e.d||0} 次；星幣 ${e.g||0}。\n${F}`;
+const p=`你是連載網路小說編輯，請寫《星途小兵錄》第${c.n}集。\n【世界觀】星際戰爭延燒數百年，資質平庸的新兵靠智慧與同袍扶持，立志成為統一星海的元帥；據點是前線戰艦「哨站七號」，艦上有補給官凌薇、招募官沈穎、醫務官白芷、軍械師鐵蘭、領航員星河、任務官紀嵐、情報官書瑤、艙務長小暖與電腦姐姐。\n【文風】${STY}\n【人物】${P}（原創，沿用這些名字；全員皆為女性，代名詞一律用「她」「她們」）。\n【內容要求】繁體中文；900–1300 字；6–10 段；必須把下列戰鬥紀錄擴寫成連貫的打鬥過程，不可略過，數字可轉為感受；第一行為 10 字內標題，空一行後接純文字段落。\n【前情】${pv}\n【本集紀錄】地點：${c.z||""}；擊倒 ${e.k||0} 隻（${(e.n||[]).join("、")}）；首領：${(e.bo||[]).join("、")||"無"}；補給箱 ${e.c||0}；全滅 ${e.d||0} 次；星幣 ${e.g||0}。\n${F}`;
 c.busy=1;rb();try{const tx=await llm(p,man);if(!tx)throw{code:"沒有可用的 AI，已保留範本"};const t=tx.trim().split("\n"),ti=t.shift().replace(/[#*《》「」\s]/g,"").slice(0,24),b=t.filter(x=>x.trim()).join("\n");if(b.length>150){c.title=`第${c.n}集：${ti}`;c.text=b;c.ai=1}}catch(x){log("AI 寫作未完成："+(x.code||"錯誤"))}c.busy=0;sv();rb()}
 async function sav(n,d){const dn=window.claude&&await claude.use("downloads");if(dn){try{await dn.save({filename:n,data:d})}catch(e){}return}const u=URL.createObjectURL(d instanceof Blob?d:new Blob([d],{type:"text/plain;charset=utf-8"}));if(!window.open(u))location.href=u}
 async function dl(){await sav("星途小兵錄.txt","《星途小兵錄》\n\n"+S.nov.map(c=>c.title+"\n"+c.text).join("\n\n"))}
@@ -382,6 +337,258 @@ async function pdf(){if(!window.jspdf)return alert("PDF 函式庫未載入，請
 const IP=flow(),V=Math.max(1,Math.ceil(IP.length/6)),doc=new window.jspdf.jsPDF({unit:"mm",format:"a4",orientation:"landscape",compress:true}),add=(c,f)=>{if(!f)doc.addPage("a4","landscape");doc.addImage(c.toDataURL("image/jpeg",.85),"JPEG",0,0,297,210)};
 add(guide(V),1);for(let v=0;v<V;v++){const P=[cov(v,V)];for(let k=0;k<6;k++){const g=IP[v*6+k]||notes();pnum(g,k+2);P.push(g)}P.push(bck());add(sheet(P))}
 await sav("星途小兵錄_摺頁小冊.pdf",doc.output("blob"))}
+/* ===== v13：移植自《凡人修仙傳》的系統（戰艦NPC／技能／狀態／裝備／任務／成就／圖鑑／設定／存檔／音效／迷宮事件） ===== */
+const pure=n=>String(n).replace(/・.*$/,"").replace(/[^\u4e00-\u9fa5]/g,""),escH=t=>String(t==null?"":t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const rmv=(a,o)=>{const i=a.indexOf(o);if(i>=0)a.splice(i,1)},lsg=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lss=(k,v)=>{try{localStorage.setItem(k,v);return true}catch(e){return false}};
+const GEN=["量子獵犬","裂隙機兵","星塵掠奪者","深空寄生體","電弧獸","虛空蜂群"],FLN=["帝國軍攔截戰機","帝國軍巡邏艇","帝國軍無人砲艇","帝國軍護航巡洋艦","帝國軍星域旗艦"];
+const DEXN=[...new Set([].concat(...EN.map(a=>a.map(pure)),GEN,BO.map(b=>b[0]),FLN,["擬態補給箱"]))].filter(Boolean);
+const DF={easy:{n:"新兵（簡單）",h:.75,a:.8,r:1},normal:{n:"正規（普通）",h:1,a:1,r:1},hard:{n:"精銳（困難）",h:1.3,a:1.2,r:1.25},nm:{n:"絕境（全滅即結束）",h:1.7,a:1.45,r:1.6}};
+const dfc=()=>DF[S.set&&S.set.diff]||DF.normal;
+const MODS={rich:["💰富礦","星幣與掉落提升"],elite:["💪精銳部隊","敵人更強，戰功更多"],calm:["🌫️寂靜","敵人較少"],swarm:["🐜蟲潮","敵人較多但較脆弱"]};
+const POI={f:"⛲",k:"🔑",l:"🔒",s:"⛩️",v:"💁‍♀️"};
+/* --- 狀態與技能 --- */
+const ST={poison:["☠️","中毒"],stun:["💫","定身"],weak:["🔻","虛弱"],rage:["🔺","強化"],taunt:["📢","嘲諷"]};
+const stI=o=>Object.keys(o.st||{}).map(k=>ST[k][0]).join("")+(o.g?"🛡️":"");
+const SPN={power:"重擊",poison:"劇毒",weak:"干擾",stun:"電擊麻痺",drain:"吸取",aoe:"範圍轟擊"},SPT=[[],[["power",.3]],[["poison",.35]],[["stun",.25]],[["drain",.4]],[["weak",.3]]];
+const spOf=(n,b)=>b?[["aoe",.3],["power",.2]]:SPT[[...pure(n)].reduce((s,c)=>s+c.charCodeAt(0),0)%SPT.length];
+const SKD={
+壓制砲擊:{lv:1,mp:3,tg:"e",pw:1.9,ic:"💥",d:"單體強力砲擊"},震撼彈:{lv:4,mp:4,tg:"e",pw:1.3,fx:["stun",1,.5],ic:"💫",d:"50%使敵人定身"},戰吼嘲諷:{lv:7,mp:3,tg:"s",buff:["taunt",2],guard:1,ic:"📢",d:"2回合吸引攻擊並防禦"},飽和轟炸:{lv:11,mp:8,tg:"ea",pw:1.1,ic:"🌀",d:"攻擊全體敵人"},
+掩護:{lv:1,mp:3,tg:"s",buff:["taunt",2],guard:1,ic:"🛡️",d:"2回合吸引攻擊並防禦"},盾擊:{lv:4,mp:4,tg:"e",pw:1.2,fx:["stun",1,.35],ic:"🔰",d:"35%使敵人定身"},護盾陣列:{lv:7,mp:7,tg:"aa",guard:1,ic:"🔰",d:"全隊本回合受傷減半"},反擊風暴:{lv:11,mp:9,tg:"ea",pw:.9,ic:"🌀",d:"攻擊全體敵人"},
+電弧:{lv:1,mp:4,tg:"e",pw:1.2,ic:"⚡",d:"單體電擊"},電磁脈衝:{lv:4,mp:6,tg:"e",pw:1.2,fx:["stun",1,.35],ic:"🔌",d:"35%使敵人定身"},電磁風暴:{lv:7,mp:8,tg:"ea",pw:.75,fx:["weak",2,.5],ic:"🌩️",d:"全體攻擊，可能虛弱"},軌道轟擊:{lv:11,mp:10,tg:"e",pw:2.8,ic:"☄️",d:"單體超強攻擊"},
+光刃連斬:{lv:1,mp:3,tg:"e",pw:.95,hits:2,ic:"⚔️",d:"連斬兩次"},淬毒光刃:{lv:4,mp:4,tg:"e",pw:.9,fx:["poison",4,.9],ic:"🗡️",d:"使敵人中毒"},光刃風暴:{lv:7,mp:8,tg:"ea",pw:.75,ic:"🌧️",d:"攻擊全體敵人"},極限斬:{lv:11,mp:10,tg:"e",pw:3.2,ic:"🌟",d:"單體極高傷害"},
+背刺:{lv:1,mp:3,tg:"e",pw:2.4,ic:"🗡️",d:"單體高傷害"},麻痺毒針:{lv:4,mp:4,tg:"e",pw:1.1,fx:["poison",5,1],ic:"💉",d:"必定使敵人中毒"},煙幕彈:{lv:7,mp:6,tg:"ea",fx:["weak",3,.9],ic:"💨",d:"全體敵人虛弱"},絕命一擊:{lv:11,mp:10,tg:"e",pw:3.6,ic:"☠️",d:"單體致命一擊"},
+連擊:{lv:1,mp:3,tg:"e",pw:.95,hits:2,ic:"👊",d:"連打兩下"},震盪拳:{lv:4,mp:5,tg:"e",pw:1.4,fx:["stun",1,.45],ic:"🖐️",d:"45%使敵人定身"},調息:{lv:7,mp:0,tg:"s",heal:[12,20],mpg:5,ic:"🧘",d:"自身回復生命與能量"},百裂拳:{lv:11,mp:9,tg:"e",pw:.55,hits:5,ic:"💢",d:"連打五下"},
+修復針劑:{lv:1,mp:4,tg:"a",heal:[20,30],ic:"💉",d:"單體治療"},淨化:{lv:3,mp:4,tg:"a",heal:[8,12],cure:1,ic:"💧",d:"解除異常並小幅治療"},群體修復:{lv:6,mp:9,tg:"aa",heal:[14,20],ic:"🌟",d:"全隊治療"},緊急復甦:{lv:9,mp:10,tg:"d",rez:.4,ic:"♻️",d:"復活倒下的隊員(40%)"},
+通訊鼓舞:{lv:1,mp:4,tg:"a",heal:[18,28],ic:"🎵",d:"單體治療"},戰術增幅:{lv:3,mp:6,tg:"aa",buff:["rage",3],ic:"🎶",d:"全隊傷害提升3回合"},干擾訊號:{lv:6,mp:8,tg:"ea",fx:["stun",1,.8],ic:"📡",d:"全體敵人可能定身"},重整頻道:{lv:10,mp:10,tg:"aa",heal:[10,16],cure:1,ic:"🎼",d:"全隊治療並解除異常"}};
+const CS=[["壓制砲擊","震撼彈","戰吼嘲諷","飽和轟炸"],["掩護","盾擊","護盾陣列","反擊風暴"],["電弧","電磁脈衝","電磁風暴","軌道轟擊"],["光刃連斬","淬毒光刃","光刃風暴","極限斬"],["背刺","麻痺毒針","煙幕彈","絕命一擊"],["連擊","震盪拳","調息","百裂拳"],["修復針劑","淨化","群體修復","緊急復甦"],["通訊鼓舞","戰術增幅","干擾訊號","重整頻道"]];
+const SKL=m=>CS[m.c].filter(k=>SKD[k].lv<=m.l);
+/* --- 裝備 --- */
+const TN=["制式","改良","精良","稀有","傳奇"],TI=["⚪","🍀","💎","🔮","🌟"],INV=30;
+const SLT=[["head","頭盔","⛑️"],["body","戰甲","🥋"],["lh","護盾","🛡️"],["rh","脈衝槍","🔫"],["legs","戰靴","👢"],["acc","晶片","📟"]];
+const SETS={fire:{n:"烈焰",e:"🔥",t2:"攻擊+4",t4:"暴擊率25%，暴擊傷害×2"},guard:{n:"堡壘",e:"🔰",t2:"防禦+3",t4:"每回合結束回復5點生命"},moon:{n:"噬能",e:"🌙",t2:"最大生命+15",t4:"吸血：傷害的30%轉為生命"},thunder:{n:"雷霆",e:"⚡",t2:"暴擊率+10%",t4:"攻擊時20%使敵人定身"},sage:{n:"智械",e:"📖",t2:"最大能量+4",t4:"技能消耗-1，治療量+25%"}};
+const ef=it=>{const u=it.up||0;return{atk:it.atk?it.atk+u*2:0,def:it.def?it.def+u:0,hp:it.hp?it.hp+u*3:0,mp:it.mp?it.mp+u:0}};
+function E(p){const e={atk:0,def:0,hp:0,mp:0,crit:0,regen:0,leech:0,stunOn:0,mpd:0,healx:1,c:{}},q=p.eq||{};for(const k in q){const it=q[k];if(!it)continue;const f=ef(it);e.atk+=f.atk;e.def+=f.def;e.hp+=f.hp;e.mp+=f.mp;if(it.set)e.c[it.set]=(e.c[it.set]||0)+1}
+const c=e.c;if(c.fire>=2)e.atk+=4;if(c.fire>=4)e.crit+=.25;if(c.guard>=2)e.def+=3;if(c.guard>=4)e.regen=5;if(c.moon>=2)e.hp+=15;if(c.moon>=4)e.leech=.3;if(c.thunder>=2)e.crit+=.1;if(c.thunder>=4)e.stunOn=1;if(c.sage>=2)e.mp+=4;if(c.sage>=4){e.mpd=1;e.healx=1.25}return e}
+const mm=m=>12+Math.floor(m.l/4)*2+E(m).mp,recl=m=>{m.mh=mh(m);m.hp=Math.min(m.hp,m.mh);m.mp=Math.min(m.mp,mm(m))};
+const itName=it=>(it.set?SETS[it.set].n+"·":"")+TN[it.tier]+SLT.find(s=>s[0]===it.sl)[1];
+function mkItem(t){const s=pk(SLT),k=s[0],it={sl:k,tier:t,e:s[2],up:0};if(k=="rh")it.atk=2+t*3+R(0,2);else if(k=="acc"){if(R(0,1))it.hp=5+t*5;else it.mp=1+t}else{it.def=Math.ceil(t/2)+1+(k=="body"?Math.floor(t/2):0);if(k=="body")it.hp=t*4}if(t>=1&&Math.random()<.5)it.set=pk(Object.keys(SETS));it.n=itName(it);return it}
+const statTxt=it=>{const f=ef(it);return[f.atk&&"攻+"+f.atk,f.def&&"防+"+f.def,f.hp&&"生命+"+f.hp,f.mp&&"能量+"+f.mp].filter(Boolean).join(" ")};
+const itemTxt=it=>`${TI[it.tier]}${it.e} ${it.up?"+"+it.up+" ":""}${it.n}（${statTxt(it)}）`,sellVal=it=>10+it.tier*15+(it.up||0)*25;
+let lootLog=[];
+function giveItem(it){if(S.inv.length>=INV){const v=sellVal(it);S.gold+=v;log(`🎒 儲物袋已滿，${itemTxt(it)} 直接出售（+${v}💰）`);lootLog.push(TI[it.tier]+it.n+"（已賣）")}else{it.nw=1;S.inv.push(it);log(`🎁 獲得 ${itemTxt(it)}`);lootLog.push(TI[it.tier]+it.e+it.n)}}
+function flushLoot(){if(lootLog.length)toast("🎁 掉落："+lootLog.join("、"));lootLog=[]}
+function loot(f,boss,rich){const n=boss?2:Math.random()<.35?1:0;for(let i=0;i<n;i++){const q=R(1,100)+Math.floor(f.xp/3)+(boss?40:0)+dep()*2+(rich?20:0),t=Math.max(q<65?0:q<90?1:q<110?2:q<130?3:4,boss?3:0);giveItem(mkItem(t))}}
+const avgL=()=>Math.round(S.party.reduce((s,m)=>s+m.l,0)/S.party.length);
+function genStock(){const t=Math.min(3,Math.floor(avgL()/6));S.stock=[];for(let i=0;i<3;i++){const it=mkItem(Math.min(4,t+(Math.random()<.25?1:0)));it.pr=60+it.tier*80+R(0,20);S.stock.push(it)}}
+/* --- 道具 --- */
+const IT={pot:{e:"💉",n:"修復針劑",pr:20,d:"生命+30"},eth:{e:"🔋",n:"能量電池",pr:30,d:"能量+8"},herb:{e:"💊",n:"解毒劑",pr:15,d:"解除異常"},scr:{e:"♻️",n:"復活模組",pr:80,d:"復活倒下隊員(50%)"}};
+const cnt=k=>k=="pot"?S.pot:(S.cn[k]||0),addc=(k,n)=>{if(k=="pot")S.pot+=n;else S.cn[k]=(S.cn[k]||0)+n};
+const cure=p=>["poison","stun","weak"].forEach(k=>delete p.st[k]);
+function useIt(k,p){if(k=="pot")p.hp=Math.min(p.mh,p.hp+30);else if(k=="eth")p.mp=Math.min(mm(p),p.mp+8);else if(k=="herb")cure(p);else if(k=="scr"){p.hp=Math.max(1,Math.ceil(p.mh*.5));p.st={};p.g=0}sfx("heal")}
+/* --- 音效 --- */
+let AX=null,musT=null,mi=0,lastMus=0;
+function actx(){if(!AX){try{AX=new(window.AudioContext||window.webkitAudioContext)()}catch(e){return null}}if(AX.state==="suspended")AX.resume();return AX}
+function tone(f,d,ty,v,sl,dl){const a=AX;if(!a)return;const t=a.currentTime+(dl||0),o=a.createOscillator(),g=a.createGain();o.type=ty||"square";o.frequency.setValueAtTime(f,t);if(sl)o.frequency.exponentialRampToValueAtTime(Math.max(20,f+sl),t+d);g.gain.setValueAtTime(v||.05,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.05)}
+const SFX={hit:()=>{tone(220,.12,"square",.06,-150);tone(90,.1,"sawtooth",.05,-40)},hurt:()=>tone(150,.18,"sawtooth",.06,-100),heal:()=>{tone(520,.12,"sine",.05);tone(780,.18,"sine",.05,0,.1)},coin:()=>{tone(880,.08,"square",.04);tone(1320,.14,"square",.04,0,.07)},level:()=>[523,659,784,1047].forEach((f,i)=>tone(f,.18,"triangle",.06,0,i*.1)),win:()=>[523,659,784].forEach((f,i)=>tone(f,.2,"triangle",.06,0,i*.12)),lose:()=>[330,262,196].forEach((f,i)=>tone(f,.3,"sawtooth",.05,0,i*.2)),alert:()=>{tone(300,.1,"square",.05);tone(400,.12,"square",.05,0,.1)},boss:()=>{tone(80,.5,"sawtooth",.08,-30);tone(120,.5,"square",.05,-40,.1)},click:()=>tone(600,.05,"square",.03),chest:()=>[660,880,1100].forEach((f,i)=>tone(f,.1,"square",.04,0,i*.06)),trap:()=>tone(200,.3,"sawtooth",.06,-150)};
+function sfx(n){if(!S||!S.set||!S.set.sfx||!actx())return;try{SFX[n]&&SFX[n]()}catch(e){}}
+const SC={town:[262,330,392,523,392,330],dun:[110,131,147,131,165,147,110,98],fight:[147,175,147,196,175,147,220,196]};
+function musicTick(){if(!S||!S.set||!S.set.mus||!AX||AX.state!=="running"||document.hidden)return;const m=C?"fight":S.z?"dun":"town",sc=SC[m];mi++;tone(sc[mi%sc.length],m==="fight"?.22:.5,m==="town"?"triangle":"sine",m==="fight"?.035:.028);if(mi%4===0&&m!=="fight")tone(sc[0]/2,1.4,"sine",.03)}
+setInterval(()=>{const m=C?1:2;if(m!==lastMus){lastMus=m;clearInterval(musT);musT=setInterval(musicTick,C?260:520)}},400);
+["pointerdown","touchstart","touchend","mousedown","keydown"].forEach(e=>addEventListener(e,()=>actx(),{once:true}));
+function toast(t){const d=document.createElement("div");d.className="toast";d.textContent=t;document.body.appendChild(d);setTimeout(()=>{if(d.parentNode)d.parentNode.removeChild(d)},3800)}
+/* --- 通用選單 --- */
+const mx=()=>{$("m").hidden=1;if(!C)ui()},mx0=()=>{$("m").hidden=1};
+function mn(title,rows,back){const m=$("m");m.innerHTML="";const b=document.createElement("div");b.className="bx";const h=document.createElement("h3");h.innerHTML=title;b.appendChild(h);const g=document.createElement("div");g.className="msub";g.textContent="💰 "+S.gold;b.appendChild(g);
+rows.forEach(r=>{if(!r)return;const x=document.createElement("button");x.className="mrow";x.innerHTML=r[0];x.disabled=!!r[2];x.onclick=r[1];b.appendChild(x)});
+const c=document.createElement("button");c.className="mrow";c.textContent=back?"↩️ 返回":"關閉";c.onclick=back||mx;b.appendChild(c);m.appendChild(b);m.hidden=false}
+function pay(c,f,re){if(S.gold<c)return;S.gold-=c;f();sfx("coin");ui();re()}
+/* --- 戰艦NPC --- */
+const NPC={sup:{e:"👩‍💼",r:"補給官",n:"凌薇",l:["歡迎光臨補給站！針劑、電池、裝備，要什麼儘管說。","每次返艦，裝備庫存都會更新喔。"]},
+rec:{e:"👩‍✈️",r:"招募官",n:"沈穎",l:["想找新夥伴嗎？招募艙裡的人都等著上戰場。","隊伍最多八人，多的可以先送去休眠艙。"]},
+med:{e:"👩‍🔬",r:"醫務官",n:"白芷",l:["受傷了就來醫療艙，我替全隊處理。","別硬撐，倒下的隊員我也救得回來。"]},
+arm:{e:"👩‍🔧",r:"軍械師",n:"鐵蘭",l:["武器強化、裝備改造，交給我。","重鑄可以洗出不同的套裝屬性，賭一把嗎？"]},
+nav:{e:"👩‍🚀",r:"領航員",n:"星河",l:["躍遷座標已就緒，想去哪個戰區？","自走砲飛艦隨時可以出港。"]},
+ops:{e:"👩‍🏫",r:"任務官",n:"紀嵐",l:["這裡有幾份委託，完成了有豐厚報酬。"]},
+int:{e:"👩‍🎓",r:"情報官",n:"書瑤",l:["敵情圖鑑、成就和連載小說，都由我整理。","你們的冒險，我都記錄下來了。"]},
+bar:{e:"👩‍🍳",r:"艙務長",n:"小暖",l:["休眠艙、儲物袋和隊伍裝備，都歸我管。","累了就讓隊員去休眠艙睡一下吧。"]},
+sis:{e:"💻",r:"電腦姐姐",n:"艦載AI",l:["新兵，存檔與設定都在我這裡。","我會持續監控戰況，隨時支援你們。"]}};
+let SHIPM=null;
+function shipMap(){if(SHIPM)return SHIPM;const g=Array.from({length:11},(_,y)=>Array.from({length:11},(_,x)=>(x==0||y==0||x==10||y==10)?1:0));[[3,3],[7,3],[3,7],[7,7]].forEach(([x,y])=>g[y][x]=1);
+const ps={sup:[2,1],rec:[5,1],med:[8,1],arm:[1,5],ops:[9,5],sis:[5,3],int:[2,9],nav:[5,9],bar:[8,9]};
+return SHIPM={g,E:Object.keys(ps).map(id=>({x:ps[id][0],y:ps[id][1],t:"n",id})),seen:g.map(r=>r.map(()=>1)),mod:null,ship:1}}
+function npcBd(id){if(id=="med")return S.party.some(m=>m.hp<m.mh)?"🩹":"";if(id=="ops")return S.quest&&qProg(S.quest)>=S.quest.n?"❗":"";if(id=="rec")return S.pool.length&&S.party.length<8?"🆕":"";return""}
+function los(M,x0,y0,x1,y1){const n=Math.ceil(Math.hypot(x1-x0,y1-y0)*4);for(let i=1;i<n;i++){const t=i/n,cx=Math.floor(x0+.5+(x1-x0)*t),cy=Math.floor(y0+.5+(y1-y0)*t);if(M.g[cy]&&M.g[cy][cx])return false}return true}
+function drawShip(ctx,M,px,py,dir,fov,w,h){ctx.fillStyle="rgba(190,235,255,.22)";for(let i=0;i<3;i++)ctx.fillRect(w*(.2+i*.22),h*.07,w*.14,3);
+const L=[];for(const e of M.E){const dx=e.x-px,dy=e.y-py,d=Math.hypot(dx,dy);if(d>9)continue;const ang=Math.atan2(dx,-dy)-dir*Math.PI/2,rel=((ang+Math.PI*3)%(Math.PI*2))-Math.PI;if(Math.abs(rel)>fov*.62||!los(M,px,py,e.x,e.y))continue;L.push({e,d,rel})}
+L.sort((a,b)=>b.d-a.d);ctx.textAlign="center";L.forEach(o=>{const n=NPC[o.e.id],ex=w/2+Math.tan(o.rel)*w*.55,sz=Math.max(18,Math.min(72,84/(o.d+.45))),ey=h/2+sz*.42;ctx.font=sz+"px sans-serif";ctx.fillStyle="#fff";ctx.fillText(n.e,ex,ey);
+if(o.d<7){const bd=npcBd(o.e.id);ctx.font="bold "+Math.max(10,Math.min(14,sz*.3))+"px sans-serif";ctx.fillStyle="#dff7ff";ctx.fillText(n.r+(bd?" "+bd:""),ex,ey-sz*.88)}});ctx.textAlign="left"}
+function npc(id){const n=NPC[id],b=()=>npc(id);const R_={
+sup:[["🛒 補給站（道具・裝備）",()=>shop(b)],["🎒 儲物袋／出售",()=>bagMenu(b)]],
+rec:[["📋 招募艙",()=>hire(b)],["🛌 休眠艙（隊員換班）",()=>campMenu(b)]],
+med:[["🏥 醫療艙：全隊治療與復活（10💰）",()=>inn(b)]],
+arm:[["🔫 兵工廠：武器與裝備強化",()=>forge(b)]],
+nav:[["🌀 躍遷門：選擇戰區",()=>{mx0();gate()}],["🚀 自走砲飛艦",()=>{mx0();toggleFlight()}],S.ret?["↩️ 返回上次出擊位置",backRet]:null],
+ops:[["📋 任務堂",()=>questMenu(b)]],
+int:[["📜 星途小兵錄（小說）",()=>{mx0();book()}],["📖 敵情圖鑑",()=>dexMenu(b)],["🏅 成就",()=>achMenu(b)],["❓ 劇情與說明",()=>helpMenu(0,b)]],
+bar:[["🛌 休眠艙",()=>campMenu(b)],["👥 隊伍裝備",()=>teamMenu(b)],["🎒 儲物袋",()=>bagMenu(b)],["🏕️ 使用休整包",restCamp]],
+sis:[["💾 存檔／讀檔",()=>saveMenu(b)],["⚙️ 設定",()=>setMenu(b)],[`🗣️ 語音：${S.sisVoice?"開":"關"}`,()=>{toggleSisVoice();mx0()}],["🔄 重新開始",rst]]}[id];
+mn(`${n.e} ${n.r}・${n.n}<br><small>「${pk(n.l)}」</small>`,R_)}
+function backRet(){const r=S.ret;if(!r)return;S.ret=null;S.z=r.z;S.f=r.f;S.pos=r.pos;S.dir=r.dir;mx0();saySis("已回到上次出擊的位置。",true);ui()}
+function retBase(){if(C)return;if(S.z>0&&!S.flight)S.ret={z:S.z,f:S.f,pos:S.pos.slice(),dir:S.dir};base()}
+function shop(b){const rows=[];Object.keys(IT).forEach(k=>{const i=IT[k];rows.push([`${i.e} ${i.n}（${i.d}）${i.pr}💰　持有 ${cnt(k)}`,()=>pay(i.pr,()=>addc(k,1),()=>shop(b)),S.gold<i.pr])});
+rows.push([`🏕️ 休整包 30💰（恢復40%生命與能量；持有 ${S.camps}）`,()=>pay(30,()=>S.camps++,()=>shop(b)),S.gold<30]);if(!S.stock)genStock();
+S.stock.forEach(it=>rows.push([`${itemTxt(it)}　${it.pr}💰`,()=>{if(S.inv.length>=INV){toast("🎒 儲物袋已滿");return}pay(it.pr,()=>{rmv(S.stock,it);S.inv.push(it)},()=>shop(b))},S.gold<it.pr||S.inv.length>=INV]));
+mn("🛒 補給站<br><small>裝備庫存每次返艦更新</small>",rows,b)}
+function inn(b){const all=S.party.concat(S.camp);mn("🏥 醫療艙<br><small>全隊（含休眠艙）完全恢復並復活，費用 10 星幣。</small>",[["💊 治療全員",()=>{S.gold-=10;all.forEach(m=>{m.hp=m.mh;m.mp=mm(m);m.st={};m.g=0});log("全隊恢復。");sfx("heal");ui();inn(b)},S.gold<10]],b)}
+function hire(b){mn(`📋 招募艙<br><small>每位 50 星幣（隊伍 ${S.party.length}/8）</small>`,S.pool.map(c=>[`${CL[c][2]}${CL[c][1]}（${CL[c][0]}）50💰`,()=>hr(c,b),S.gold<50||S.party.length>=8]).concat(S.pool.length?[]:[["（沒有可招募的隊員）",()=>{},true]]),b)}
+function hr(c,b){S.gold-=50;S.pool=S.pool.filter(x=>x!=c);S.party.push(mk(c,Math.max(1,avgL()-1)));log(`${CL[c][1]}加入小隊。`);sfx("coin");ui();hire(b)}
+function campMenu(b){const rows=[],lab=m=>`${m.hp?CL[m.c][2]:"💀"} ${pn(m)} Lv${m.l}　❤️${m.hp}/${m.mh}`;
+S.party.forEach(m=>rows.push([`🛌 轉入休眠艙　${lab(m)}`,()=>{if(S.party.length<=2)return;S.party.splice(S.party.indexOf(m),1);S.camp.push(m);ui();campMenu(b)},S.party.length<=2]));
+S.camp.forEach(m=>rows.push([`📣 喚醒入隊　${lab(m)}`,()=>{if(S.party.length>=8)return;rmv(S.camp,m);S.party.push(m);ui();campMenu(b)},S.party.length>=8]));
+mn(`🛌 休眠艙（隊伍 ${S.party.length}/8　休眠 ${S.camp.length}）<br><small>休眠者不獲得戰功，但探索時會緩慢恢復</small>`,rows,b)}
+function restCamp(){if(C)return;if(S.camps<1){toast("🏕️ 沒有休整包了，可到補給站購買");return}S.camps--;S.party.forEach(m=>{m.st={};if(m.hp>0){m.hp=Math.min(m.mh,m.hp+Math.ceil(m.mh*.4));m.mp=Math.min(mm(m),m.mp+Math.ceil(mm(m)*.4))}});sfx("heal");log("🏕️ 使用休整包，全隊恢復了生命與能量。");mx0();ui()}
+function forge(b){const w=40*(S.w+1),rows=[[`🔫 全隊武器強化 +${S.w} → +${S.w+1}（每級攻擊+2，上限+10）${w}💰`,()=>pay(w,()=>{S.w++;S.party.forEach(recl)},()=>forge(b)),S.gold<w||S.w>=10]];
+S.party.forEach(p=>SLT.forEach(s=>{const it=p.eq[s[0]];if(it)rows.push([`${CL[p.c][2]}${pn(p)}　${itemTxt(it)}`,()=>forgeItem(it,b)])}));
+S.inv.slice().sort((a,c)=>c.tier-a.tier||(c.up||0)-(a.up||0)).slice(0,12).forEach(it=>rows.push([`🎒 ${itemTxt(it)}`,()=>forgeItem(it,b)]));
+mn("🔫 兵工廠<br><small>裝備強化最高 +10；重鑄可重新抽取套裝屬性</small>",rows,b)}
+function forgeItem(it,b){const up=it.up||0,c=Math.round(30*(1+up)*(1+it.tier*.6)),rc=60+it.tier*60,rows=[[`🔨 強化 +${up} → +${up+1}　${c}💰`,()=>pay(c,()=>{it.up=up+1;it.n=itName(it);S.party.forEach(recl)},()=>forgeItem(it,b)),up>=10||S.gold<c]];
+if(it.tier>=1)rows.push([`🔁 重鑄套裝屬性　${rc}💰`,()=>pay(rc,()=>{it.set=Math.random()<.2?undefined:pk(Object.keys(SETS));it.n=itName(it);S.party.forEach(recl)},()=>forgeItem(it,b)),S.gold<rc]);
+mn(`🔫 ${itemTxt(it)}`,rows,()=>forge(b))}
+function bagMenu(b){const list=S.inv.slice().sort((a,c)=>c.tier-a.tier||(c.up||0)-(a.up||0)),low=S.inv.filter(x=>x.tier<2&&!x.up),fresh=list.filter(x=>x.nw).length,rows=[["👥 隊伍裝備",()=>teamMenu(()=>bagMenu(b))],["🧪 使用道具",()=>itemMenu(false,()=>bagMenu(b))],[`🏕️ 使用休整包（持有 ${S.camps}）`,restCamp,S.camps<1],[`💰 賣出低階裝備（${low.length} 件）`,()=>{S.gold+=low.reduce((a,x)=>a+sellVal(x),0);S.inv=S.inv.filter(x=>!(x.tier<2&&!x.up));sfx("coin");ui();bagMenu(b)},!low.length]];
+list.forEach(it=>rows.push([`${it.nw?"🆕 ":""}${itemTxt(it)}`,()=>itemDetail(it,b)]));if(!list.length)rows.push(["（儲物袋是空的）",()=>{},true]);
+mn(`🎒 儲物袋（${S.inv.length}/${INV} 件）${fresh?`<br><small>🆕 ${fresh} 件新獲得；點物品可裝備或出售</small>`:""}`,rows,b);S.inv.forEach(x=>delete x.nw)}
+function itemDetail(it,b){const sl=SLT.find(s=>s[0]===it.sl),rows=S.party.map(p=>{const cur=p.eq[it.sl],e1=E(p);p.eq[it.sl]=it;const e2=E(p);p.eq[it.sl]=cur;const df=(a,c,n)=>a===c?"":` ${n}${c>a?"+":""}${c-a}`,t=df(e1.atk,e2.atk,"攻")+df(e1.def,e2.def,"防")+df(e1.hp,e2.hp,"生命")+df(e1.mp,e2.mp,"能量");
+return[`${CL[p.c][2]} ${pn(p)}　現裝：${cur?itemTxt(cur):"—"}　→${t||" 無變化"}`,()=>{rmv(S.inv,it);if(cur)S.inv.push(cur);p.eq[it.sl]=it;recl(p);ui();bagMenu(b)}]});
+rows.push([`💰 出售 ${sellVal(it)}💰`,()=>{rmv(S.inv,it);S.gold+=sellVal(it);sfx("coin");ui();bagMenu(b)}]);
+mn(`${itemTxt(it)}${it.set?`<br><small>${SETS[it.set].e}${SETS[it.set].n}套裝：2件 ${SETS[it.set].t2}；4件 ${SETS[it.set].t4}</small>`:""}<br><small>部位：${sl[2]} ${sl[1]}　選擇要裝備給誰</small>`,rows,()=>bagMenu(b))}
+function teamMenu(b){mn("👥 隊伍裝備（點隊員查看並更換各部位）",S.party.map((p,i)=>{const e=E(p);return[`${CL[p.c][2]} ${pn(p)} Lv${p.l}　攻+${e.atk}　防+${e.def}`,()=>charMenu(i,b)]}),b)}
+function charMenu(i,b){const p=S.party[i],e=E(p),st=Object.entries(e.c).filter(([k,n])=>n>=2).map(([k,n])=>`<br><small>${SETS[k].e}${SETS[k].n}×${n}：${SETS[k].t2}${n>=4?"；"+SETS[k].t4:""}</small>`).join(""),nx=CS[p.c].find(k=>SKD[k].lv>p.l);
+mn(`${CL[p.c][2]} ${pn(p)}（${CL[p.c][0]}）Lv${p.l}　攻+${e.atk} 防+${e.def}<br><small>技能：${SKL(p).join("、")}${nx?`（Lv${SKD[nx].lv} 習得${nx}）`:""}　戰功 ${p.xp}/${p.l*30}</small>${st}`,SLT.map(s=>[`${s[2]} ${s[1]}：${p.eq[s[0]]?itemTxt(p.eq[s[0]]):"—"}`,()=>slotMenu(i,s[0],b)]),()=>teamMenu(b))}
+function slotMenu(i,sl,b){const p=S.party[i],cur=p.eq[sl],rows=S.inv.filter(x=>x.sl===sl).sort((a,c)=>c.tier-a.tier||(c.up||0)-(a.up||0)).map(x=>[itemTxt(x),()=>{rmv(S.inv,x);if(cur)S.inv.push(cur);p.eq[sl]=x;recl(p);ui();slotMenu(i,sl,b)}]);
+if(cur)rows.unshift(["⬇️ 卸下 "+itemTxt(cur),()=>{S.inv.push(cur);p.eq[sl]=null;recl(p);ui();charMenu(i,b)}]);mn(`${CL[p.c][2]} ${pn(p)}：${SLT.find(s=>s[0]===sl)[1]}`,rows,()=>charMenu(i,b))}
+function allyPick(title,ok,cb,back){mn(title,S.party.map(p=>[`${p.hp?CL[p.c][2]:"💀"} ${pn(p)} Lv${p.l}　❤️${p.hp}/${p.mh} ⚡${p.mp}/${mm(p)} ${stI(p)}`,()=>cb(p),!ok(p)]),back)}
+function itemMenu(inC,back){const m=inC?cur():null,rows=Object.keys(IT).filter(k=>cnt(k)>0).map(k=>[`${IT[k].e} ${IT[k].n} ×${cnt(k)}　${IT[k].d}`,()=>allyPick(`${IT[k].e} ${IT[k].n}`,p=>k=="scr"?p.hp<=0:p.hp>0,p=>{addc(k,-1);useIt(k,p);log(`${IT[k].e} 對${pn(p)}使用了${IT[k].n}。`);if(inC){mx0();endAct(m)}else{ui();itemMenu(false,back)}},()=>itemMenu(inC,back))]);
+mn(rows.length?"🧪 使用道具":"🧪 沒有可用的道具",rows,inC?mx0:back)}
+/* --- 任務／成就／圖鑑／說明／設定／存檔 --- */
+function genOffers(){const nm_=[...new Set([].concat(...Array.from({length:Math.min(Math.max(S.unl,1),12)},(_,i)=>enemiesFor(i+1).map(pure))))].filter(Boolean),lv=avgL(),o=[];
+for(let i=0;i<2;i++){const tg=pk(nm_),n=R(3,6)+Math.floor(lv/6);o.push({t:"kill",tg,n,have:0,rew:n*(20+lv*3),tier:lv>=8?2:1})}const z=S.unl+1;o.push({t:"zone",n:z,have:0,rew:z*60+100,tier:2});return o}
+const qTxt=q=>q.t=="kill"?`討伐 ${q.tg} ×${q.n}`:`解鎖並抵達第 ${q.n} 戰區`,qProg=q=>q.t=="kill"?q.have:Math.min(q.n,S.unl);
+function questMenu(b){const q=S.quest;if(q){const p=qProg(q),ok=p>=q.n;mn(`📋 任務堂<br><small>進行中：${qTxt(q)}（${p}/${q.n}）　獎勵 ${q.rew}💰＋裝備</small>`,[[ok?"✅ 領取獎勵":"尚未完成",()=>{S.gold+=q.rew;giveItem(mkItem(Math.min(4,q.tier+(Math.random()<.3?1:0))));S.qdone++;S.quest=null;S.offers=null;sfx("coin");log("📋 任務完成！");flushLoot();chk();ui();questMenu(b)},!ok],["❌ 放棄任務",()=>{S.quest=null;questMenu(b)}]],b);return}
+if(!S.offers)S.offers=genOffers();mn("📋 任務堂（接取一個任務）",S.offers.map(q=>[`${qTxt(q)}　獎勵 ${q.rew}💰＋裝備`,()=>{S.quest=q;S.offers=null;ui();questMenu(b)}]),b)}
+const ALLG=()=>S.inv.concat(...S.party.concat(S.camp).map(p=>Object.values(p.eq))).filter(Boolean);
+const ACH=[["first","🩸","初陣","擊敗第一個敵人",()=>S.kills>=1],["k100","⚔️","百戰","累計擊敗 100 個敵人",()=>S.kills>=100],["k500","🏴","千軍","累計擊敗 500 個敵人",()=>S.kills>=500],["l10","⭐","老兵","任一角色達 Lv10",()=>S.party.concat(S.camp).some(p=>p.l>=10)],["l30","🌟","傳奇士官","任一角色達 Lv30",()=>S.party.concat(S.camp).some(p=>p.l>=30)],
+["bd","👑","首領殺手","擊敗第一個首領",()=>S.bk>=1],["bk5","🐛","獵王","擊敗 5 個首領",()=>S.bk>=5],["z4","🚀","遠征者","解鎖第 4 戰區",()=>S.unl>=4],["leg","🌟","傳奇裝備","獲得傳奇裝備",()=>ALLG().some(i=>i.tier>=4)],["up10","🔨","兵工大師","裝備強化到 +10",()=>ALLG().some(i=>i.up>=10)||S.w>=10],
+["full","👥","艦上齊聚","隊伍滿八人",()=>S.party.length>=8],["rich","💰","財大氣粗","持有 5000 星幣",()=>S.gold>=5000],["q5","📋","任務達人","完成 5 個任務",()=>S.qdone>=5],["ng","🔄","重啟戰線","開啟第二周目",()=>S.ng>=1],["dex","📖","敵情專家","擊敗所有種類的敵人",()=>DEXN.every(n=>S.dex[n]&&S.dex[n].k>0)]];
+function chk(){ACH.forEach(a=>{if(!S.ach[a[0]]&&a[4]()){S.ach[a[0]]=1;toast(`🏅 成就解鎖：${a[1]} ${a[2]}`);log(`🏅 成就解鎖：${a[2]}`);sfx("level")}})}
+function achMenu(b){mn(`🏅 成就（${Object.keys(S.ach).length}/${ACH.length}）`,ACH.map(a=>[`${S.ach[a[0]]?"✅":"⬜"} ${a[1]} ${a[2]}　${a[3]}`,()=>{}]),b)}
+function dexMenu(b){mn(`📖 敵情圖鑑（${DEXN.filter(n=>S.dex[n]).length}/${DEXN.length}）`,DEXN.map(n=>{const d=S.dex[n];return[d?`${n}　遭遇 ${d.s}　擊敗 ${d.k}　基礎生命${d.h} 攻${d.a}`:"❓ ？？？",()=>{}]}),b)}
+const HELP=["📜 故事：星際戰爭延燒數百年。你們是前線戰艦「哨站七號」上資質平庸的新兵，卻想憑智慧與同袍扶持，一步步成為統一星海的元帥。","🛰️ 戰艦：哨站七號是你們的家，同樣用方向鍵在艦內走動（不會遇敵、沒有迷宮）。走到艦員面前就能交談：補給官、招募官、醫務官、軍械師、領航員、任務官、情報官、艙務長與電腦姐姐，都在艦上為你服務。","🧭 移動：點畫面前方前進、左下／右下轉向，或用下方按鈕。靠近敵人、箱子、祭壇與商人會自動互動。","⚔️ 戰鬥：我方全員行動完後，敵人才行動。可攻擊、用技能、🛡️防禦（受傷減半、能量+2）、使用道具或撤退。點敵人可切換目標。","☠️ 狀態：中毒每回合扣血；💫定身會失去一次行動；🔻虛弱降低傷害；🔺強化提升傷害；📢嘲諷吸引攻擊。💊解毒劑、淨化可解除。","📈 成長：每位角色各自升級，並在 Lv3/4/6/7/9/10/11 習得新技能。休眠艙的角色不會得到戰功。","🔫 裝備：六個部位、五種品質，集滿 2／4 件同套裝有額外效果。可到兵工廠強化到 +10 或重鑄。🎒儲物袋最多 30 件。","🗺️ 戰區：每層可能出現 ⛲能量泉、🔑密鑰與🔒上鎖箱、⛩️祭壇、💁‍♀️流浪商人，以及隱藏陷阱；也有富礦、精銳、寂靜、蟲潮等樓層特性。","💾 進度會自動存檔，也可到電腦姐姐處手動存檔、匯出或匯入。"];
+function helpMenu(p,b){mn(`❓ 說明 (${p+1}/${HELP.length})`,[[HELP[p],()=>{}],...(p<HELP.length-1?[["➡️ 下一頁",()=>helpMenu(p+1,b)]]:[]),...(p>0?[["⬅️ 上一頁",()=>helpMenu(p-1,b)]]:[])],b)}
+function setMenu(b){const s=S.set,re=()=>{sv();setMenu(b)};mn("⚙️ 設定",[[`🔊 音效：${s.sfx?"開":"關"}`,()=>{s.sfx=s.sfx?0:1;re()}],[`🎵 音樂：${s.mus?"開":"關"}`,()=>{s.mus=s.mus?0:1;if(s.mus)actx();re()}],[`🗣️ 電腦姐姐語音：${S.sisVoice?"開":"關"}`,()=>{S.sisVoice=!S.sisVoice;re()}],[`⚔️ 難度：${dfc().n}（影響之後新生成的敵人與報酬）`,()=>{const ks=Object.keys(DF);s.diff=ks[(ks.indexOf(s.diff)+1)%ks.length];re()}],["💾 存檔／讀檔",()=>saveMenu(()=>setMenu(b))],["📲 安裝到主畫面說明",()=>mn("📲 安裝到主畫面",[["🍎 iPhone：用 Safari 開啟，點「分享」→「加入主畫面」",()=>{},true],["需使用 https 網址；第一次載入後可離線遊玩。",()=>{},true]],()=>setMenu(b))],["❓ 說明",()=>helpMenu(0,()=>setMenu(b))]],b)}
+const SLK=i=>"xb_s_"+i;
+function loadRaw(raw){try{const d=JSON.parse(raw);if(!d||!d.party||!d.maps)throw 0;S=d;mig();C=null;$("m").hidden=1;ui();toast("📂 已讀取存檔")}catch(e){toast("❌ 存檔損毀，無法讀取")}}
+function exportSave(){sv();const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:"application/json"}));a.download="小兵傳奇存檔.json";document.body.appendChild(a);a.click();a.remove();toast("⬇️ 已匯出存檔檔案")}
+function saveMenu(b){const rows=[],sm=raw=>{try{const d=JSON.parse(raw);return `${zoneName(d.z)}　隊伍${d.party.length}　💰${d.gold}`}catch(e){return"（損毀）"}};
+for(let i=1;i<=3;i++){const raw=lsg(SLK(i));rows.push([`💾 存入欄位 ${i}　${raw?sm(raw):"空"}`,()=>{sv();toast(lss(SLK(i),JSON.stringify(S))?`💾 已存入欄位 ${i}`:"❌ 瀏覽器不允許儲存");saveMenu(b)}]);rows.push([`📂 讀取欄位 ${i}`,()=>loadRaw(raw),!raw])}
+rows.push(["⬇️ 匯出存檔檔案",exportSave]);rows.push(["⬆️ 匯入存檔檔案",()=>$("imp").click()]);mn("💾 存檔／讀檔<br><small>進度也會自動存檔</small>",rows,b)}
+$("imp").onchange=e=>{const f=e.target.files[0];e.target.value="";if(!f)return;const r=new FileReader();r.onload=()=>loadRaw(r.result);r.readAsText(f)};
+function permaDeath(){mn("💀 全軍覆沒<br><small>絕境難度下，戰線到此為止。可讀取先前的存檔，或重新開始。</small>",[...[1,2,3].map(i=>[`📂 讀取欄位 ${i}`,()=>loadRaw(lsg(SLK(i))),!lsg(SLK(i))]),["🔄 重新開始",()=>{const st=S.set;S=ns();S.set=st;S.set.diff="normal";mig();mx0();ui()}]],()=>permaDeath())}
+function mig(){const d=ns();["cn","inv","camp","camps","dex","ach","kills","bk","qdone","keys","bless"].forEach(k=>{if(S[k]==null)S[k]=d[k]});if(S.quest===undefined)S.quest=null;if(S.offers===undefined)S.offers=null;S.set=Object.assign({sfx:1,mus:1,diff:"normal"},S.set);if(!DF[S.set.diff])S.set.diff="normal";S.party.concat(S.camp).forEach(m=>{if(!m.eq)m.eq={};if(!m.st)m.st={};m.g=0;recl(m)})}
+/* --- 戰鬥 --- */
+function cur(){for(;;){const m=S.party.find((m,i)=>i>=C.i&&m.hp>0);if(!m)return undefined;if(m.st.stun){delete m.st.stun;log(`💫 ${pn(m)}被定身，無法行動。`);C.i=S.party.indexOf(m)+1;continue}return m}}
+const tg=()=>{if(!C.foes[C.t]||C.foes[C.t].hp<=0)C.t=C.foes.findIndex(f=>f.hp>0);return C.t};
+const endAct=m=>{C.i=S.party.indexOf(m)+1;step()};
+function fx(f,e){const M=S.flight?null:gm(),md=M&&M.mod,k=dfc(),hm=k.h*(md=="elite"?1.25:md=="swarm"?.85:1),am=k.a*(md=="elite"?1.15:1);
+f.forEach((x,i)=>{x.mh=Math.max(1,Math.round(x.mh*hm));x.hp=x.mh;x.a=Math.round(x.a*am);x.st={};x.g=0;x.boss=e.t=="b"&&i==0;x.sp=spOf(x.n,x.boss);const q=pure(x.n),d=S.dex[q]=S.dex[q]||{s:0,k:0,h:x.mh,a:x.a};d.s++});sfx(e.t=="b"?"boss":"alert")}
+function cr(){if(!C)return;const m=cur(),t=tg();if(!m)return step();const ai=S.party.indexOf(m);
+document.body.classList.add("inbattle");document.body.classList.remove("exp");document.body.classList.remove("ship");$("m").hidden=1;
+const layer=$("battleLayer");if(!layer)return;
+layer.innerHTML=`<div class="battle-foes">${C.foes.map((f,i)=>`<button class="battle-foe ${i===t?"selected":""} ${f.boss?"boss":""} ${C.anim&&C.anim.kind==="hit"&&C.anim.fi===i?"hit":""} ${C.anim&&C.anim.kind==="enemy"&&C.anim.fi===i?"attacking":""}" ${f.hp<=0?"disabled":""} onclick="C.t=${i};cr()" aria-label="鎖定目標 ${f.n}"><div class="foe-icon">${((f.n.match(/[^\u4e00-\u9fffA-Za-z0-9]/u)||[])[0])||"👾"}</div><div class="foe-name">${f.n}${f.boss?"👑":""} ${stI(f)}</div><div class="hp-track"><i class="hp-fill" style="width:${Math.max(0,f.hp)/f.mh*100}%"></i></div><div class="member-stats">${Math.max(0,f.hp)} / ${f.mh}</div></button>`).join("")}</div>
+<div class="battle-party">${S.party.map((p,i)=>`<div class="battle-member ${i===ai?"active":""} ${p.hp<=0?"dead":""} ${C.anim&&C.anim.kind==="attack"&&C.anim.pi===i?"attacking":""}"><div class="member-icon">${p.hp?CL[p.c][2]:"💀"}</div><div class="member-name">${pn(p)} Lv${p.l}</div><div class="hp-track"><i class="hp-fill" style="width:${Math.max(0,p.hp)/p.mh*100}%"></i></div><div class="member-stats">HP ${Math.max(0,p.hp)}/${p.mh}</div><div class="mp-track"><i class="mp-fill" style="width:${Math.min(100,p.mp/mm(p)*100)}%"></i></div><div class="member-stats">⚡ ${p.mp}/${mm(p)} ${stI(p)}</div></div>`).join("")}</div>`;
+const an=C.anim;if(an)setTimeout(()=>{if(C&&C.anim===an)C.anim=null},550);
+$("l").innerHTML=S.log.slice(-3).map(x=>`<div>${x}</div>`).join("");
+$("c").innerHTML=`<div class="battle-turn">⚔️ 輪到 <b>${nm(m)}</b>　⚡${m.mp}/${mm(m)} ${stI(m)}${S.bless?"　✨加持":""}</div><div class="battle-actions"><button class="primary" onclick="ac('a')">⚔️ 攻擊</button><button ${SKL(m).length?"":"disabled"} onclick="ac('s')">✨ 技能</button><button onclick="ac('d')">🛡️ 防禦</button><button onclick="ac('i')">🎒 道具</button><button onclick="ac('r')">↩️ 撤退</button><button onclick="C.t=(C.t+1)%C.foes.length;tg();cr()">🎯 換目標</button></div>`}
+const stat=(o,k,d)=>{if(o.boss&&k=="stun"&&Math.random()<.5){log(`🛡️ ${o.n}抵抗了定身！`);return}o.st[k]=Math.max(o.st[k]||0,d)};
+const hamt=(a,s)=>Math.round((R(s.heal[0],s.heal[1])+a.l*1.2)*E(a).healx),heal=(p,n)=>{p.hp=Math.min(p.mh,p.hp+n);sfx("heal")};
+function hitF(a,s,fi){const f=C.foes[fi];if(!f||f.hp<=0)return 0;const e=E(a);let d=Math.round((at(a)+R(-1,3))*(s.pw||1));if(a.st.rage)d=Math.round(d*1.3);if(a.st.weak)d=Math.round(d*.7);if(S.bless>0)d=Math.round(d*1.25);
+if(Math.random()<e.crit){d*=2;log("💥 暴擊！")}d=Math.max(1,d);f.hp=Math.max(0,f.hp-d);if(e.leech)a.hp=Math.min(a.mh,a.hp+Math.ceil(d*e.leech));if(e.stunOn&&Math.random()<.2&&f.hp>0)stat(f,"stun",1);if(s.fx&&f.hp>0&&Math.random()<s.fx[2])stat(f,s.fx[0],s.fx[1]);if(f.hp<=0)log(`${f.n}倒下了。`);return d}
+function strike(a,s,k){const f=C.foes[tg()],fi=C.foes.indexOf(f);if(s.tg=="ea"){C.foes.forEach((x,i)=>{if(x.hp>0){if(s.pw)hitF(a,s,i);else if(s.fx)stat(x,s.fx[0],s.fx[1])}});log(`${s.ic} ${pn(a)}使用${k}，攻擊全體！`)}
+else{const hs=s.hits||1,ds=[];for(let h=0;h<hs;h++)ds.push(hitF(a,s,fi));log(`${s.ic} ${pn(a)}${k=="攻擊"?"攻擊":"使用"+k}${f.n}，造成 ${ds.join("+")}${hs>1?"="+ds.reduce((x,y)=>x+y,0):""}。`)}C.anim={kind:"attack",pi:S.party.indexOf(a),fi};sfx("hit")}
+function useSk(a,k,t){const s=SKD[k];a.mp-=Math.max(0,s.mp-E(a).mpd);
+if(s.tg=="e"||s.tg=="ea")strike(a,s,k);
+else if(s.tg=="a"){const h=hamt(a,s);heal(t,h);if(s.cure)cure(t);log(`${s.ic} ${pn(a)}使用${k}，${pn(t)}恢復 ${h} 生命。`)}
+else if(s.tg=="aa"){S.party.filter(x=>x.hp>0).forEach(x=>{if(s.heal)heal(x,hamt(a,s));if(s.cure)cure(x);if(s.buff)x.st[s.buff[0]]=s.buff[1];if(s.guard)x.g=1});log(`${s.ic} ${pn(a)}使用${k}！`)}
+else if(s.tg=="d"){t.hp=Math.max(1,Math.ceil(t.mh*s.rez));t.st={};t.g=0;log(`${s.ic} ${pn(a)}使用${k}，${pn(t)}復活了！`);sfx("heal")}
+else if(s.tg=="s"){if(s.heal)heal(a,hamt(a,s));if(s.mpg)a.mp=Math.min(mm(a),a.mp+s.mpg);if(s.buff)a.st[s.buff[0]]=s.buff[1];if(s.guard)a.g=1;log(`${s.ic} ${pn(a)}使用${k}。`)}}
+function skm(){const a=cur(),rows=SKL(a).map(k=>{const s=SKD[k],cost=Math.max(0,s.mp-E(a).mpd),dis=a.mp<cost||(s.tg=="d"&&!S.party.some(p=>p.hp<=0)),go_=t=>{mx0();useSk(a,k,t);endAct(a)};
+return[`${s.ic} ${k}　⚡${cost}　${s.d}`,()=>{if(s.tg=="a")allyPick(`${s.ic} ${k}`,p=>p.hp>0,go_,skm);else if(s.tg=="d")allyPick(`${s.ic} ${k}`,p=>p.hp<=0,go_,skm);else go_()},dis]});
+mn(`${CL[a.c][2]} ${pn(a)} 的技能　⚡${a.mp}/${mm(a)}`,rows,mx0)}
+function ac(k){if(!C)return;const m=cur();if(!m)return;
+if(k=="a"){strike(m,{pw:1,tg:"e",ic:"⚔️"},"攻擊");endAct(m)}
+else if(k=="s")skm();else if(k=="i")itemMenu(true);
+else if(k=="d"){m.g=1;m.mp=Math.min(mm(m),m.mp+2);log(`🛡️ ${pn(m)}展開防禦姿態（受傷減半，能量+2）。`);sfx("click");endAct(m)}
+else if(k=="r"){if(C.e.t=="b"||Math.random()>.5){log("撤退失敗！");endAct(m)}else{log("全隊成功撤退。");rcd("退");C=null;$("m").hidden=1;S.nev.n.push("撤退");ui()}}}
+function step(){if(!C)return;if(C.foes.every(f=>f.hp<=0))return win();if(cur())return cr();enemyTurn()}
+function enemyTurn(){const al=()=>S.party.filter(m=>m.hp>0);let last=null;
+C.foes.forEach((f,fi)=>{if(f.hp<=0||!al().length)return;if(f.st.stun){delete f.st.stun;log(`💫 ${f.n}被定身，無法行動。`);return}
+let sp=null;for(const[k,p]of f.sp)if(Math.random()<p){sp=k;break}
+const tk=al().filter(m=>m.st.taunt),t=tk.length&&Math.random()<.8?pk(tk):pk(al()),raw=()=>Math.max(1,Math.round((f.a+R(-2,2))*(f.st.weak?.7:1))),
+dm=(m,b)=>{let d=Math.max(1,Math.round(b-E(m).def*.6));if(m.g)d=Math.ceil(d/2);m.hp=Math.max(0,m.hp-d);return d};
+if(sp=="aoe"){const b=Math.round(raw()*.7);al().forEach(m=>dm(m,b));log(`🔥 ${f.n}使用${SPN.aoe}，波及全隊！`);C.anim={kind:"enemy",fi,pi:-1}}
+else{const mul={power:1.7,poison:.8,weak:.8,stun:.7,drain:1}[sp]||1,d=dm(t,Math.round(raw()*mul));let ex="";
+if(sp=="poison"&&Math.random()<.9){t.st.poison=Math.max(t.st.poison||0,3);ex="，並中毒了"}
+if(sp=="weak"){t.st.weak=Math.max(t.st.weak||0,3);ex="，並被干擾而虛弱"}
+if(sp=="stun"&&!t.g&&Math.random()<.6&&t.hp>0){t.st.stun=1;ex="，並被麻痺得動彈不得"}
+if(sp=="drain"){f.hp=Math.min(f.mh,f.hp+Math.ceil(d/2));ex="，並吸取生命"}
+log(`${f.n}${sp?"使用"+SPN[sp]:"攻擊"}${nm(t)}，造成 ${d} 傷害${ex}。`);C.anim={kind:"enemy",fi,pi:S.party.indexOf(t)};last=t}
+sfx("hurt");S.party.forEach(m=>{if(m.hp<=0&&!m.dn){m.dn=1;m.st={};m.g=0;log(`💀 ${pn(m)}倒下了。`)}})});
+if(last)saySis(`${nm(last)}受到攻擊。請留意隊員生命值。`,false);
+S.party.forEach(m=>{if(m.hp>0&&m.st.poison)m.hp=Math.max(0,m.hp-Math.max(2,Math.ceil(m.mh*.06)))});
+C.foes.forEach(f=>{if(f.hp>0&&f.st.poison){f.hp=Math.max(0,f.hp-Math.max(2,Math.ceil(f.mh*.07)));if(f.hp<=0)log(`${f.n}因中毒倒下了。`)}});
+S.party.forEach(m=>{if(m.hp>0){const h=E(m).regen;if(h)m.hp=Math.min(m.mh,m.hp+h);m.mp=Math.min(mm(m),m.mp+1)}else m.dn=0});
+S.party.concat(C.foes).forEach(o=>{o.g=0;for(const k of["poison","weak","rage","taunt"])if(o.st[k]){o.st[k]--;if(o.st[k]<=0)delete o.st[k]}});
+if(S.party.every(m=>m.hp<=0))return lose();if(C.foes.every(f=>f.hp<=0))return win();C.i=0;cr()}
+function winX(f){const M=S.flight?null:gm(),rich=M&&M.mod=="rich";S.kills+=f.length;
+f.forEach(x=>{const k=pure(x.n),d=S.dex[k]=S.dex[k]||{s:1,k:0,h:x.mh,a:x.a};d.k++;if(x.boss)S.bk++;if(S.quest&&S.quest.t=="kill"&&S.quest.tg==k&&S.quest.have<S.quest.n)S.quest.have++;
+loot({xp:x.mh},x.boss,rich);if(Math.random()<.18){S.pot++;log("掉落一支修復針劑。")}if(Math.random()<.08){addc("eth",1);log("掉落一顆能量電池。")}if(Math.random()<.08){addc("herb",1);log("掉落一包解毒劑。")}if(Math.random()<(x.boss?.5:.03)){addc("scr",1);log("掉落復活模組！")}});
+flushLoot();if(S.bless>0){S.bless--;if(!S.bless)log("✨ 戰術加持結束。")}S.party.forEach(m=>{m.st={};m.g=0;m.dn=0});sfx("win");chk()}
+function lvX(m){const k=CS[m.c].find(k=>SKD[k].lv===m.l);if(k)log(`📖 ${pn(m)}習得新技能「${k}」！`);sfx("level")}
+const gmul=()=>{const M=S.flight?null:gm();return dfc().r*(M&&M.mod=="rich"?1.5:1)};
+/* --- 迷宮事件 --- */
+function touch(e,M){const rm_=()=>{M.E=M.E.filter(o=>o!==e)},d=dep(),rich=M.mod=="rich";
+if(e.t=="c"){rm_();if(Math.random()<.2){e.t="x";log("擬態補給箱！");return fight(e)}const g=Math.round(R(30,80)*(1+.1*d)*(rich?1.5:1));S.gold+=g;S.nev.g+=g;S.nev.c++;sfx("chest");log(`打開補給箱，獲得 ${g} 星幣。`);if(Math.random()<.5)giveItem(mkItem(Math.min(4,R(0,1)+Math.floor(d/3))));if(Math.random()<.3){S.pot++;log("還有一支修復針劑。")}flushLoot();chk()}
+else if(e.t=="l"){if(S.keys<1){log("🔒 上鎖的補給箱，需要 🔑 通行密鑰。");saySis("這個箱子上鎖了，先找密鑰吧。")}else{S.keys--;rm_();const g=R(60,120)+d*10;S.gold+=g;S.nev.g+=g;S.nev.c++;sfx("chest");log(`🔒 解鎖補給箱！獲得 ${g} 星幣。`);giveItem(mkItem(Math.min(4,2+(Math.random()<.35?1:0))));if(Math.random()<.5){addc("scr",1);log("還有一個復活模組！")}flushLoot();chk()}}
+else if(e.t=="k"){rm_();S.keys++;sfx("chest");log("🔑 撿到一把通行密鑰。")}
+else if(e.t=="f"){rm_();S.party.forEach(p=>{if(p.hp<=0){p.hp=Math.ceil(p.mh/2);p.dn=0}else p.hp=p.mh;p.mp=mm(p);p.st={}});sfx("heal");log("⛲ 能量泉讓全隊完全恢復，倒下的隊員復活了！")}
+else if(e.t=="t"){rm_();sfx("trap");if(Math.random()<.6){const al=S.party.filter(m=>m.hp>0),x=Math.max(3,Math.ceil(al.reduce((s,m)=>s+m.mh,0)/Math.max(1,al.length)*.08));al.forEach(m=>m.hp=Math.max(1,m.hp-x));log(`⚠️ 觸發陷阱！全隊受到 ${x} 點傷害。`)}else{S.party.forEach(m=>{if(m.hp>0)m.st.poison=3});log("⚠️ 毒氣陷阱！全隊中毒了。")}}
+else if(e.t=="s")return shrine(e,M);else if(e.t=="v")return merch(e,M);else if(e.t=="n")return npc(e.id);ui()}
+function shrine(e,M){const use=f=>{M.E=M.E.filter(o=>o!==e);f();mx0();ui()};
+mn("⛩️ 神秘祭壇",[["🙏 獻上 50💰：全隊恢復 30% 生命",()=>use(()=>{S.gold-=50;S.party.forEach(p=>{if(p.hp>0)p.hp=Math.min(p.mh,p.hp+Math.ceil(p.mh*.3))});log("🙏 祭壇的能量治癒了你們。")}),S.gold<50],["✨ 獻上 100💰：戰術加持（接下來 5 場戰鬥傷害 +25%）",()=>use(()=>{S.gold-=100;S.bless=5;log("✨ 你們得到了祭壇的加持。")}),S.gold<100],
+["🎲 空手參悟：可能頓悟，也可能出事",()=>use(()=>{if(Math.random()<.5){S.party.forEach(p=>{if(p.hp>0)p.mp=mm(p)});log("🔷 頓悟！全隊能量全滿。")}else{S.party.forEach(p=>{if(p.hp>0)p.st.poison=3});log("☠️ 能量失控，全隊中毒了！")}})]],mx)}
+function merch(e,M){if(!e.stock){e.stock=[];for(let i=0;i<2;i++){const it=mkItem(Math.min(4,Math.floor(dep()/3)+1+(Math.random()<.3?1:0)));it.pr=80+it.tier*90;e.stock.push(it)}}
+const rows=e.stock.map(it=>[`${itemTxt(it)}　${it.pr}💰`,()=>{if(S.inv.length>=INV){toast("🎒 儲物袋已滿");return}pay(it.pr,()=>{rmv(e.stock,it);S.inv.push(it)},()=>merch(e,M))},S.gold<it.pr||S.inv.length>=INV]);
+rows.push(["🎁 神秘貨箱 150💰（精良以上裝備）",()=>{if(S.inv.length>=INV){toast("🎒 儲物袋已滿");return}pay(150,()=>S.inv.push(mkItem(R(2,Math.min(4,3+(dep()>=6?1:0))))),()=>merch(e,M))},S.gold<150||S.inv.length>=INV]);
+rows.push(["💉 修復針劑 ×3　70💰",()=>pay(70,()=>S.pot+=3,()=>merch(e,M)),S.gold<70]);mn("💁‍♀️ 流浪商人",rows,mx)}
+function mv(dx,dy){if(C||!$("m").hidden)return;const M=S.flight?fg():gm(),x=S.pos[0]+dx,y=S.pos[1]+dy;
+if(x<0||y<0||x>=11||y>=11||(!S.flight&&M.g[y][x])){if(dx||dy){log("前方是牆壁，請轉向後再前進。");ui()}return}
+const e=M.E.find(o=>o.x==x&&o.y==y);
+if(e){if(e.t==="b")saySis("注意！前方偵測到首領反應。先鎖定目標，善用技能與修復針劑。",true);else if(e.t==="m")saySis("敵人接近！先觀察敵方血量，姐姐建議集中火力逐一擊破。",true);
+if(e.t==="b"||e.t==="m"||e.t==="x")return fight(e);return touch(e,M)}
+S.pos=[x,y];S.camp.forEach(c=>{if(c.hp>0){c.hp=Math.min(c.mh,c.hp+Math.ceil(c.mh*.05));c.mp=Math.min(mm(c),c.mp+1)}});
+if(Math.random()<.22)saySis(pk(S.z?["路線暫時安全，繼續前進吧。","姐姐提醒：轉角可能有敵人，記得查看戰術地圖。","小隊狀態正常。保持隊形，別離補給點太遠。"]:["艦內系統運作正常。走到艦員面前就能交談。","補給、招募、醫療都有專人負責，出擊前記得整備。","領航員在艦艏，準備好就能躍遷。"]),false);ui()}
+/* --- 介面 --- */
+function fitVh(){try{document.documentElement.style.setProperty("--vh1",(window.innerHeight/100)+"px")}catch(e){}}
+addEventListener("resize",fitVh);addEventListener("orientationchange",function(){setTimeout(fitVh,250)});fitVh();
+function ui(){document.body.classList.toggle("inbattle",!!C);document.body.classList.toggle("exp",!C);document.body.classList.remove("ship");$("p").hidden=!!C;sv();
+const f=!!S.flight,M=S.z&&!f?gm():null,md=M&&M.mod?MODS[M.mod][0]:"";
+const ht=`${zoneName(S.z)}${S.z?" 第"+S.f+"層":""}　💰${S.gold}　💉${S.pot}　武器+${S.w}${S.keys?"　🔑"+S.keys:""}${S.bless?"　✨"+S.bless:""}${md?"　"+md:""}${S.ng?"　周目"+(S.ng+1):""}${S.z?"　"+(S.pos[0]+1)+","+(S.pos[1]+1):""}`;
+$("h").innerHTML=`<span class="ht">${escH(ht)}</span><span class="hb"><button type="button" onclick="bagMenu()" aria-label="儲物袋">🎒</button>${S.z&&!f?`<button type="button" onclick="toggleFlight()" aria-label="搭乘飛艦">🚀</button>`:""}<button type="button" onclick="book()" aria-label="小說">📖</button><button type="button" onclick="setMenu()" aria-label="設定">⚙️</button></span>`;
+const ctl=`<div class="${f?"flight-actions":"move-actions"}"><button onclick="turn3d(-1)" aria-label="左轉">↶<small>左轉</small></button><button onclick="step3d(1)" aria-label="向前">▲<small>${f?"推進":"前進"}</small></button><button onclick="turn3d(1)" aria-label="右轉">↷<small>右轉</small></button><button onclick="step3d(-1)" aria-label="後退">▼<small>${f?"減速":"後退"}</small></button><button onclick="${f?"toggleFlight()":S.z?"retBase()":"npc('nav')"}" aria-label="${f?"返航下艦":S.z?"返航":"躍遷"}">${f?"🛬":S.z?"⌂":"🌀"}<small>${f?"下艦":S.z?"返航":"躍遷"}</small></button><button onclick="itemMenu(false)" aria-label="使用道具">💉<small>補給</small></button></div>`;
+$("v").innerHTML=`<div class="scene-wrap"><canvas id="scene3d" width="480" height="300" aria-label="3D探索場景"></canvas><div id="battleLayer" aria-label="戰鬥畫面"></div></div><div class="xrow"><div id="minimap">${mapH()}</div><div class="xright">${ctl}<div class="xsis"><b>姊</b><span id="sisText">${escH(S.sisText||sisDefault)}</span></div></div></div>`;
+$("p").innerHTML=S.party.map(m=>`<div class="pc ${m.hp?"":"dn"}"><b>${nm(m)}</b> Lv${m.l}<i style="--w:${m.hp/m.mh*100}%"></i>${m.hp}/${m.mh} ⚡${m.mp}</div>`).join("");
+$("l").innerHTML=S.log.slice(S.z?-2:-3).map(x=>`<div>${x}</div>`).join("");$("c").innerHTML="";refreshScene()}
+function rst(){if(confirm("確定要清除存檔並重新開始？")){const st=S.set;S=ns();S.set=st;mig();$("m").hidden=1;ui()}}
+
 try{S=JSON.parse(localStorage.getItem("xb_save"))}catch(e){}
-if(!S||!S.party)S=ns();if(S.dir==null)S.dir=0;if(S.unl==null)S.unl=1;if(S.sisText==null)S.sisText=sisDefault;if(S.sisVoice==null)S.sisVoice=false;if(S.flight==null)S.flight=false;if(S.flightZone==null)S.flightZone=1;if(S.maps==null)S.maps={};ui();
+if(!S||!S.party)S=ns();mig();if(S.dir==null)S.dir=0;if(S.unl==null)S.unl=1;if(S.sisText==null)S.sisText=sisDefault;if(S.sisVoice==null)S.sisVoice=false;if(S.flight==null)S.flight=false;if(S.flightZone==null)S.flightZone=1;if(S.maps==null)S.maps={};ui();
 </script><script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}</script></body></html>
