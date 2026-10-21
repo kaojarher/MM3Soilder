@@ -48,13 +48,15 @@ button:active:not(:disabled){transform:translateY(1px);filter:brightness(1.12)}
 .row{gap:4px;margin:6px 0}
 .row>*{margin:0}
 @media(max-width:360px){#a{padding-left:6px;padding-right:6px}.g{gap:1px}.g i{height:calc((100vw - 28px)/11);font-size:calc((100vw - 28px)/11*.58)}.pc{font-size:11px}.bx{padding:10px}}
-@media(min-width:561px){#a{margin:0 auto}.g i{height:calc((560px - 48px)/11)}}
+@media(min-width:561px){#a{margin:0 auto}.g i{height:calc((560px - 48px)/11)}#scene3d{height:350px}}
+@supports (height: 1dvh){body{min-height:100dvh}#a{min-height:100dvh}}
+@supports not (height: 1dvh){body{min-height:100vh}#a{min-height:100vh}}
 @media(orientation:landscape) and (max-height:430px){#a{min-height:100vh;padding-top:4px;padding-bottom:4px;gap:4px}#l{min-height:2em;max-height:3.5em}.bx{max-height:calc(100vh - 16px);padding:9px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
 
 
 /* First-person pseudo-3D exploration view: lightweight for iPhone 6 */
-#scene3d{display:block;width:100%;height:auto;aspect-ratio:16/10;border:1px solid #38516d;border-radius:8px;background:#080e18;box-shadow:inset 0 0 22px #000;touch-action:manipulation}
+#scene3d{display:block;width:100%;height:auto;height:calc((100vw - 20px)*.625);aspect-ratio:16/10;border:1px solid #38516d;border-radius:8px;background:#080e18;box-shadow:inset 0 0 22px #000;touch-action:manipulation}
 .scenehead{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:12px;color:var(--mut);margin:0 2px 5px}
 .scenehud{display:flex;justify-content:space-between;gap:6px;font-size:11px;color:#b9d7ef;margin-top:4px}
 #minimap{margin-top:8px;opacity:.85}
@@ -157,11 +159,11 @@ const gm=()=>S.maps[S.z+":"+S.f]||(S.maps[S.z+":"+S.f]=gen());
 function fg(){const key="F:"+(S.flightZone||1);if(S.maps[key])return S.maps[key];const g=Array.from({length:11},()=>Array(11).fill(0)),seen=g.map(r=>r.map(()=>0)),spots=[];for(let y=2;y<10;y++)for(let x=2;x<10;x++)if(!(x===9&&y===9))spots.push([x,y]);spots.sort(()=>Math.random()-.5);const E=[{x:9,y:9,t:"b"}];for(let i=0;i<6;i++){const [x,y]=spots.pop();E.push({x,y,t:"m"})}for(let i=0;i<3;i++){const [x,y]=spots.pop();E.push({x,y,t:"c"})}return S.maps[key]={g,E,seen}}
 function mapH(){const M=S.flight?fg():gm(),[px,py]=S.pos;let h='<div class=g>';for(let y=0;y<11;y++)for(let x=0;x<11;x++){const near=Math.abs(x-px)<3&&Math.abs(y-py)<3;if(near)M.seen[y][x]=1;let k="",c="";if(!M.seen[y][x])k="u";else if(!S.flight&&M.g[y][x])k="w";else{const e=M.E.find(o=>o.x==x&&o.y==y);c=x==px&&y==py?(S.flight?"🚀":"👨‍🚀"):e?(e.t=="b"?(S.flight?"帝":"👹"):e.t=="c"?"📦":near?(S.flight?"⚔":"❗"):""):""}h+=`<i class="${k}">${c}</i>`}return h+"</div>"}
 const DIRS=[[0,-1],[1,0],[0,1],[-1,0]];
-function turn3d(n){S.dir=((S.dir??0)+n+4)%4;if(S.flight)saySis(`航向已調整至${["北方","東方","南方","西方"][S.dir]}。注意帝國軍雷達訊號。`);ui()}
-function step3d(n){const d=DIRS[((S.dir??0)+4)%4];const dx=d[0]*n,dy=d[1]*n;mv(dx,dy)}
+function turn3d(n){S.dir=(((S.dir==null?0:S.dir))+n+4)%4;if(S.flight)saySis(`航向已調整至${["北方","東方","南方","西方"][S.dir]}。注意帝國軍雷達訊號。`);ui()}
+function step3d(n){const d=DIRS[(((S.dir==null?0:S.dir))+4)%4];const dx=d[0]*n,dy=d[1]*n;mv(dx,dy)}
 function toggleFlight(){if(C)return;if(!S.flight){S.groundReturn={z:S.z||0,f:S.f||1,pos:(S.pos||[1,1]).slice(),dir:S.dir||0};S.flight=true;S.flightZone=S.flightZone||1;S.z=S.z||1;S.f=1;S.pos=[1,1];S.dir=0;fg();saySis("飛艦已出港。姐姐已切換星系導航，雷達正在搜尋帝國軍。點擊前方航道前進，接近紅色目標即可交戰。",true);log("搭乘星隕級自走砲飛艦，進入星系探索。")}else{S.flight=false;const r=S.groundReturn||{z:0,f:1,pos:[1,1],dir:0};S.z=r.z;S.f=r.f;S.pos=r.pos;S.dir=r.dir;S.groundReturn=null;saySis("已完成返航，回到原本的探索區域。",true);log("飛艦返航，回到地面探索。")}$("m").hidden=1;ui()}
 function nextFlightZone(){if(!S.flight)return;S.flightZone=(S.flightZone||1)+1;S.pos=[1,1];S.dir=0;delete S.maps["F:"+S.flightZone];fg();saySis(`躍遷完成，抵達第 ${S.flightZone} 星系。帝國軍威脅等級提升。`,true);log(`進入第 ${S.flightZone} 星系。`);ui()}
-function scene3d(){const M=S.flight?fg():gm(),[px,py]=S.pos,dir=((S.dir??0)+4)%4,ctx=$('scene3d').getContext('2d'),w=$('scene3d').width,h=$('scene3d').height;
+function scene3d(){const M=S.flight?fg():gm(),[px,py]=S.pos,dir=(((S.dir==null?0:S.dir))+4)%4,ctx=$('scene3d').getContext('2d'),w=$('scene3d').width,h=$('scene3d').height;
 if(S.flight){
 // 星系飛艦：沿用地面探索的方向、距離與投影概念，改成太空航道場景
 ctx.clearRect(0,0,w,h);
@@ -215,7 +217,7 @@ function handleSceneClick(ev){
 function refreshScene(){const canvas=$('scene3d');if(canvas){scene3d();canvas.onclick=handleSceneClick;canvas.style.cursor='pointer'}}
 const hubH=()=>`${sisBox()}<div class=hub><button onclick=shop()>🏪 補給站</button><button onclick=hire()>📋 招募艙</button><button onclick=inn()>🏥 醫療艙</button><button onclick=forge()>🔧 兵工廠</button><button onclick=gate()>🌀 躍遷門</button><button onclick=toggleFlight()>🚀 自走砲飛艦</button><button onclick=book()>📖 小說（${S.nov.length}集）</button></div><p style="color:var(--mut)">前線星港。整備好隊伍，從躍遷門出發。休眠艙裡的隊員會原地待命。</p>`;
 function ui(){document.body.classList.toggle("inbattle",!!C);$("p").hidden=!!C;sv();$("h").textContent=`${zoneName(S.z)}${S.z?" 第"+S.f+"層":""}　💰${S.gold}　💉${S.pot}　武器+${S.w}${S.ng?"　周目"+(S.ng+1):""}`;
-$("v").innerHTML=S.z?`<div class="scenehead"><b>${S.flight?"星系 3D 飛艦探索":"第一人稱 3D 探索"}</b><span>${S.flight?`第 ${S.flightZone||1} 星系 <i class="flight-badge">帝國軍活動</i>`:`方向感測：${["北","東","南","西"][((S.dir??0)+4)%4]}`}</span></div><div class="scene-wrap"><canvas id="scene3d" width="480" height="300" aria-label="3D探索場景"></canvas><div id="battleLayer" aria-label="戰鬥畫面"></div><div id="minimap"><div class="maptop"><b>2D 戰術地圖</b><button type="button" onclick="toggleMap()" aria-label="收合或展開2D地圖">−</button></div>${mapH()}</div></div><div class="scenehud"><span>${S.flight?"點擊前方星際航道前進；左下左轉、右下右轉，接近帝國軍即可交戰":"點擊前方路面前進；畫面左下左轉、右下右轉"}</span><span>${S.pos[0]+1},${S.pos[1]+1}</span></div>${S.flight?`<div class="space-note">星隕級自走砲飛艦｜耐久 100%　護盾 100%　主砲就緒</div>`:""}${sisBox()}`:hubH();
+$("v").innerHTML=S.z?`<div class="scenehead"><b>${S.flight?"星系 3D 飛艦探索":"第一人稱 3D 探索"}</b><span>${S.flight?`第 ${S.flightZone||1} 星系 <i class="flight-badge">帝國軍活動</i>`:`方向感測：${["北","東","南","西"][(((S.dir==null?0:S.dir))+4)%4]}`}</span></div><div class="scene-wrap"><canvas id="scene3d" width="480" height="300" aria-label="3D探索場景"></canvas><div id="battleLayer" aria-label="戰鬥畫面"></div><div id="minimap"><div class="maptop"><b>2D 戰術地圖</b><button type="button" onclick="toggleMap()" aria-label="收合或展開2D地圖">−</button></div>${mapH()}</div></div><div class="scenehud"><span>${S.flight?"點擊前方星際航道前進；左下左轉、右下右轉，接近帝國軍即可交戰":"點擊前方路面前進；畫面左下左轉、右下右轉"}</span><span>${S.pos[0]+1},${S.pos[1]+1}</span></div>${S.flight?`<div class="space-note">星隕級自走砲飛艦｜耐久 100%　護盾 100%　主砲就緒</div>`:""}${sisBox()}`:hubH();
 $("p").innerHTML=S.party.map(m=>`<div class="pc ${m.hp?"":"dn"}"><b>${nm(m)}</b> Lv${m.l}<i style="--w:${m.hp/m.mh*100}%"></i>${m.hp}/${m.mh} ⚡${m.mp}</div>`).join("");
 $("l").innerHTML=S.log.slice(-5).map(x=>`<div>${x}</div>`).join("");
 $("c").innerHTML=(S.z?`<div class="${S.flight?"flight-actions":"move-actions"}"><button onclick="turn3d(-1)" aria-label="左轉">↶<small>左轉</small></button><button onclick="step3d(1)" aria-label="向前">▲<small>${S.flight?"推進":"前進"}</small></button><button onclick="turn3d(1)" aria-label="右轉">↷<small>右轉</small></button><button onclick="step3d(-1)" aria-label="後退">▼<small>${S.flight?"減速":"後退"}</small></button><button onclick="${S.flight?"toggleFlight()":"base()"}" aria-label="${S.flight?"返航下艦":"返航"}">${S.flight?"🛬":"⌂"}<small>${S.flight?"下艦":"返航"}</small></button><button onclick="${S.flight?"fireShipWeapon()":"pot()"}" aria-label="${S.flight?"主砲射擊":"使用修復針劑"}">${S.flight?"🎯":"💉"}<small>${S.flight?"主砲":"補給"}</small></button></div>${S.flight?"":`<button onclick="toggleFlight()">🚀 搭乘自走砲飛艦</button>`}`:"")+`<button onclick=book()>📖</button><button onclick=rst()>重新開始</button>`;
@@ -238,7 +240,7 @@ function cr(){
  if(!C)return;const m=cur(),t=tg();
  document.body.classList.add("inbattle");$("m").hidden=1;
  const layer=$("battleLayer");if(!layer)return;
- layer.innerHTML=`<div class="battle-foes">${C.foes.map((f,i)=>`<button class="battle-foe ${i===t?"selected":""} ${f.boss?"boss":""} ${C.anim&&C.anim.kind==="hit"&&C.anim.fi===i?"hit":""} ${C.anim&&C.anim.kind==="enemy"&&C.anim.fi===i?"attacking":""}" ${f.hp<=0?"disabled":""} onclick="C.t=${i};cr()" aria-label="鎖定目標 ${f.n}"><div class="foe-icon">${f.n.match(/[^\u4e00-\u9fffA-Za-z0-9]/u)?.[0]||"👾"}</div><div class="foe-name">${f.n}</div><div class="hp-track"><i class="hp-fill" style="width:${Math.max(0,f.hp)/f.mh*100}%"></i></div><div class="member-stats">${Math.max(0,f.hp)} / ${f.mh}</div></button>`).join("")}</div>
+ layer.innerHTML=`<div class="battle-foes">${C.foes.map((f,i)=>`<button class="battle-foe ${i===t?"selected":""} ${f.boss?"boss":""} ${C.anim&&C.anim.kind==="hit"&&C.anim.fi===i?"hit":""} ${C.anim&&C.anim.kind==="enemy"&&C.anim.fi===i?"attacking":""}" ${f.hp<=0?"disabled":""} onclick="C.t=${i};cr()" aria-label="鎖定目標 ${f.n}"><div class="foe-icon">${((f.n.match(/[^\u4e00-\u9fffA-Za-z0-9]/u)||[])[0])||"👾"}</div><div class="foe-name">${f.n}</div><div class="hp-track"><i class="hp-fill" style="width:${Math.max(0,f.hp)/f.mh*100}%"></i></div><div class="member-stats">${Math.max(0,f.hp)} / ${f.mh}</div></button>`).join("")}</div>
  <div class="battle-party">${S.party.map((p,i)=>`<div class="battle-member ${i===C.i?"active":""} ${p.hp<=0?"dead":""} ${C.anim&&C.anim.kind==="attack"&&C.anim.pi===i?"attacking":""}"><div class="member-icon">${p.hp?CL[p.c][2]:"💀"}</div><div class="member-name">${pn(p)} Lv${p.l}</div><div class="hp-track"><i class="hp-fill" style="width:${Math.max(0,p.hp)/p.mh*100}%"></i></div><div class="member-stats">HP ${Math.max(0,p.hp)}/${p.mh}</div><div class="mp-track"><i class="mp-fill" style="width:${p.mp/12*100}%"></i></div><div class="member-stats">⚡ ${p.mp}/12</div></div>`).join("")}</div>`;
  const animNow=C.anim;if(animNow)setTimeout(()=>{if(C&&C.anim===animNow)C.anim=null},550);
  $("l").innerHTML=S.log.slice(-3).map(x=>`<div>${x}</div>`).join("");
