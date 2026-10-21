@@ -172,7 +172,7 @@ body.inbattle .scene-wrap{min-height:0;max-height:none;height:calc((100vw - 36px
 </style><script src="jspdf.umd.min.js"></script></head><body><div id="a"><div id="h"></div><div id="v"></div><div id="p"></div><div id="l"></div><div id="c"></div></div><div id="m" hidden></div>
 <script>
 const $=i=>document.getElementById(i),R=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),pk=a=>a[R(0,a.length-1)];
-const CL=[["重甲兵","岩崢","💂",44,6,"壓制砲擊"],["護盾兵","安瀾","🛡️",40,5,"掩護"],["電磁術士","雷馳","⚡",26,7,"電磁風暴"],["光刃劍士","霜刃","⚔️",32,8,"光刃連斬"],["潛行特工","夜梭","🕵️",28,8,"背刺"],["格鬥兵","烈風","🥊",36,7,"連擊"],["軍醫","蘇茗","💊",28,4,"修復針劑"],["通訊官","陸弦","📡",26,4,"戰術增幅"]];
+const CL=[["重甲兵","岩崢","💂\u200d\u2640\ufe0f",44,6,"壓制砲擊"],["護盾兵","安瀾","🦸\u200d\u2640\ufe0f",40,5,"掩護"],["電磁術士","雷馳","🧙\u200d\u2640\ufe0f",26,7,"電磁風暴"],["光刃劍士","霜刃","🧝\u200d\u2640\ufe0f",32,8,"光刃連斬"],["潛行特工","夜梭","🕵\ufe0f\u200d\u2640\ufe0f",28,8,"背刺"],["格鬥兵","烈風","👮\u200d\u2640\ufe0f",36,7,"連擊"],["軍醫","蘇茗","👩\u200d\u2695\ufe0f",28,4,"修復針劑"],["通訊官","陸弦","👩\u200d💻",26,4,"戰術增幅"]];
 const ZN=["哨站七號","灰塵礦星","赤焰戰區","星核要塞"];
 const zoneName=z=>z===0?ZN[0]:(ZN[z]||`${["霜環","雷暴","幽影","晶海","熔爐","天穹","深淵","蒼穹","星塵","量子"][((z-4)%10+10)%10]}遠征戰區 ${z-3}`);
 const bossFor=d=>{const b=BO[(d-1)%BO.length];return d<=BO.length?b:[`${b[0]}・第${Math.floor((d-1)/BO.length)+1}型`,b[1]]};
@@ -200,7 +200,7 @@ const E=[{x:9,y:9,t:"b"}];for(let i=0;i<6;i++){const[p,q]=f.pop();E.push({x:p,y:
 return{g,E,seen:g.map(r=>r.map(()=>0))}}
 const gm=()=>S.maps[S.z+":"+S.f]||(S.maps[S.z+":"+S.f]=gen());
 function fg(){const key="F:"+(S.flightZone||1);if(S.maps[key])return S.maps[key];const g=Array.from({length:11},()=>Array(11).fill(0)),seen=g.map(r=>r.map(()=>0)),spots=[];for(let y=2;y<10;y++)for(let x=2;x<10;x++)if(!(x===9&&y===9))spots.push([x,y]);spots.sort(()=>Math.random()-.5);const E=[{x:9,y:9,t:"b"}];for(let i=0;i<6;i++){const [x,y]=spots.pop();E.push({x,y,t:"m"})}for(let i=0;i<3;i++){const [x,y]=spots.pop();E.push({x,y,t:"c"})}return S.maps[key]={g,E,seen}}
-function mapH(){const M=S.flight?fg():gm(),[px,py]=S.pos;let h='<div class=g>';for(let y=0;y<11;y++)for(let x=0;x<11;x++){const near=Math.abs(x-px)<3&&Math.abs(y-py)<3;if(near)M.seen[y][x]=1;let k="",c="";if(!M.seen[y][x])k="u";else if(!S.flight&&M.g[y][x])k="w";else{const e=M.E.find(o=>o.x==x&&o.y==y);c=x==px&&y==py?(S.flight?"🚀":"👨‍🚀"):e?(e.t=="b"?(S.flight?"帝":"👹"):e.t=="c"?"📦":near?(S.flight?"⚔":"❗"):""):""}h+=`<i class="${k}${x==px&&y==py?" me":""}">${c}</i>`}return h+"</div>"}
+function mapH(){const M=S.flight?fg():gm(),[px,py]=S.pos;let h='<div class=g>';for(let y=0;y<11;y++)for(let x=0;x<11;x++){const near=Math.abs(x-px)<3&&Math.abs(y-py)<3;if(near)M.seen[y][x]=1;let k="",c="";if(!M.seen[y][x])k="u";else if(!S.flight&&M.g[y][x])k="w";else{const e=M.E.find(o=>o.x==x&&o.y==y);c=x==px&&y==py?(S.flight?"🚀":"👩‍🚀"):e?(e.t=="b"?(S.flight?"帝":"👹"):e.t=="c"?"📦":near?(S.flight?"⚔":"❗"):""):""}h+=`<i class="${k}${x==px&&y==py?" me":""}">${c}</i>`}return h+"</div>"}
 const DIRS=[[0,-1],[1,0],[0,1],[-1,0]];
 function turn3d(n){S.dir=(((S.dir==null?0:S.dir))+n+4)%4;if(S.flight)saySis(`航向已調整至${["北方","東方","南方","西方"][S.dir]}。注意帝國軍雷達訊號。`);ui()}
 function step3d(n){const d=DIRS[(((S.dir==null?0:S.dir))+4)%4];const dx=d[0]*n,dy=d[1]*n;mv(dx,dy)}
@@ -341,9 +341,9 @@ function rst(){if(confirm("確定要清除存檔並重新開始？")){S=ns();$("
 function chap(force){const e=S.nev,sc=e.k+3*e.b+3*e.d+e.c;if(!force&&sc<3)return 0;
 const z=zoneName(Math.max(1,...Object.keys(e.zs).map(Number))),P=S.party.map(pn),a=P[0],b=P[1]||P[0],n=S.nov.length+1,T=[];
 T.push(pk([`哨站七號的警報在拂曉響起。${a}與${b}領著 ${P.length} 人小隊登上躍遷艙，目的地是${z}。`,`躍遷艙裡只有低沉的嗡鳴。${a}檢查完能量電池，抬頭望向${z}的荒涼地表。`]));
-if(e.k)T.push(`接下來的幾個小時，他們與${e.n.slice(0,3).join("、")}交火，一共擊倒 ${e.k} 隻。${pk([`${b}的槍管燙得發紅，卻沒有人喊停。`,`每倒下一隻敵人，隊伍的默契便多一分。`])}`);
-T.push(e.bo.length?`通道盡頭，${e.bo.join("與")}擋住了去路。${pk([`${a}壓低身子，低聲說：「按訓練來。」`,`機械教官的嚴訓在這一刻派上了用場。`])}戰鬥結束時，沒有人再說笑。`:`他們沒遇上統領級的敵人，但通訊頻道裡一直有種不安的雜音。`);
-if(e.fs&&e.fs.length){const f=e.fs[e.fs.length-1];T.push(`一場惡戰令人難忘：${f.lines.slice(1,4).join("")}最終${f.res=="勝"?"他們慘勝":f.res=="敗"?"他們不敵":"他們及時撤走"}。`)}const x=[];if(e.c)x.push(`拆開 ${e.c} 個補給箱`);if(e.lv)x.push(`隊伍升階 ${e.lv} 次`);if(e.d)x.push(`一度全隊倒下，是${a}拖著傷員撤回星港`);if(x.length)T.push(`這一趟，他們${x.join("，")}。`);
+if(e.k)T.push(`接下來的幾個小時，她們與${e.n.slice(0,3).join("、")}交火，一共擊倒 ${e.k} 隻。${pk([`${b}的槍管燙得發紅，卻沒有人喊停。`,`每倒下一隻敵人，隊伍的默契便多一分。`])}`);
+T.push(e.bo.length?`通道盡頭，${e.bo.join("與")}擋住了去路。${pk([`${a}壓低身子，低聲說：「按訓練來。」`,`機械教官的嚴訓在這一刻派上了用場。`])}戰鬥結束時，沒有人再說笑。`:`她們沒遇上統領級的敵人，但通訊頻道裡一直有種不安的雜音。`);
+if(e.fs&&e.fs.length){const f=e.fs[e.fs.length-1];T.push(`一場惡戰令人難忘：${f.lines.slice(1,4).join("")}最終${f.res=="勝"?"她們慘勝":f.res=="敗"?"她們不敵":"她們及時撤走"}。`)}const x=[];if(e.c)x.push(`拆開 ${e.c} 個補給箱`);if(e.lv)x.push(`隊伍升階 ${e.lv} 次`);if(e.d)x.push(`一度全隊倒下，是${a}拖著傷員撤回星港`);if(x.length)T.push(`這一趟，她們${x.join("，")}。`);
 T.push(`回到哨站七號時，補給站的燈還亮著。這趟共帶回 ${e.g} 星幣。距離元帥之夢仍遠，但新兵們明白，每一步都算數。`);
 S.nov.push({n,title:`第${n}集：${z}${e.bo.length?"・"+e.bo[0]:"巡弋"}`,text:T.join("\n"),ev:e,z});S.nev=ne();if(S.ai)aiw(S.nov.length-1);return 1}
 function book(){const h=S.nov.slice().reverse().map(c=>`<div class=ch><h3>${c.title}${c.ai?" ✨":""}${c.busy?" ⏳":""}</h3><button onclick="aiw(${S.nov.indexOf(c)},1)">✨ AI 重寫此集</button>${c.text.split("\n").map(p=>`<p>${p.replace(/</g,"&lt;")}</p>`).join("")}</div>`).join("");mo(`<h3>📖 《星途小兵錄》</h3>${h||"<p>還沒有章節。完成幾場戰鬥並返航，就會自動成章。</p>"}<div class=row><button onclick="chap(1)&&book()">立即成章</button><button onclick=dl()>下載 TXT</button><button onclick=pdf()>摺頁小冊 PDF</button><button onclick=tai()>自動 AI 成章：${S.ai?"開":"關"}</button></div>`)}
@@ -358,7 +358,7 @@ const r=await Promise.race([puter.ai.chat(p,{model:"claude-sonnet-4-5"}),tmo(120
 const sm=window.claude&&await claude.use("sample");if(sm){try{return(await sm(p,{cache:false})).text}catch(e){}}return null}
 async function aiw(i,man){const c=S.nov[i];if(!c||c.busy)return;
 const e=c.ev||{},P=S.party.map(m=>CL[m.c][1]+"（"+CL[m.c][0]+"）").join("、"),pv=S.nov[i-1]?S.nov[i-1].text.slice(0,200):"（無）",F=(e.fs||[]).map((f,k)=>`戰鬥${k+1}（${f.z}${f.bs?"，首領戰":""}，結果：${f.res}）：${f.lines.join("／")}`).join("\n");
-const p=`你是連載網路小說編輯，請寫《星途小兵錄》第${c.n}集。\n【世界觀】星際戰爭延燒數百年，資質平庸的新兵靠智慧與同袍扶持，立志成為統一星海的元帥；據點是前線星港「哨站七號」。\n【文風】${STY}\n【人物】${P}（原創，沿用這些名字）。\n【內容要求】繁體中文；900–1300 字；6–10 段；必須把下列戰鬥紀錄擴寫成連貫的打鬥過程，不可略過，數字可轉為感受；第一行為 10 字內標題，空一行後接純文字段落。\n【前情】${pv}\n【本集紀錄】地點：${c.z||""}；擊倒 ${e.k||0} 隻（${(e.n||[]).join("、")}）；首領：${(e.bo||[]).join("、")||"無"}；補給箱 ${e.c||0}；全滅 ${e.d||0} 次；星幣 ${e.g||0}。\n${F}`;
+const p=`你是連載網路小說編輯，請寫《星途小兵錄》第${c.n}集。\n【世界觀】星際戰爭延燒數百年，資質平庸的新兵靠智慧與同袍扶持，立志成為統一星海的元帥；據點是前線星港「哨站七號」。\n【文風】${STY}\n【人物】${P}（原創，沿用這些名字；全員皆為女性，代名詞一律用「她」「她們」）。\n【內容要求】繁體中文；900–1300 字；6–10 段；必須把下列戰鬥紀錄擴寫成連貫的打鬥過程，不可略過，數字可轉為感受；第一行為 10 字內標題，空一行後接純文字段落。\n【前情】${pv}\n【本集紀錄】地點：${c.z||""}；擊倒 ${e.k||0} 隻（${(e.n||[]).join("、")}）；首領：${(e.bo||[]).join("、")||"無"}；補給箱 ${e.c||0}；全滅 ${e.d||0} 次；星幣 ${e.g||0}。\n${F}`;
 c.busy=1;rb();try{const tx=await llm(p,man);if(!tx)throw{code:"沒有可用的 AI，已保留範本"};const t=tx.trim().split("\n"),ti=t.shift().replace(/[#*《》「」\s]/g,"").slice(0,24),b=t.filter(x=>x.trim()).join("\n");if(b.length>150){c.title=`第${c.n}集：${ti}`;c.text=b;c.ai=1}}catch(x){log("AI 寫作未完成："+(x.code||"錯誤"))}c.busy=0;sv();rb()}
 async function sav(n,d){const dn=window.claude&&await claude.use("downloads");if(dn){try{await dn.save({filename:n,data:d})}catch(e){}return}const u=URL.createObjectURL(d instanceof Blob?d:new Blob([d],{type:"text/plain;charset=utf-8"}));if(!window.open(u))location.href=u}
 async function dl(){await sav("星途小兵錄.txt","《星途小兵錄》\n\n"+S.nov.map(c=>c.title+"\n"+c.text).join("\n\n"))}
