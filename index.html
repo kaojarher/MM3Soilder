@@ -141,6 +141,34 @@ body.inbattle #scene3d{position:absolute;top:0;left:0;width:100%;height:100%}
 .row{gap:0;margin:4px -2px}.row>*{margin:2px}
 #c{gap:0}#c>*{margin:2px}
 body.inbattle #c>*{margin:0}
+
+/* v11 iPhone 6 單頁操作：探索畫面免上下捲動；小地圖改為固定格高正方形（iOS 12 不支援 aspect-ratio，空格原本高度為 0 而被壓扁） */
+:root{--vh1:1vh}
+body.exp #a{gap:5px;padding-top:calc(5px + env(safe-area-inset-top,0px));padding-bottom:calc(6px + env(safe-area-inset-bottom,0px))}
+body.exp #h{display:flex;align-items:center;justify-content:space-between;height:38px;padding:3px 6px 3px 9px;font-size:12px}
+#h .ht{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#h .hb{flex:0 0 auto;display:flex}
+#h .hb button{min-height:30px;width:32px;padding:0;margin-left:3px;font-size:15px;line-height:1;border-radius:6px}
+body.inbattle #h .hb{display:none}
+body.exp #v{padding:0;border:0;background:transparent;overflow:visible}
+body.exp #scene3d{height:calc((100vw - 18px)*.625);height:max(150px,min(calc((100vw - 18px)*.625),calc(var(--vh1)*100 - 325px)))}
+.xrow{display:flex;align-items:stretch;--mw:min(calc((100vw - 18px)*.44),200px);--cell:calc((var(--mw) - 20px)/11);height:var(--mw)}
+body.inbattle .xrow{display:none}
+body.exp #minimap{position:relative;top:auto;right:auto;z-index:auto;flex:0 0 var(--mw);width:var(--mw);height:var(--mw);min-width:0;margin:0 6px 0 0;padding:4px;background:#0a1624;border:1px solid #527a96;border-radius:7px;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;opacity:1}
+body.exp #minimap .g{gap:1px;grid-template-columns:repeat(11,minmax(0,1fr))}
+body.exp #minimap .g i{height:var(--cell);width:auto;aspect-ratio:auto;min-height:0;padding:0;font-size:calc(var(--cell)*.8);line-height:1}
+body.exp #minimap .g i.me{background:#b98312!important;border-radius:3px}
+.xright{position:relative;flex:1;min-width:0}
+.xrow .move-actions,.xrow .flight-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,48px);gap:4px;width:100%}
+.xrow .move-actions button,.xrow .flight-actions button{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;height:48px;padding:2px 1px;font-size:19px}
+.xrow .move-actions small,.xrow .flight-actions small{font-size:10px;margin-top:2px}
+.xsis{position:absolute;left:0;right:0;top:104px;bottom:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:3px 6px;font-size:11px;line-height:1.3;color:#e7f6ff;background:linear-gradient(120deg,#172a3d,#101a29);border:1px solid #52728d;border-radius:8px}
+.xsis b{color:#9de7ff;margin-right:4px}
+body.exp #c{display:none}
+body.exp #p{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+body.exp .pc{font-size:10px;line-height:1.25;padding:3px 4px}
+body.exp #l{min-height:0;max-height:none;font-size:12px;line-height:1.4;overflow:hidden;padding:0 2px}
+body.inbattle .scene-wrap{min-height:0;max-height:none;height:calc((100vw - 36px)*.9);height:max(250px,min(calc((100vw - 36px)*.9),calc(var(--vh1)*100 - 255px)))}
 </style><script src="jspdf.umd.min.js"></script></head><body><div id="a"><div id="h"></div><div id="v"></div><div id="p"></div><div id="l"></div><div id="c"></div></div><div id="m" hidden></div>
 <script>
 const $=i=>document.getElementById(i),R=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),pk=a=>a[R(0,a.length-1)];
@@ -172,7 +200,7 @@ const E=[{x:9,y:9,t:"b"}];for(let i=0;i<6;i++){const[p,q]=f.pop();E.push({x:p,y:
 return{g,E,seen:g.map(r=>r.map(()=>0))}}
 const gm=()=>S.maps[S.z+":"+S.f]||(S.maps[S.z+":"+S.f]=gen());
 function fg(){const key="F:"+(S.flightZone||1);if(S.maps[key])return S.maps[key];const g=Array.from({length:11},()=>Array(11).fill(0)),seen=g.map(r=>r.map(()=>0)),spots=[];for(let y=2;y<10;y++)for(let x=2;x<10;x++)if(!(x===9&&y===9))spots.push([x,y]);spots.sort(()=>Math.random()-.5);const E=[{x:9,y:9,t:"b"}];for(let i=0;i<6;i++){const [x,y]=spots.pop();E.push({x,y,t:"m"})}for(let i=0;i<3;i++){const [x,y]=spots.pop();E.push({x,y,t:"c"})}return S.maps[key]={g,E,seen}}
-function mapH(){const M=S.flight?fg():gm(),[px,py]=S.pos;let h='<div class=g>';for(let y=0;y<11;y++)for(let x=0;x<11;x++){const near=Math.abs(x-px)<3&&Math.abs(y-py)<3;if(near)M.seen[y][x]=1;let k="",c="";if(!M.seen[y][x])k="u";else if(!S.flight&&M.g[y][x])k="w";else{const e=M.E.find(o=>o.x==x&&o.y==y);c=x==px&&y==py?(S.flight?"🚀":"👨‍🚀"):e?(e.t=="b"?(S.flight?"帝":"👹"):e.t=="c"?"📦":near?(S.flight?"⚔":"❗"):""):""}h+=`<i class="${k}">${c}</i>`}return h+"</div>"}
+function mapH(){const M=S.flight?fg():gm(),[px,py]=S.pos;let h='<div class=g>';for(let y=0;y<11;y++)for(let x=0;x<11;x++){const near=Math.abs(x-px)<3&&Math.abs(y-py)<3;if(near)M.seen[y][x]=1;let k="",c="";if(!M.seen[y][x])k="u";else if(!S.flight&&M.g[y][x])k="w";else{const e=M.E.find(o=>o.x==x&&o.y==y);c=x==px&&y==py?(S.flight?"🚀":"👨‍🚀"):e?(e.t=="b"?(S.flight?"帝":"👹"):e.t=="c"?"📦":near?(S.flight?"⚔":"❗"):""):""}h+=`<i class="${k}${x==px&&y==py?" me":""}">${c}</i>`}return h+"</div>"}
 const DIRS=[[0,-1],[1,0],[0,1],[-1,0]];
 function turn3d(n){S.dir=(((S.dir==null?0:S.dir))+n+4)%4;if(S.flight)saySis(`航向已調整至${["北方","東方","南方","西方"][S.dir]}。注意帝國軍雷達訊號。`);ui()}
 function step3d(n){const d=DIRS[(((S.dir==null?0:S.dir))+4)%4];const dx=d[0]*n,dy=d[1]*n;mv(dx,dy)}
@@ -231,11 +259,17 @@ function handleSceneClick(ev){
 }
 function refreshScene(){const canvas=$('scene3d');if(canvas){scene3d();canvas.onclick=handleSceneClick;canvas.style.cursor='pointer'}}
 const hubH=()=>`${sisBox()}<div class=hub><button onclick=shop()>🏪 補給站</button><button onclick=hire()>📋 招募艙</button><button onclick=inn()>🏥 醫療艙</button><button onclick=forge()>🔧 兵工廠</button><button onclick=gate()>🌀 躍遷門</button><button onclick=toggleFlight()>🚀 自走砲飛艦</button><button onclick=book()>📖 小說（${S.nov.length}集）</button></div><p style="color:var(--mut)">前線星港。整備好隊伍，從躍遷門出發。休眠艙裡的隊員會原地待命。</p>`;
-function ui(){document.body.classList.toggle("inbattle",!!C);$("p").hidden=!!C;sv();$("h").textContent=`${zoneName(S.z)}${S.z?" 第"+S.f+"層":""}　💰${S.gold}　💉${S.pot}　武器+${S.w}${S.ng?"　周目"+(S.ng+1):""}`;
-$("v").innerHTML=S.z?`<div class="scenehead"><b>${S.flight?"星系 3D 飛艦探索":"第一人稱 3D 探索"}</b><span>${S.flight?`第 ${S.flightZone||1} 星系 <i class="flight-badge">帝國軍活動</i>`:`方向感測：${["北","東","南","西"][(((S.dir==null?0:S.dir))+4)%4]}`}</span></div><div class="scene-wrap"><canvas id="scene3d" width="480" height="300" aria-label="3D探索場景"></canvas><div id="battleLayer" aria-label="戰鬥畫面"></div><div id="minimap"><div class="maptop"><b>2D 戰術地圖</b><button type="button" onclick="toggleMap()" aria-label="收合或展開2D地圖">−</button></div>${mapH()}</div></div><div class="scenehud"><span>${S.flight?"點擊前方星際航道前進；左下左轉、右下右轉，接近帝國軍即可交戰":"點擊前方路面前進；畫面左下左轉、右下右轉"}</span><span>${S.pos[0]+1},${S.pos[1]+1}</span></div>${S.flight?`<div class="space-note">星隕級自走砲飛艦｜耐久 100%　護盾 100%　主砲就緒</div>`:""}${sisBox()}`:hubH();
+function fitVh(){try{document.documentElement.style.setProperty("--vh1",(window.innerHeight/100)+"px")}catch(e){}}
+addEventListener("resize",fitVh);addEventListener("orientationchange",function(){setTimeout(fitVh,250)});fitVh();
+function ui(){document.body.classList.toggle("inbattle",!!C);document.body.classList.toggle("exp",!!S.z&&!C);$("p").hidden=!!C;sv();
+const esc=t=>String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"),f=!!S.flight;
+const ht=`${zoneName(S.z)}${S.z?" 第"+S.f+"層":""}　💰${S.gold}　💉${S.pot}　武器+${S.w}${S.ng?"　周目"+(S.ng+1):""}${S.z?"　"+(S.pos[0]+1)+","+(S.pos[1]+1):""}`;
+$("h").innerHTML=`<span class="ht">${esc(ht)}</span>`+(S.z?`<span class="hb"><button type="button" onclick="toggleSisVoice()" aria-label="語音開關">${S.sisVoice?"🔊":"🔈"}</button>${f?"":`<button type="button" onclick="toggleFlight()" aria-label="搭乘飛艦">🚀</button>`}<button type="button" onclick="book()" aria-label="小說">📖</button><button type="button" onclick="rst()" aria-label="重新開始">↺</button></span>`:"");
+const ctl=`<div class="${f?"flight-actions":"move-actions"}"><button onclick="turn3d(-1)" aria-label="左轉">↶<small>左轉</small></button><button onclick="step3d(1)" aria-label="向前">▲<small>${f?"推進":"前進"}</small></button><button onclick="turn3d(1)" aria-label="右轉">↷<small>右轉</small></button><button onclick="step3d(-1)" aria-label="後退">▼<small>${f?"減速":"後退"}</small></button><button onclick="${f?"toggleFlight()":"base()"}" aria-label="${f?"返航下艦":"返航"}">${f?"🛬":"⌂"}<small>${f?"下艦":"返航"}</small></button><button onclick="${f?"fireShipWeapon()":"pot()"}" aria-label="${f?"主砲射擊":"使用修復針劑"}">${f?"🎯":"💉"}<small>${f?"主砲":"補給"}</small></button></div>`;
+$("v").innerHTML=S.z?`<div class="scene-wrap"><canvas id="scene3d" width="480" height="300" aria-label="3D探索場景"></canvas><div id="battleLayer" aria-label="戰鬥畫面"></div></div><div class="xrow"><div id="minimap">${mapH()}</div><div class="xright">${ctl}<div class="xsis"><b>姊</b><span id="sisText">${esc(S.sisText||sisDefault)}</span></div></div></div>`:hubH();
 $("p").innerHTML=S.party.map(m=>`<div class="pc ${m.hp?"":"dn"}"><b>${nm(m)}</b> Lv${m.l}<i style="--w:${m.hp/m.mh*100}%"></i>${m.hp}/${m.mh} ⚡${m.mp}</div>`).join("");
-$("l").innerHTML=S.log.slice(-5).map(x=>`<div>${x}</div>`).join("");
-$("c").innerHTML=(S.z?`<div class="${S.flight?"flight-actions":"move-actions"}"><button onclick="turn3d(-1)" aria-label="左轉">↶<small>左轉</small></button><button onclick="step3d(1)" aria-label="向前">▲<small>${S.flight?"推進":"前進"}</small></button><button onclick="turn3d(1)" aria-label="右轉">↷<small>右轉</small></button><button onclick="step3d(-1)" aria-label="後退">▼<small>${S.flight?"減速":"後退"}</small></button><button onclick="${S.flight?"toggleFlight()":"base()"}" aria-label="${S.flight?"返航下艦":"返航"}">${S.flight?"🛬":"⌂"}<small>${S.flight?"下艦":"返航"}</small></button><button onclick="${S.flight?"fireShipWeapon()":"pot()"}" aria-label="${S.flight?"主砲射擊":"使用修復針劑"}">${S.flight?"🎯":"💉"}<small>${S.flight?"主砲":"補給"}</small></button></div>${S.flight?"":`<button onclick="toggleFlight()">🚀 搭乘自走砲飛艦</button>`}`:"")+`<button onclick=book()>📖</button><button onclick=rst()>重新開始</button>`;
+$("l").innerHTML=S.log.slice(S.z?-2:-5).map(x=>`<div>${x}</div>`).join("");
+$("c").innerHTML=S.z?"":`<button onclick=book()>📖</button><button onclick=rst()>重新開始</button>`;
 refreshScene();
 }
 function mv(dx,dy){if(C||!$("m").hidden||!S.z)return;const M=S.flight?fg():gm(),x=S.pos[0]+dx,y=S.pos[1]+dy;if(x<0||y<0||x>=11||y>=11||(!S.flight&&M.g[y][x])){if(dx||dy){log("前方是牆壁，請轉向後再前進。");ui()}return}const e=M.E.find(o=>o.x==x&&o.y==y);
@@ -253,7 +287,7 @@ function rcd(res){const ev=S.nev;ev.fs=ev.fs||[];const r=C.rec;ev.fs.push({z:zon
 const cur=()=>S.party.find((m,i)=>i>=C.i&&m.hp>0),tg=()=>{if(!C.foes[C.t]||C.foes[C.t].hp<=0)C.t=C.foes.findIndex(f=>f.hp>0);return C.t};
 function cr(){
  if(!C)return;const m=cur(),t=tg();
- document.body.classList.add("inbattle");$("m").hidden=1;
+ document.body.classList.add("inbattle");document.body.classList.remove("exp");$("m").hidden=1;
  const layer=$("battleLayer");if(!layer)return;
  layer.innerHTML=`<div class="battle-foes">${C.foes.map((f,i)=>`<button class="battle-foe ${i===t?"selected":""} ${f.boss?"boss":""} ${C.anim&&C.anim.kind==="hit"&&C.anim.fi===i?"hit":""} ${C.anim&&C.anim.kind==="enemy"&&C.anim.fi===i?"attacking":""}" ${f.hp<=0?"disabled":""} onclick="C.t=${i};cr()" aria-label="鎖定目標 ${f.n}"><div class="foe-icon">${((f.n.match(/[^\u4e00-\u9fffA-Za-z0-9]/u)||[])[0])||"👾"}</div><div class="foe-name">${f.n}</div><div class="hp-track"><i class="hp-fill" style="width:${Math.max(0,f.hp)/f.mh*100}%"></i></div><div class="member-stats">${Math.max(0,f.hp)} / ${f.mh}</div></button>`).join("")}</div>
  <div class="battle-party">${S.party.map((p,i)=>`<div class="battle-member ${i===C.i?"active":""} ${p.hp<=0?"dead":""} ${C.anim&&C.anim.kind==="attack"&&C.anim.pi===i?"attacking":""}"><div class="member-icon">${p.hp?CL[p.c][2]:"💀"}</div><div class="member-name">${pn(p)} Lv${p.l}</div><div class="hp-track"><i class="hp-fill" style="width:${Math.max(0,p.hp)/p.mh*100}%"></i></div><div class="member-stats">HP ${Math.max(0,p.hp)}/${p.mh}</div><div class="mp-track"><i class="mp-fill" style="width:${p.mp/12*100}%"></i></div><div class="member-stats">⚡ ${p.mp}/12</div></div>`).join("")}</div>`;
