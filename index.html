@@ -111,11 +111,11 @@ body.inbattle #p{display:none}
 .battle-member .member-icon{font-size:clamp(22px,6vw,36px);line-height:1.05;filter:drop-shadow(0 2px 2px #000)}
 .battle-member .member-name{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .battle-member .member-stats{font-size:9px;color:#c4d5e7;line-height:1.25}
-.battle-member.attacking .member-icon{animation:xbLunge .48s ease-in-out}
+.battle-member.attacking{position:relative;z-index:6}.battle-member.attacking .member-icon{position:relative;transform-origin:50% 50%;will-change:transform;animation:xbLunge .52s ease-in-out}
 .battle-foe.hit .foe-icon{animation:xbHit .32s linear}
-.battle-foe.attacking .foe-icon{animation:xbEnemyLunge .48s ease-in-out}
-@keyframes xbLunge{0%,100%{transform:translate(0,0) scale(1)}35%,65%{transform:translateY(-8px) scale(1.22)}}
-@keyframes xbEnemyLunge{0%,100%{transform:translate(0,0) scale(1)}40%,65%{transform:translateY(20px) scale(1.15)}}
+.battle-foe.attacking{position:relative;z-index:6;overflow:visible}.battle-foe.attacking .foe-icon{position:relative;transform-origin:50% 50%;will-change:transform;animation:xbEnemyLunge .52s ease-in-out}
+@keyframes xbLunge{0%,100%{transform:translate(0,0) scale(1)}24%{transform:translateY(10px) scale(2.1)}58%,68%{transform:translateY(-72px) scale(.62)}}
+@keyframes xbEnemyLunge{0%,100%{transform:translate(0,0) scale(1)}24%{transform:translateY(-4px) scale(1.5)}58%,68%{transform:translateY(72px) scale(.62)}}
 @keyframes xbHit{0%,100%{transform:translateX(0);filter:drop-shadow(0 0 0 #f33)}25%,75%{transform:translateX(-4px);filter:drop-shadow(0 0 8px #f33)}50%{transform:translateX(4px);filter:drop-shadow(0 0 8px #f33)}}
 .battle-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;width:100%}
 .battle-actions button{min-height:42px;padding:6px 4px;font-size:13px;border-radius:8px;background:linear-gradient(145deg,#263c55,#111c2b);border-color:#496987;box-shadow:0 2px 0 #060b12}
