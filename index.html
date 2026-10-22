@@ -186,6 +186,9 @@ body.inbattle .scene-wrap{min-height:0;max-height:none;height:calc((100vw - 36px
 .member-icon{display:flex;align-items:flex-end;justify-content:center;min-height:clamp(34px,9vw,52px)}
 .member-icon .av{height:clamp(36px,10vw,54px);vertical-align:bottom}
 .battle-turn .av{height:1.8em}
+@keyframes br{0%,100%{transform:scale(1,1)}50%{transform:scale(.99,1.03)}}
+.bx h3 .av.npc{transform-origin:50% 100%;animation:br 3.6s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.bx h3 .av.npc{animation:none}}
 .bx h3 .av{height:2.4em;vertical-align:middle;margin-right:4px}
 .g i .av.npc{height:100%}
 #inst{position:fixed;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));-webkit-transform:translateX(-50%);transform:translateX(-50%);width:min(94vw,420px);z-index:8;display:flex;align-items:center;gap:8px;background:var(--p);border:1px solid var(--ac);border-radius:10px;padding:8px 10px;box-shadow:0 4px 16px #0008;font-size:13px}
@@ -203,6 +206,32 @@ const NID=["sup","rec","med","arm","nav","ops","int","bar","sis"],NSPR={"sup": "
 const nav_=i=>'<img class="av npc" alt="" draggable="false" src="'+NSPR[NID[i]]+'">';
 const NIMG={};NID.forEach(id=>{const im=new Image();im.onload=()=>{try{if(typeof refreshScene==="function")refreshScene()}catch(e){}};im.src=NSPR[id];NIMG[id]=im});
 const rich=s=>{s=String(s);for(let i=0;i<EMJ.length;i++)if(s.indexOf(EMJ[i])>-1)s=s.split(EMJ[i]).join(av(i));for(let i=0;i<NID.length;i++){const m=String.fromCharCode(57344+i);if(s.indexOf(m)>-1)s=s.split(m).join(nav_(i))}return s};
+/* v17 艦內動態：呼吸律動、天花板星空、領航員側牆流動星空 */
+let TT=0;const RM=(()=>{try{return matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){return false}})();
+const hh_=(n,l)=>{const s=Math.sin(n*127.1+l*311.7)*43758.5453;return s-Math.floor(s)};
+function starCeil(ctx,w,h,dir,px,py){const H=h/2,sc=Math.max(1,w/480),g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,"#01030a");g.addColorStop(.6,"#050d22");g.addColorStop(1,"#10264a");ctx.fillStyle=g;ctx.fillRect(0,0,w,H);
+ctx.save();ctx.globalAlpha=.17;const mg=ctx.createLinearGradient(0,H,w,0);mg.addColorStop(0,"rgba(90,140,255,0)");mg.addColorStop(.5,"rgba(160,190,255,1)");mg.addColorStop(1,"rgba(130,100,255,0)");ctx.fillStyle=mg;ctx.fillRect(0,0,w,H);ctx.restore();
+const off=dir*w*.9+(px*11+py*7)*2;
+for(let i=0;i<120;i++){const l=i%3,x=(((hh_(i,1)*w-off*(.6+l*.3)-TT*(1.5+l*1.3))%w)+w)%w,y=Math.pow(hh_(i,2),1.25)*H*.98,tw=.35+.65*(.5+.5*Math.sin(TT*(1+hh_(i,3)*2)+i)),s=(l==2?2:1)*sc;ctx.fillStyle="rgba("+(hh_(i,4)>.7?"255,226,190":"205,226,255")+","+tw.toFixed(2)+")";ctx.fillRect(x,y,s,s)}}
+function starWall(ctx,ang,px,py,x,y,cw,hh){const c=Math.cos(ang);let u;if(c<-.01){u=px+.5+Math.sin(ang)*((10-(py+.5))/-c)}else u=px+.5+Math.sin(ang)*8;
+const nb=.5+.5*Math.sin(u*.7+TT*.05),g=ctx.createLinearGradient(0,y,0,y+hh);g.addColorStop(0,"rgb("+(2+nb*8|0)+","+(5+nb*10|0)+","+(18+nb*26|0)+")");g.addColorStop(1,"rgb("+(8+nb*14|0)+","+(18+nb*18|0)+","+(48+nb*30|0)+")");ctx.fillStyle=g;ctx.fillRect(x,y,cw,hh);
+const L=[[5,.10],[9,.18],[15,.30]];for(let l=0;l<3;l++){const q=(u-TT*L[l][1])*L[l][0],n=Math.floor(q),fr=q-n;if(fr<.1&&hh_(n,l)<[.7,.6,.5][l]){const sy=y+hh*(.06+.88*hh_(n,l+7)),tw=.45+.55*Math.sin(TT*1.6+n*1.7+l);ctx.fillStyle="rgba("+(l==2?"255,240":"205,228")+",255,"+tw.toFixed(2)+")";ctx.fillRect(x+cw*.2,sy,Math.max(1.2,cw*.6),1+l)}}
+ctx.fillStyle="rgba(140,200,255,.38)";ctx.fillRect(x,y,cw,2);ctx.fillRect(x,y+hh-2,cw,2)}
+function wallPlanet(ctx,SWR,px,py,dir,fov,w,h){const dx=4.2-(px+.5),dy=10-(py+.5);if(dy<=0)return;const rel=((Math.atan2(dx,-dy)-dir*Math.PI/2+Math.PI*3)%(Math.PI*2))-Math.PI;if(Math.abs(rel)>fov*.8)return;
+const hw=Math.min(h*.94,h/(Math.hypot(dx,dy)*Math.cos(rel)+.12)*.62),cx=w*(.5+rel/fov),cy=(h-hw)/2+hw*.4,pr=hw*.36,zn=(S.flightZone||1)%2,T=RM?0:TT;
+ctx.save();ctx.beginPath();SWR.forEach(r=>ctx.rect(r[0],r[1],r[2],r[3]));ctx.clip();
+const gl=ctx.createRadialGradient(cx,cy,pr*.9,cx,cy,pr*1.55);gl.addColorStop(0,"rgba(120,190,255,.30)");gl.addColorStop(1,"rgba(120,190,255,0)");ctx.fillStyle=gl;ctx.beginPath();ctx.arc(cx,cy,pr*1.55,0,7);ctx.fill();
+ctx.strokeStyle="rgba(118,209,255,.6)";ctx.lineWidth=Math.max(1,pr*.07);ctx.beginPath();ctx.ellipse(cx,cy,pr*1.55,pr*.34,-.18,Math.PI,Math.PI*2);ctx.stroke();
+const g=ctx.createRadialGradient(cx-pr*.38,cy-pr*.45,1,cx,cy,pr);g.addColorStop(0,"#d7efff");g.addColorStop(.38,zn?"#5797ca":"#ba718b");g.addColorStop(.78,"#243d68");g.addColorStop(1,"#080e22");ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,pr,0,7);ctx.fill();
+ctx.save();ctx.beginPath();ctx.arc(cx,cy,pr,0,7);ctx.clip();for(let k=0;k<4;k++){const by=cy+(k-1.5)*pr*.5+Math.sin(T*.12+k*1.9)*pr*.05;ctx.fillStyle=k%2?"rgba(255,255,255,.08)":"rgba(0,0,50,.14)";ctx.fillRect(cx-pr,by,pr*2,pr*.17)}ctx.restore();
+ctx.beginPath();ctx.ellipse(cx,cy,pr*1.55,pr*.34,-.18,0,Math.PI);ctx.stroke();ctx.restore()}
+function drawNpcImg(ctx,im,id,ex,yb,sz,i){const ih=sz*1.04,iw=ih*im.naturalWidth/im.naturalHeight,T=RM?0:TT;
+if(id==="sis"){const fl=Math.sin(T*1.3+1)*sz*.05,pl=.82+.18*Math.sin(T*2.1);ctx.save();ctx.globalAlpha=.35*pl;ctx.fillStyle="#6fe9ff";ctx.beginPath();ctx.ellipse(ex,yb+sz*.02,iw*.3,sz*.06,0,0,7);ctx.fill();ctx.globalAlpha=pl;ctx.drawImage(im,ex-iw/2,yb-ih-sz*.06+fl,iw,ih);ctx.restore();return}
+const per=3.1+(i%4)*.45,ph=i*1.7,b=Math.sin(T*6.2832/per+ph),sw=Math.sin(T*6.2832/(per*2.3)+ph)*.012;
+ctx.save();ctx.globalAlpha=.4;ctx.fillStyle="#000";ctx.beginPath();ctx.ellipse(ex,yb,iw*.3,sz*.055,0,0,7);ctx.fill();ctx.restore();
+ctx.save();ctx.translate(ex,yb);ctx.rotate(sw);ctx.scale(1-.009*b,1+.022*b);ctx.drawImage(im,-iw/2,-ih,iw,ih);ctx.restore()}
+let _lt=0;function shipAnim(ts){requestAnimationFrame(shipAnim);if(RM||ts-_lt<50)return;_lt=ts;try{if(document.hidden||typeof S==="undefined"||!S||S.z||S.flight||C)return;const cv=$("scene3d");if(!cv||!cv.offsetParent)return;scene3d()}catch(e){}}
+requestAnimationFrame(shipAnim);
 (function(){try{let P=Element.prototype;if(!Object.getOwnPropertyDescriptor(P,"innerHTML"))P=HTMLElement.prototype;const d=Object.getOwnPropertyDescriptor(P,"innerHTML");if(d&&d.set)Object.defineProperty(P,"innerHTML",{get:d.get,set:function(v){d.set.call(this,typeof v==="string"?rich(v):v)},configurable:true,enumerable:d.enumerable})}catch(e){}})();
 /* v15 安裝功能（Android Chrome／Edge／三星瀏覽器、筆電 Chrome／Edge；iOS 與其他瀏覽器顯示教學） */
 let DIP=null;
@@ -256,7 +285,7 @@ function turn3d(n){S.dir=(((S.dir==null?0:S.dir))+n+4)%4;if(S.flight)saySis(`航
 function step3d(n){const d=DIRS[(((S.dir==null?0:S.dir))+4)%4];const dx=d[0]*n,dy=d[1]*n;mv(dx,dy)}
 function toggleFlight(){if(C)return;if(!S.flight){S.groundReturn={z:S.z||0,f:S.f||1,pos:(S.pos||[1,1]).slice(),dir:S.dir||0};S.flight=true;S.flightZone=S.flightZone||1;S.z=S.z||1;S.f=1;S.pos=[1,1];S.dir=0;fg();saySis("飛艦已出港。姐姐已切換星系導航，雷達正在搜尋帝國軍。點擊前方航道前進，接近紅色目標即可交戰。",true);log("搭乘星隕級自走砲飛艦，進入星系探索。")}else{S.flight=false;const r=S.groundReturn||{z:0,f:1,pos:[1,1],dir:0};S.z=r.z;S.f=r.f;S.pos=r.pos;S.dir=r.dir;S.groundReturn=null;saySis("已完成返航，回到原本的探索區域。",true);log("飛艦返航，回到地面探索。")}$("m").hidden=1;ui()}
 function nextFlightZone(){if(!S.flight)return;S.flightZone=(S.flightZone||1)+1;S.pos=[1,1];S.dir=0;delete S.maps["F:"+S.flightZone];fg();saySis(`躍遷完成，抵達第 ${S.flightZone} 星系。帝國軍威脅等級提升。`,true);log(`進入第 ${S.flightZone} 星系。`);ui()}
-function scene3d(){const M=S.flight?fg():gm(),[px,py]=S.pos,dir=(((S.dir==null?0:S.dir))+4)%4,ctx=$('scene3d').getContext('2d'),w=$('scene3d').width,h=$('scene3d').height;
+function scene3d(){TT=performance.now()/1000;const M=S.flight?fg():gm(),[px,py]=S.pos,dir=(((S.dir==null?0:S.dir))+4)%4,ctx=$('scene3d').getContext('2d'),w=$('scene3d').width,h=$('scene3d').height;
 if(S.flight){
 // 星系飛艦：沿用地面探索的方向、距離與投影概念，改成太空航道場景
 ctx.clearRect(0,0,w,h);
@@ -282,15 +311,16 @@ if(e.t!=='c'&&forward<=4){ctx.strokeStyle='rgba(255,100,120,.7)';ctx.setLineDash
 // 準星與導航資訊
 ctx.strokeStyle='#8feaff';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(w/2-8,h*.58);ctx.lineTo(w/2+8,h*.58);ctx.moveTo(w/2,h*.58-8);ctx.lineTo(w/2,h*.58+8);ctx.stroke();
 ctx.fillStyle='#b9ecff';ctx.font='12px sans-serif';ctx.fillText('星系 '+(S.flightZone||1)+'　航向 '+['北 ↑','東 →','南 ↓','西 ←'][dir],8,17);ctx.fillStyle='#ff9f9f';ctx.font='bold 11px sans-serif';ctx.fillText('帝國軍雷達活動區',8,h-10);return;}
-ctx.clearRect(0,0,w,h);const sky=ctx.createLinearGradient(0,0,0,h/2);sky.addColorStop(0,S.z?'#07101f':'#0c1624');sky.addColorStop(1,S.z?'#23415c':'#3a5670');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h/2);
+ctx.clearRect(0,0,w,h);const sky=ctx.createLinearGradient(0,0,0,h/2);sky.addColorStop(0,S.z?'#07101f':'#0c1624');sky.addColorStop(1,S.z?'#23415c':'#3a5670');ctx.fillStyle=sky;ctx.fillRect(0,0,w,h/2);if(!S.z)starCeil(ctx,w,h,dir,px,py);
 const floor=ctx.createLinearGradient(0,h/2,0,h);floor.addColorStop(0,'#26384a');floor.addColorStop(1,'#080d15');ctx.fillStyle=floor;ctx.fillRect(0,h/2,w,h/2);
 // horizon and glowing floor guides
 ctx.strokeStyle='#41647c';ctx.lineWidth=1;for(let i=1;i<7;i++){let y=h/2+(h/2)*i/7;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke()}for(let i=0;i<9;i++){ctx.beginPath();ctx.moveTo(w/2,h/2);ctx.lineTo(i*w/8,h);ctx.stroke()}
-const rayCount= Math.min(120,w),fov=Math.PI/2.8;
-for(let i=0;i<rayCount;i++){const ang=(dir*Math.PI/2)+((i/(rayCount-1))-.5)*fov;let dist=.03,hit=false,tx=px+.5,ty=py+.5,wall=0;
-while(dist<8&&!hit){dist+=.035;tx=px+.5+Math.sin(ang)*dist;ty=py+.5-Math.cos(ang)*dist;const cx=Math.floor(tx),cy=Math.floor(ty);if(cx<0||cy<0||cx>=11||cy>=11||M.g[cy][cx]){hit=true;wall=1}}
+const rayCount= Math.min(120,w),fov=Math.PI/2.8,SWR=[];
+for(let i=0;i<rayCount;i++){const ang=(dir*Math.PI/2)+((i/(rayCount-1))-.5)*fov;let dist=.03,hit=false,tx=px+.5,ty=py+.5,wall=0,swall=0;
+while(dist<8&&!hit){dist+=.035;tx=px+.5+Math.sin(ang)*dist;ty=py+.5-Math.cos(ang)*dist;const cx=Math.floor(tx),cy=Math.floor(ty);if(cx<0||cy<0||cx>=11||cy>=11||M.g[cy][cx]){hit=true;wall=1;if(!S.z&&cy>=10)swall=1}}
 const corrected=dist*Math.cos(((i/(rayCount-1))-.5)*fov),hh=Math.min(h*.94,h/(corrected+.12)*.62),x=i*w/rayCount,y=(h-hh)/2;
-let shade=Math.max(22,115-corrected*13);ctx.fillStyle=`rgb(${Math.floor(shade*(S.z?.58:.74))},${Math.floor(shade*(S.z?.76:.84))},${Math.floor(shade*(S.z?1:.96))})`;ctx.fillRect(x,y,w/rayCount+1,hh);ctx.fillStyle='rgba(120,190,230,.18)';ctx.fillRect(x,y,w/rayCount+1,2);}
+let shade=Math.max(22,115-corrected*13);ctx.fillStyle=`rgb(${Math.floor(shade*(S.z?.58:.74))},${Math.floor(shade*(S.z?.76:.84))},${Math.floor(shade*(S.z?1:.96))})`;ctx.fillRect(x,y,w/rayCount+1,hh);ctx.fillStyle='rgba(120,190,230,.18)';ctx.fillRect(x,y,w/rayCount+1,2);if(swall){starWall(ctx,ang,px,py,x,y,w/rayCount+1,hh);SWR.push([x,y,w/rayCount+1,hh])}}
+if(SWR.length)wallPlanet(ctx,SWR,px,py,dir,fov,w,h);
 // nearest visible point-of-interest indicator
 if(!S.z)drawShip(ctx,M,px,py,dir,fov,w,h);let best=null,bd=99;for(const e of M.E){if(e.t==='t'||!S.z)continue;const dx=e.x-px,dy=e.y-py,d=Math.hypot(dx,dy);if(d<bd){bd=d;best=e}}
 if(best&&bd<5){const dx=best.x-px,dy=best.y-py,ang=Math.atan2(dx,-dy)-dir*Math.PI/2;let rel=((ang+Math.PI*3)%(Math.PI*2))-Math.PI;if(Math.abs(rel)<fov*.62){const ex=w/2+Math.tan(rel)*w*.55,ey=h*.55,sz=Math.max(12,Math.min(38,52/(bd+.25)));ctx.font=`${sz}px sans-serif`;ctx.textAlign='center';ctx.fillText(best.t==='b'?'👹':best.t==='c'?'📦':(POI[best.t]||'❗'),ex,ey);ctx.textAlign='left'}}
@@ -461,7 +491,7 @@ function npcBd(id){if(id=="med")return S.party.some(m=>m.hp<m.mh)?"🩹":"";if(i
 function los(M,x0,y0,x1,y1){const n=Math.ceil(Math.hypot(x1-x0,y1-y0)*4);for(let i=1;i<n;i++){const t=i/n,cx=Math.floor(x0+.5+(x1-x0)*t),cy=Math.floor(y0+.5+(y1-y0)*t);if(M.g[cy]&&M.g[cy][cx])return false}return true}
 function drawShip(ctx,M,px,py,dir,fov,w,h){ctx.fillStyle="rgba(190,235,255,.22)";for(let i=0;i<3;i++)ctx.fillRect(w*(.2+i*.22),h*.07,w*.14,3);
 const L=[];for(const e of M.E){const dx=e.x-px,dy=e.y-py,d=Math.hypot(dx,dy);if(d>9)continue;const ang=Math.atan2(dx,-dy)-dir*Math.PI/2,rel=((ang+Math.PI*3)%(Math.PI*2))-Math.PI;if(Math.abs(rel)>fov*.62||!los(M,px,py,e.x,e.y))continue;L.push({e,d,rel})}
-L.sort((a,b)=>b.d-a.d);ctx.textAlign="center";L.forEach(o=>{const n=NPC[o.e.id],ex=w/2+Math.tan(o.rel)*w*.55,sz=Math.max(18,Math.min(72,84/(o.d+.45))),ey=h/2+sz*.42;ctx.font=sz+"px sans-serif";ctx.fillStyle="#fff";const im=NIMG[o.e.id];if(im&&im.naturalWidth){const ih=sz*1.04,iw=ih*im.naturalWidth/im.naturalHeight;ctx.drawImage(im,ex-iw/2,ey+sz*.14-ih,iw,ih)}
+L.sort((a,b)=>b.d-a.d);ctx.textAlign="center";L.forEach(o=>{const n=NPC[o.e.id],ex=w/2+Math.tan(o.rel)*w*.55,sz=Math.max(18,Math.min(72,84/(o.d+.45))),ey=h/2+sz*.42;ctx.font=sz+"px sans-serif";ctx.fillStyle="#fff";const im=NIMG[o.e.id];if(im&&im.naturalWidth){const ih=sz*1.04,iw=ih*im.naturalWidth/im.naturalHeight;drawNpcImg(ctx,im,o.e.id,ex,ey+sz*.14,sz,NID.indexOf(o.e.id))}
 if(o.d<7){const bd=npcBd(o.e.id);ctx.font="bold "+Math.max(10,Math.min(14,sz*.3))+"px sans-serif";ctx.fillStyle="#dff7ff";ctx.fillText(n.r+(bd?" "+bd:""),ex,ey-sz*.88)}});ctx.textAlign="left"}
 function npc(id){const n=NPC[id],b=()=>npc(id);const R_={
 sup:[["🛒 補給站（道具・裝備）",()=>shop(b)],["🎒 儲物袋／出售",()=>bagMenu(b)]],
